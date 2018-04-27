@@ -69,7 +69,7 @@
 								Already have an account?
 							</span>
 
-							<a href="./index.html" class="txt2">
+							<a href="WEB-INF/views/jsp/index.html" class="txt2">
 								Log in
 							</a>
 						</li>
