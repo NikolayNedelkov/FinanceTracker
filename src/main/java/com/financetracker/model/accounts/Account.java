@@ -15,20 +15,21 @@ public class Account {
 	private String accountName;
 	private double balance;
 	// private Currency currency;
-	private int currency;
-	private AccountType type;
-	private List<Transaction> transactions;
+	private String currency;
+	private String type;
+	// private List<Transaction> transactions;
 
 	public Account() {
-		this.transactions = new ArrayList<Transaction>();
+		// this.transactions = new ArrayList<Transaction>();
 	}
 
-	public Account(User user, String name, double balance, AccountType type) throws AccountException {
+	public Account(User user, String name, double balance, String currency, String type) throws AccountException {
 		setAccountName(name);
 		setType(type);
-		this.user = user;
+		setUser(user);
 		this.balance = balance;
-		this.transactions = new ArrayList<Transaction>();
+		setCurrency(currency);
+		// this.transactions = new ArrayList<Transaction>();
 	}
 
 	public int getAccount_id() {
@@ -73,7 +74,7 @@ public class Account {
 	// return currency;
 	// }
 
-	public int getCurrency() {
+	public String getCurrency() {
 		return currency;
 	}
 
@@ -84,26 +85,26 @@ public class Account {
 	// throw new AccountException();
 	// }
 
-	public void setCurrency(int currency) throws AccountException {
-		if (currency > 0)
+	public void setCurrency(String currency) throws AccountException {
+		if ((currency != null) && (currency.trim().length() > 0))
 			this.currency = currency;
 		else
 			throw new AccountException();
 	}
 
-	public AccountType getType() {
+	public String getType() {
 		return type;
 	}
 
-	public void setType(AccountType type) throws AccountException {
+	public void setType(String type) throws AccountException {
 		if (type != null) {
 			this.type = type;
 		} else
 			throw new AccountException("Not a valid accounttype");
 	}
 
-	public List<Transaction> getTransactions() {
-		return Collections.unmodifiableList(this.transactions);
-	}
+	// public List<Transaction> getTransactions() {
+	// return Collections.unmodifiableList(this.transactions);
+	// }
 
 }

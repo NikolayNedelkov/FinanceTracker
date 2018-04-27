@@ -50,10 +50,14 @@ public class LoginServlet extends HttpServlet {
 				session.setAttribute("email", email);
 //				session.setMaxInactiveInterval(5);
 				
-				response.sendRedirect("./home.jsp");
+				request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
+			
+				//response.sendRedirect("./home.jsp");
 			} else {
-//				response.getWriter().println("<h1> Ti ne se logna, syjalqvam! </h1>");		
-				response.sendRedirect("./register.jsp");
+//				response.getWriter().println("<h1> Ti ne se logna, syjalqvam! </h1>");	
+				request.getRequestDispatcher("WEB-INF/register.jsp").forward(request, response);
+
+				//response.sendRedirect("./register.jsp");
 			}
 		} catch (UserException e) {
 			// TODO Auto-generated catch block

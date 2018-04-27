@@ -1,4 +1,4 @@
-package com.example;
+package com.financetracker;
 
 import java.util.Locale;
 

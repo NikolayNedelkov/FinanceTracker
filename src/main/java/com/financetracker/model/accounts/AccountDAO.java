@@ -4,8 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.financetracker.database.DBConnection;
 import com.financetracker.exceptions.AccountException;
@@ -14,7 +12,6 @@ public class AccountDAO {
 	private static final String CHECK_IF_ACCOUNT_EXISTS = "SELECT * FROM accounts where name =?";
 	private static final String ADD_ACCOUNT_SQL = "insert into accounts (name, balance, currencies_id1, account_type_id, user_id) values (?, ?, ?, ?,";
 	private static AccountDAO instance = null;
-	private List<Account> accounts = new ArrayList<Account>();
 
 	private AccountDAO() {
 
@@ -35,8 +32,8 @@ public class AccountDAO {
 						ADD_ACCOUNT_SQL + a.getUser().getId() + ");", Statement.RETURN_GENERATED_KEYS);
 				pstmt.setString(1, a.getAccountName());
 				pstmt.setDouble(2, a.getBalance());
-				pstmt.setInt(3, a.getCurrency());
-				pstmt.setInt(4, a.getType().getAccountTypeId());
+				pstmt.setString(3, a.getCurrency());
+				pstmt.setString(4, a.getType());
 
 				pstmt.executeUpdate();
 

@@ -24,9 +24,9 @@ public class RegisterServlet extends HttpServlet {
 		
 			try {
 				if(UserDAO.getInstance().register(user)>0) {
-					response.sendRedirect("./login.jsp");
+					response.sendRedirect("WEB-INF/login.jsp");
 				}else {
-					response.sendRedirect("./index");
+					response.sendRedirect("WEB-INF/index");
 				}
 			} catch (UserException e) {
 				e.printStackTrace();
