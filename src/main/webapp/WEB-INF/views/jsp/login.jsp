@@ -66,7 +66,7 @@
 								Don’t have an account?
 							</span>
 
-							<a href="./register.jsp" class="txt2">
+							<a href="WEB-INF/register.jsp" class="txt2">
 								Sign up
 							</a>
 						</li>

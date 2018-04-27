@@ -50,12 +50,12 @@ public class LoginServlet extends HttpServlet {
 				session.setAttribute("email", email);
 //				session.setMaxInactiveInterval(5);
 				
-				request.getRequestDispatcher("WEB-INF/home.jsp").forward(request, response);
+				request.getRequestDispatcher("WEB-INF/views/jsp/home.jsp").forward(request, response);
 			
 				//response.sendRedirect("./home.jsp");
 			} else {
 //				response.getWriter().println("<h1> Ti ne se logna, syjalqvam! </h1>");	
-				request.getRequestDispatcher("WEB-INF/register.jsp").forward(request, response);
+				request.getRequestDispatcher("WEB-INF/views/jsp/register.jsp").forward(request, response);
 
 				//response.sendRedirect("./register.jsp");
 			}
