@@ -15,21 +15,50 @@ public class Account {
 	private String accountName;
 	private double balance;
 	// private Currency currency;
-	private String currency;
-	private String type;
+	private String lastFourDigits;
+	private byte percentage;
+	private int paymentDueDay;
+	private int currency;
+	private int type;
 	// private List<Transaction> transactions;
 
-	public Account() {
-		// this.transactions = new ArrayList<Transaction>();
-	}
+	// public Account() {
+	// // this.transactions = new ArrayList<Transaction>();
+	// }
 
-	public Account(User user, String name, double balance, String currency, String type) throws AccountException {
-		setAccountName(name);
+	// public Account(User user, String name, double balance, String currency,
+	// String type) throws AccountException {
+	// setAccountName(name);
+	// setType(type);
+	// setUser(user);
+	// this.balance = balance;
+	// setCurrency(currency);
+	// // this.transactions = new ArrayList<Transaction>();
+	// }
+	//
+	// public Account(int id, User user, String name, double balance, String
+	// currency, String type)
+	// throws AccountException {
+	// this.account_id = id;
+	// setAccountName(name);
+	// setType(type);
+	// setUser(user);
+	// this.balance = balance;
+	// setCurrency(currency);
+	// // this.transactions = new ArrayList<Transaction>();
+	// }
+
+	public Account(int account_id, User user, String accountName, double balance, String lastFourDigits,
+			byte percentage, int paymentDueDay, int currency, int type) throws AccountException {
+		this.account_id = account_id;
+		setAccountName(accountName);
 		setType(type);
 		setUser(user);
 		this.balance = balance;
 		setCurrency(currency);
-		// this.transactions = new ArrayList<Transaction>();
+		this.lastFourDigits = lastFourDigits;
+		this.percentage = percentage;
+		this.paymentDueDay = paymentDueDay;
 	}
 
 	public int getAccount_id() {
@@ -74,7 +103,7 @@ public class Account {
 	// return currency;
 	// }
 
-	public String getCurrency() {
+	public int getCurrency() {
 		return currency;
 	}
 
@@ -85,19 +114,19 @@ public class Account {
 	// throw new AccountException();
 	// }
 
-	public void setCurrency(String currency) throws AccountException {
-		if ((currency != null) && (currency.trim().length() > 0))
+	public void setCurrency(int currency) throws AccountException {
+		if (currency > 0)
 			this.currency = currency;
 		else
 			throw new AccountException();
 	}
 
-	public String getType() {
+	public int getType() {
 		return type;
 	}
 
-	public void setType(String type) throws AccountException {
-		if (type != null) {
+	public void setType(int type) throws AccountException {
+		if (type > 0) {
 			this.type = type;
 		} else
 			throw new AccountException("Not a valid accounttype");
