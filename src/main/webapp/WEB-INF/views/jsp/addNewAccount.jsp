@@ -33,7 +33,8 @@
 			<option value="Cash">Cash</option>
 			<option value="PayPal">PayPal</option>
 			<option value="GiftCard">Gift Card</option>
-		</select>
+		</select><br>
+		<button type="submit">Add</button>
 	</form>
 </body>
 </html>

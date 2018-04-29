@@ -17,12 +17,18 @@ public class User {
 	private String password;
 	private LocalDateTime lastLoggedIn;
 	private Budget budget;
-    private List<Account> accounts;
-	
+	private List<Account> accounts;
+
 	public User(String email, String password) {
 		this.email = email;
 		this.password = password;
 		this.accounts = new ArrayList<Account>();
+	}
+
+	public User(int id, String email, String password, LocalDateTime lastLoggedIn) {
+		this(email, password);
+		this.id = id;
+		this.lastLoggedIn = lastLoggedIn;
 	}
 
 	public int getId() {
@@ -88,8 +94,5 @@ public class User {
 	public List<Account> getAccounts() {
 		return Collections.unmodifiableList(accounts);
 	}
-	
-	
-	
 
 }

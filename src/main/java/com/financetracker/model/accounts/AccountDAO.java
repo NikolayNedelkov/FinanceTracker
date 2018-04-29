@@ -27,7 +27,7 @@ public class AccountDAO {
 		return instance;
 	}
 
-	public boolean addNewAccount(Account a) throws AccountException {
+	public int addNewAccount(Account a) throws AccountException {
 		PreparedStatement pstmt;
 		try {
 			if (!accountExists(a)) {
@@ -46,7 +46,7 @@ public class AccountDAO {
 				resultSet.next();
 				//than add it also to the HashSet???
 				
-				return true;
+				return resultSet.getInt(1);
 			} else {
 				throw new AccountException("You have already added account with name " + a.getAccountName());
 			}
@@ -89,7 +89,7 @@ public class AccountDAO {
 					allAccounts.add(new Account(rs.getInt("id"), user, rs.getString("name"), rs.getDouble("balance"),
 							"" + rs.getInt("last_4_digits"), (byte) (rs.getInt("percentage")),
 							rs.getInt("payment_due_day"), rs.getInt("currencies_id1"), rs.getInt("account_type_id")));
-				} catch (javax.security.auth.login.AccountException e) {
+				} catch (AccountException e) {
 					e.printStackTrace();
 					throw new AccountException("Could not get all accounts for this user", e);
 				}

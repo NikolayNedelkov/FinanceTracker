@@ -4,11 +4,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 
 import com.financetracker.database.DBConnection;
 import com.financetracker.exceptions.UserException;
 
 public class UserDAO implements IUserDAO {
+	private static final String GET_USER_BY_EMAIL = "SELECT id, password, last_loged_in FROM users where email like ?;";
 	private static final String LOGIN_USER_SQL = "SELECT * FROM users WHERE email=? and password=sha1(?)";
 	private static final String ADD_USER_SQL = "INSERT INTO users(email, password) VALUES (?, sha1(?))";
 	private static final String CHECK_USER_IF_EXISTS = "SELECT * FROM users where email =?";
@@ -46,19 +48,21 @@ public class UserDAO implements IUserDAO {
 		}
 	}
 
-//	@Override
-//	public boolean login(String email, String password) throws ClassNotFoundException, SQLException {
-//		PreparedStatement pstmt = DBConnection.getInstance().getConnection().prepareStatement(LOGIN_USER_SQL);
-//		pstmt.setString(1, email);
-//		pstmt.setString(2, password);
-//		ResultSet rs = pstmt.executeQuery();
-//		if (rs.next()) {
-//			pstmt.close();
-//			return true;
-//		}
-//		pstmt.close();
-//		return false;
-//	}
+	// @Override
+	// public boolean login(String email, String password) throws
+	// ClassNotFoundException, SQLException {
+	// PreparedStatement pstmt =
+	// DBConnection.getInstance().getConnection().prepareStatement(LOGIN_USER_SQL);
+	// pstmt.setString(1, email);
+	// pstmt.setString(2, password);
+	// ResultSet rs = pstmt.executeQuery();
+	// if (rs.next()) {
+	// pstmt.close();
+	// return true;
+	// }
+	// pstmt.close();
+	// return false;
+	// }
 
 	@Override
 	public int register(User user) throws UserException {
@@ -106,4 +110,26 @@ public class UserDAO implements IUserDAO {
 		}
 	}
 
+	public User getUserByEmail(String email) throws UserException {
+		PreparedStatement pstmt;
+		try {
+			pstmt = DBConnection.getInstance().getConnection().prepareStatement(GET_USER_BY_EMAIL);
+			pstmt.setString(1, email);
+
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				int id = rs.getInt("id");
+				String password = rs.getString("password");
+				LocalDateTime lastLoggedIn = rs.getTimestamp("last_loged_in").toLocalDateTime();
+				User user = new User(id, email, password, lastLoggedIn);
+				pstmt.close();
+				return user;
+			} else {
+				throw new UserException("User with email:" + email + " doesn't exist!");
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+			throw new UserException("User with that email already exists!", e);
+		}
+	}
 }

@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import com.financetracker.database.DBConnection;
+import com.financetracker.exceptions.AccountException;
 import com.financetracker.model.currencies.CurrencyDAO;
 
 public class AccountTypeDAO {
@@ -22,11 +23,15 @@ public class AccountTypeDAO {
 		return instance;
 	}
 
-	public int getAccountTypeId(String typeName) throws SQLException, ClassNotFoundException {
+	public int getAccountTypeId(String typeName) throws SQLException, ClassNotFoundException, AccountException {
 		PreparedStatement pst = DBConnection.getInstance().getConnection().prepareStatement(GET_ACC_TYPE_ID,
 				Statement.RETURN_GENERATED_KEYS);
 		pst.setString(1, typeName);
 		ResultSet rs = pst.executeQuery();
-		return rs.getInt(1);
+		if (rs.next()) {
+			return rs.getInt(1);
+		} else {
+			throw new AccountException("Not such accounttype in DB!");
+		}
 	}
 }
