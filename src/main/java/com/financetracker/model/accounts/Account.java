@@ -72,6 +72,30 @@ public class Account {
 		this.percentage = percentage;
 		this.paymentDueDay = paymentDueDay;
 	}
+	public String getLastFourDigits() {
+		return lastFourDigits;
+	}
+
+	public void setLastFourDigits(String lastFourDigits) {
+		this.lastFourDigits = lastFourDigits;
+	}
+
+	public float getPercentage() {
+		return percentage;
+	}
+
+	public void setPercentage(float percentage) {
+		this.percentage = percentage;
+	}
+
+	public int getPaymentDueDay() {
+		return paymentDueDay;
+	}
+
+	public void setPaymentDueDay(int paymentDueDay) {
+		this.paymentDueDay = paymentDueDay;
+	}
+
 	public int getAccount_id() {
 		return account_id;
 	}

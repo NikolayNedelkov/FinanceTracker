@@ -25,14 +25,14 @@
 		<p>Account type: </p> <br>
 		<select name="type" required="required">
 			
-			<option value="CreditCard">Credit Card</option>
+			<option value="Credit Card">Credit Card</option>
 			<option value="Loan">Loan</option>
 			<option value="Pension">Pension</option>
 			<option value="IRA">IRA</option>
-			<option value="OtherInvestment">Other Investment</option>
+			<option value="Other Investment">Other Investment</option>
 			<option value="Cash">Cash</option>
 			<option value="PayPal">PayPal</option>
-			<option value="GiftCard">Gift Card</option>
+			<option value="Gift Card">Gift Card</option>
 		</select><br>
 		<button type="submit">Add</button>
 	</form>
