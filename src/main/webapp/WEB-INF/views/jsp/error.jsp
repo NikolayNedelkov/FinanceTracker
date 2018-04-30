@@ -7,6 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h1>Something went wrong!</h1>
+	<h1>Yay! there is an error on the previous page!</h1>
 </body>
 </html>
