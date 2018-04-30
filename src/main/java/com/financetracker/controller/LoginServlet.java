@@ -55,7 +55,7 @@ public class LoginServlet extends HttpServlet {
 
 				request.getRequestDispatcher("WEB-INF/views/jsp/home.jsp").forward(request, response);
 
-				// response.sendRedirect("./home.jsp");
+				//response.sendRedirect("./home.jsp");
 			} else {
 				// response.getWriter().println("<h1> Ti ne se logna, syjalqvam! </h1>");
 				request.getRequestDispatcher("WEB-INF/views/jsp/register.jsp").forward(request, response);

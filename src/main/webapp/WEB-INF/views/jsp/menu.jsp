@@ -77,7 +77,7 @@
         <li><a href="home.jsp" id="dash_btn"><i class="fas fa-columns"></i>
         <div class="inline">My Dashboard</div></a>
 
-        <a href="accounts.jsp" id="expense_btn"><i class="fas fa-credit-card"></i>
+        <a href="accounts" id="expense_btn"><i class="fas fa-credit-card"></i>
         <div class="inline">My Accounts</div></a>
 
         <a href="transactions.jsp"id="expense_btn"><i class="fas fa-exchange-alt"></i>

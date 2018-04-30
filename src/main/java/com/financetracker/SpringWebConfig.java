@@ -19,7 +19,7 @@ import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan("com.example")
+@ComponentScan("com.financetracker")
 public class SpringWebConfig extends WebMvcConfigurerAdapter {
 	
     @Override
@@ -27,6 +27,7 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
     	registry.addResourceHandler("/uploaded/**").addResourceLocations("file:///C:\\uploaded\\");
     	registry.addResourceHandler("/img/**").addResourceLocations("FinalProject/static/images/");
         registry.addResourceHandler("/css/**").addResourceLocations("/static/css/");
+        registry.addResourceHandler("/js/**").addResourceLocations("/static/js/");
         registry.addResourceHandler("/pdfs/**").addResourceLocations("/static/pdf/");
         registry.addResourceHandler("/fonts/**").addResourceLocations("/static/fonts/font-awesome-4.7.0/css");
         registry.addResourceHandler("/bootstrap/**").addResourceLocations("/static/vendor/bootstrap/css");
