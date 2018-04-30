@@ -41,7 +41,7 @@ public class TransactionServlet extends HttpServlet {
 			Transaction transaction = new Transaction(payee, amount, date, 9, isIncome, category);
 			TransactionDAO dao = TransactionDAO.getInstance();
 			dao.addTransaction(transaction);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("transactions.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("./transactions.jsp");
 			dispatcher.forward(request, response);
 
 

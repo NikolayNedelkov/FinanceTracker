@@ -17,17 +17,19 @@ public class RegisterServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		String firstName = request.getParameter("firstName");
+		String lastName = request.getParameter("lastName");
 		String email = request.getParameter("email");
 		String pass = request.getParameter("password");
 		User user = null;
-		user = new User(email, pass);
+		user = new User(email, pass, firstName, lastName);
 
 		try {
 			if (UserDAO.getInstance().register(user) > 0) {
-				request.getRequestDispatcher("WEB-INF/views/jsp/login.jsp").forward(request, response);
+				request.getRequestDispatcher("WEB-INF/views/jsp/signup-login.jsp").forward(request, response);
 				// response.sendRedirect("WEB-INF/views/jsp/home.jsp");
 			} else {
-				request.getRequestDispatcher("WEB-INF/views/jsp/register.jsp").forward(request, response);
+				request.getRequestDispatcher("WEB-INF/views/jsp/signup-login.jsp").forward(request, response);
 				// response.sendRedirect("WEB-INF/views/jsp/index.html");
 			}
 		} catch (UserException e) {
