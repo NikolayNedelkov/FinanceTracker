@@ -20,7 +20,7 @@ public class WelcomeServlet extends HttpServlet {
 //		Object o = s.getAttribute("logged");
 //		boolean logged = (o != null && ((boolean) o));
 //		if (s.isNew() || !logged) {
-		request.getRequestDispatcher("WEB-INF/views/jsp/login2.jsp").forward(request, response);
+		request.getRequestDispatcher("WEB-INF/views/jsp/signup-login.jsp").forward(request, response);
 			//request.getRequestDispatcher("WEB-INF/lib/index.html").forward(request, response);
 //			response.sendRedirect("./login");
 //		} else {

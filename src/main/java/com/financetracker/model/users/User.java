@@ -26,6 +26,12 @@ public class User {
 		this.password = password;
 		this.accounts = new HashSet<Account>();
 	}
+	
+	public User(String email, String password, String firstName, String lastName) {
+		this(email, password);
+		this.firstName = firstName;
+		this.lastName = lastName;
+	}
 
 	public User(int id, String email, String password, LocalDateTime lastLoggedIn) {
 		this(email, password);

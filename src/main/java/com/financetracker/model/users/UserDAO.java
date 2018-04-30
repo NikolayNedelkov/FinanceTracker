@@ -12,7 +12,7 @@ import com.financetracker.exceptions.UserException;
 public class UserDAO implements IUserDAO {
 	private static final String GET_USER_BY_EMAIL = "SELECT id, password, last_loged_in FROM users where email like ?;";
 	private static final String LOGIN_USER_SQL = "SELECT * FROM users WHERE email=? and password=sha1(?)";
-	private static final String ADD_USER_SQL = "INSERT INTO users(email, password) VALUES (?, sha1(?))";
+	private static final String ADD_USER_SQL = "INSERT INTO users(first_name, last_name, email, password) VALUES (?, ?, ?, sha1(?));";
 	private static final String CHECK_USER_IF_EXISTS = "SELECT * FROM users where email =?";
 	private static UserDAO userDAO = null;
 
@@ -48,22 +48,6 @@ public class UserDAO implements IUserDAO {
 		}
 	}
 
-	// @Override
-	// public boolean login(String email, String password) throws
-	// ClassNotFoundException, SQLException {
-	// PreparedStatement pstmt =
-	// DBConnection.getInstance().getConnection().prepareStatement(LOGIN_USER_SQL);
-	// pstmt.setString(1, email);
-	// pstmt.setString(2, password);
-	// ResultSet rs = pstmt.executeQuery();
-	// if (rs.next()) {
-	// pstmt.close();
-	// return true;
-	// }
-	// pstmt.close();
-	// return false;
-	// }
-
 	@Override
 	public int register(User user) throws UserException {
 		PreparedStatement pstmt;
@@ -71,14 +55,15 @@ public class UserDAO implements IUserDAO {
 			if (checkIfUserExists(user)) {
 				pstmt = DBConnection.getInstance().getConnection().prepareStatement(ADD_USER_SQL,
 						Statement.RETURN_GENERATED_KEYS);
-				pstmt.setString(1, user.getEmail());
-				pstmt.setString(2, user.getPassword());
+				pstmt.setString(1, user.getFirstName());
+				pstmt.setString(2, user.getLastName());
+				pstmt.setString(3, user.getEmail());
+				pstmt.setString(4, user.getPassword());
 
 				pstmt.executeUpdate();
 
 				ResultSet resultSet = pstmt.getGeneratedKeys();
 				resultSet.next();
-
 				return resultSet.getInt(1);
 			} else {
 				throw new UserException("User already exist");
