@@ -3,7 +3,9 @@ package com.financetracker.model.users;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.financetracker.exceptions.UserException;
 import com.financetracker.model.accounts.Account;
@@ -17,12 +19,18 @@ public class User {
 	private String password;
 	private LocalDateTime lastLoggedIn;
 	private Budget budget;
-    private List<Account> accounts;
-	
+	private Set<Account> accounts;
+
 	public User(String email, String password) {
 		this.email = email;
 		this.password = password;
-		this.accounts = new ArrayList<Account>();
+		this.accounts = new HashSet<Account>();
+	}
+
+	public User(int id, String email, String password, LocalDateTime lastLoggedIn) {
+		this(email, password);
+		this.id = id;
+		this.lastLoggedIn = lastLoggedIn;
 	}
 
 	public int getId() {
@@ -85,11 +93,11 @@ public class User {
 		this.budget = budget;
 	}
 
-	public List<Account> getAccounts() {
-		return Collections.unmodifiableList(accounts);
+	public Set<Account> getAccounts() {
+		return Collections.unmodifiableSet(accounts);
 	}
-	
-	
-	
 
+	public void setAccounts(Set<Account> accounts) {
+		this.accounts = accounts;
+	}
 }

@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.security.auth.login.AccountException;
-
+import com.financetracker.exceptions.AccountException;
 import com.financetracker.model.transactions.Transaction;
 import com.financetracker.model.users.User;
 
@@ -16,7 +15,7 @@ public class Account {
 	private double balance;
 	// private Currency currency;
 	private String lastFourDigits;
-	private byte percentage;
+	private float percentage;
 	private int paymentDueDay;
 	private int currency;
 	private int type;
@@ -49,8 +48,9 @@ public class Account {
 	// }
 
 	public Account(int account_id, User user, String accountName, double balance, String lastFourDigits,
-			byte percentage, int paymentDueDay, int currency, int type) throws AccountException {
+			float percentage, int paymentDueDay, int currency, int type) throws AccountException {
 		this.account_id = account_id;
+		this.user=user;
 		setAccountName(accountName);
 		setType(type);
 		setUser(user);
@@ -58,6 +58,41 @@ public class Account {
 		setCurrency(currency);
 		this.lastFourDigits = lastFourDigits;
 		this.percentage = percentage;
+		this.paymentDueDay = paymentDueDay;
+	}
+
+	public Account(User user, String accountName, double balance, String lastFourDigits,
+			float percentage, int paymentDueDay, int currency, int type) throws AccountException {
+		setAccountName(accountName);
+		setType(type);
+		setUser(user);
+		this.balance = balance;
+		setCurrency(currency);
+		this.lastFourDigits = lastFourDigits;
+		this.percentage = percentage;
+		this.paymentDueDay = paymentDueDay;
+	}
+	public String getLastFourDigits() {
+		return lastFourDigits;
+	}
+
+	public void setLastFourDigits(String lastFourDigits) {
+		this.lastFourDigits = lastFourDigits;
+	}
+
+	public float getPercentage() {
+		return percentage;
+	}
+
+	public void setPercentage(float percentage) {
+		this.percentage = percentage;
+	}
+
+	public int getPaymentDueDay() {
+		return paymentDueDay;
+	}
+
+	public void setPaymentDueDay(int paymentDueDay) {
 		this.paymentDueDay = paymentDueDay;
 	}
 
