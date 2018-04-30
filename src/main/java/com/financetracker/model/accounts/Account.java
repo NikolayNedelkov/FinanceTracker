@@ -47,10 +47,13 @@ public class Account {
 	// // this.transactions = new ArrayList<Transaction>();
 	// }
 
+	public Account() {
+	}
+
 	public Account(int account_id, User user, String accountName, double balance, String lastFourDigits,
 			float percentage, int paymentDueDay, int currency, int type) throws AccountException {
 		this.account_id = account_id;
-		this.user=user;
+		this.user = user;
 		setAccountName(accountName);
 		setType(type);
 		setUser(user);
@@ -61,8 +64,8 @@ public class Account {
 		this.paymentDueDay = paymentDueDay;
 	}
 
-	public Account(User user, String accountName, double balance, String lastFourDigits,
-			float percentage, int paymentDueDay, int currency, int type) throws AccountException {
+	public Account(User user, String accountName, double balance, String lastFourDigits, float percentage,
+			int paymentDueDay, int currency, int type) throws AccountException {
 		setAccountName(accountName);
 		setType(type);
 		setUser(user);
@@ -72,6 +75,7 @@ public class Account {
 		this.percentage = percentage;
 		this.paymentDueDay = paymentDueDay;
 	}
+
 	public String getLastFourDigits() {
 		return lastFourDigits;
 	}

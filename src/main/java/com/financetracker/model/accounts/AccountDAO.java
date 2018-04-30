@@ -6,10 +6,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashSet;
 
+import org.springframework.stereotype.Component;
+
 import com.financetracker.database.DBConnection;
 import com.financetracker.exceptions.AccountException;
 import com.financetracker.model.users.User;
 
+@Component
 public class AccountDAO {
 
 	private static final String ALL_ACCOUNTS_FOR_USER = "SELECT id, name, balance, last_4_digits, percentage, payment_due_day, currencies_id1, account_type_id FROM financetracker.accounts where user_id=?;";

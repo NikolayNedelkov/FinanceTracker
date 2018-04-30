@@ -4,13 +4,20 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Component;
 
 import com.financetracker.database.DBConnection;
 import com.financetracker.exceptions.AccountException;
+import com.financetracker.exceptions.CurrencyException;
 import com.financetracker.model.currencies.CurrencyDAO;
 
+@Component
 public class AccountTypeDAO {
 	private static final String GET_ACC_TYPE_ID = "SELECT id from account_types where type like ?;";
+	private static final String GET_ALL_ACCOUNTTYPES = "SELECT type FROM account_types;";
 	private static AccountTypeDAO instance = null;
 
 	private AccountTypeDAO() {
@@ -33,5 +40,18 @@ public class AccountTypeDAO {
 		} else {
 			throw new AccountException("Not such accounttype in DB!");
 		}
+	}
+
+	public List<String> getAccountTypesFromDB() throws ClassNotFoundException, SQLException, AccountException {
+		List<String> allAccountTypes = new ArrayList<String>();
+		Statement st = DBConnection.getInstance().getConnection().createStatement();
+		ResultSet rs = st.executeQuery(GET_ALL_ACCOUNTTYPES);
+		if (!rs.next()) {
+			throw new AccountException("No account types in DB");
+		}
+		while (rs.next()) {
+			allAccountTypes.add((String) rs.getString("account_types"));
+		}
+		return allAccountTypes;
 	}
 }

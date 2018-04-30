@@ -4,12 +4,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Component;
 
 import com.financetracker.database.DBConnection;
 import com.financetracker.exceptions.AccountException;
+import com.financetracker.exceptions.CurrencyException;
 
+@Component
 public class CurrencyDAO {
 	private static final String GET_CURR_ID = "SELECT id from currencies where currency_type like ?;";
+	private static final String GET_ALL_CURRENCIES = "SELECT currency_type FROM currencies;";
 	private static CurrencyDAO instance = null;
 
 	private CurrencyDAO() {
@@ -33,4 +40,18 @@ public class CurrencyDAO {
 			throw new AccountException("Not such currency in DB!");
 		}
 	}
+
+	public List<String> getCurrenciesFromDB() throws ClassNotFoundException, SQLException, CurrencyException {
+		List<String> allCurrencies = new ArrayList<String>();
+		Statement st = DBConnection.getInstance().getConnection().createStatement();
+		ResultSet rs = st.executeQuery(GET_ALL_CURRENCIES);
+		if (!rs.next()) {
+			throw new CurrencyException("No currencies in DB");
+		}
+		while (rs.next()) {
+			allCurrencies.add((String) rs.getString("currency_type"));
+		}
+		return allCurrencies;
+	}
+
 }
