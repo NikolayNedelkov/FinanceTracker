@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.security.auth.login.AccountException;
-
+import com.financetracker.exceptions.AccountException;
 import com.financetracker.model.transactions.Transaction;
 import com.financetracker.model.users.User;
 
@@ -15,21 +14,86 @@ public class Account {
 	private String accountName;
 	private double balance;
 	// private Currency currency;
-	private String currency;
-	private String type;
+	private String lastFourDigits;
+	private float percentage;
+	private int paymentDueDay;
+	private int currency;
+	private int type;
 	// private List<Transaction> transactions;
 
-	public Account() {
-		// this.transactions = new ArrayList<Transaction>();
-	}
+	// public Account() {
+	// // this.transactions = new ArrayList<Transaction>();
+	// }
 
-	public Account(User user, String name, double balance, String currency, String type) throws AccountException {
-		setAccountName(name);
+	// public Account(User user, String name, double balance, String currency,
+	// String type) throws AccountException {
+	// setAccountName(name);
+	// setType(type);
+	// setUser(user);
+	// this.balance = balance;
+	// setCurrency(currency);
+	// // this.transactions = new ArrayList<Transaction>();
+	// }
+	//
+	// public Account(int id, User user, String name, double balance, String
+	// currency, String type)
+	// throws AccountException {
+	// this.account_id = id;
+	// setAccountName(name);
+	// setType(type);
+	// setUser(user);
+	// this.balance = balance;
+	// setCurrency(currency);
+	// // this.transactions = new ArrayList<Transaction>();
+	// }
+
+	public Account(int account_id, User user, String accountName, double balance, String lastFourDigits,
+			float percentage, int paymentDueDay, int currency, int type) throws AccountException {
+		this.account_id = account_id;
+		this.user=user;
+		setAccountName(accountName);
 		setType(type);
 		setUser(user);
 		this.balance = balance;
 		setCurrency(currency);
-		// this.transactions = new ArrayList<Transaction>();
+		this.lastFourDigits = lastFourDigits;
+		this.percentage = percentage;
+		this.paymentDueDay = paymentDueDay;
+	}
+
+	public Account(User user, String accountName, double balance, String lastFourDigits,
+			float percentage, int paymentDueDay, int currency, int type) throws AccountException {
+		setAccountName(accountName);
+		setType(type);
+		setUser(user);
+		this.balance = balance;
+		setCurrency(currency);
+		this.lastFourDigits = lastFourDigits;
+		this.percentage = percentage;
+		this.paymentDueDay = paymentDueDay;
+	}
+	public String getLastFourDigits() {
+		return lastFourDigits;
+	}
+
+	public void setLastFourDigits(String lastFourDigits) {
+		this.lastFourDigits = lastFourDigits;
+	}
+
+	public float getPercentage() {
+		return percentage;
+	}
+
+	public void setPercentage(float percentage) {
+		this.percentage = percentage;
+	}
+
+	public int getPaymentDueDay() {
+		return paymentDueDay;
+	}
+
+	public void setPaymentDueDay(int paymentDueDay) {
+		this.paymentDueDay = paymentDueDay;
 	}
 
 	public int getAccount_id() {
@@ -74,7 +138,7 @@ public class Account {
 	// return currency;
 	// }
 
-	public String getCurrency() {
+	public int getCurrency() {
 		return currency;
 	}
 
@@ -85,19 +149,19 @@ public class Account {
 	// throw new AccountException();
 	// }
 
-	public void setCurrency(String currency) throws AccountException {
-		if ((currency != null) && (currency.trim().length() > 0))
+	public void setCurrency(int currency) throws AccountException {
+		if (currency > 0)
 			this.currency = currency;
 		else
 			throw new AccountException();
 	}
 
-	public String getType() {
+	public int getType() {
 		return type;
 	}
 
-	public void setType(String type) throws AccountException {
-		if (type != null) {
+	public void setType(int type) throws AccountException {
+		if (type > 0) {
 			this.type = type;
 		} else
 			throw new AccountException("Not a valid accounttype");

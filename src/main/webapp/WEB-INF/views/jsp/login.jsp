@@ -36,7 +36,7 @@
 			<div class="wrap-login100 p-t-85 p-b-20">
 				<form class="login100-form validate-form" action="./login" method="post" >
 					<span class="login100-form-avatar">
-						<img src="C:\Users\Ra\Desktop\uploads\logo2.jpg" alt="AVATAR">
+						<img src="/static/images/logo2.jpg" alt="AVATAR">
 					</span>
 					<br />
 					<br />
@@ -66,7 +66,7 @@
 								Don’t have an account?
 							</span>
 
-							<a href="WEB-INF/register.jsp" class="txt2">
+							<a href="WEB-INF/views/register.jsp" class="txt2">
 								Sign up
 							</a>
 						</li>
