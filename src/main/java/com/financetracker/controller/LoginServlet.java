@@ -14,7 +14,7 @@ import com.financetracker.exceptions.UserException;
 import com.financetracker.model.users.UserDAO;
 
 
-@WebServlet("/login")
+@WebServlet("/login2")
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
