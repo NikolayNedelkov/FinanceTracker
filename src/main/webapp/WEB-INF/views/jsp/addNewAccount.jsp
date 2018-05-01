@@ -10,18 +10,18 @@
 <body>
 
 	<form:form commandName="account">
-	Account Name:<form:input path="accountName" />
-	Balance:<form:input path="balance" />
-	Account number::<form:input path="lastFourDigits" />
+	Account Name:<form:input path="accountName" /><br>
+	Balance:<form:input path="balance" /><br>
+	Account number::<form:input path="lastFourDigits" /><br>
 		<p>(Optional last 4 digits)</p>
 	
-	Currency:<form:select path="currency">
+	Currency:<form:select path="currency"><br>
 			<form:option value="-" label="--Select Currency" />
 			<form:options items="${allCurrencies}" />
 		</form:select>
 	
 	
-		Account type:<form:select path="type">
+		Account type:<form:select path="type"><br>
 			<%-- <form:option value="-" label="--Select Currency" /> --%>
 			<form:options items="${allTypes}" />
 		</form:select>
