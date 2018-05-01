@@ -53,40 +53,41 @@ public class AccountController {
 	}
 
 	// GET i POST metodi za dobavqne na nov Account, URL:.../accounts/add
-//
-//	@RequestMapping(value = "/add", method = RequestMethod.GET)
-//	public String addAccount(Model model) {
-//		Account account = new Account();
-//		model.addAttribute("account", account);
-//		List<String> currencies;
-//		List<String> accountTypes;
-//		try {
-//			currencies = currencyDAO.getCurrenciesFromDB();
-//			accountTypes = accountTypeDAO.getAccountTypesFromDB();
-//			model.addAttribute("allCurrencies", currencies);
-//			model.addAttribute("allTypes", accountTypes);
-//			return "addNewAccount";
-//		} catch (ClassNotFoundException | SQLException | CurrencyException | AccountException e) {
-//			e.printStackTrace();
-//
-//			// tuka nqma da e home, vremenno
-//			return "redirect:home";
-//		}
-//	}
-//
-//	@RequestMapping(value = "/add", method = RequestMethod.POST)
-//	public String addAccount(@ModelAttribute Account readyAccount, HttpServletRequest request) {
-//		try {
-//			accountDao.addNewAccount(readyAccount);
-//			if (accountDao.addNewAccount(readyAccount) > 0) {
-//				return "accounts";
-//			} else {
-//				request.setAttribute("error", "The account couldn't be added!");
-//				return "accounts";
-//			}
-//		} catch (AccountException e) {
-//			e.printStackTrace();
-//			return "error";
-//		}
-//	}
+
+	@RequestMapping(value = "/add", method = RequestMethod.GET)
+	public String addAccount(Model model) {
+		Account account = new Account();
+		model.addAttribute("account", account);
+		List<String> currencies;
+		List<String> accountTypes;
+		try {
+			currencies = currencyDAO.getCurrenciesFromDB();
+			accountTypes = accountTypeDAO.getAccountTypesFromDB();
+			model.addAttribute("allCurrencies", currencies);
+			model.addAttribute("allTypes", accountTypes);
+			return "addNewAccount";
+		} catch (ClassNotFoundException | SQLException | CurrencyException | AccountException e) {
+			e.printStackTrace();
+
+			// tuka nqma da e home, vremenno
+			return "redirect:home";
+		}
+	}
+
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	public String addAccount(@ModelAttribute Account readyAccount, HttpServletRequest request, HttpSession session) {
+		try {
+			if (accountDao.addNewAccount(readyAccount, session) > 0) {
+				
+				//Check the redirect PROBLEM!!!  + accauntDAO.addAccount : dobavqm akaunta i v kolekciqta na usera, ne samo v bazata
+				return "redirect:./";
+			} else {
+				request.setAttribute("error", "The account couldn't be added!");
+				return "redirect:./";
+			}
+		} catch (AccountException e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
 }

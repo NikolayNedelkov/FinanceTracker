@@ -32,12 +32,7 @@ public class LoginServlet extends HttpServlet {
 				User user = dao.getUserByEmail(email);
 				session.setAttribute("user", user);
 				request.getRequestDispatcher("WEB-INF/views/jsp/home.jsp").forward(request, response);
-<<<<<<< HEAD
 
-				//response.sendRedirect("./home.jsp");
-=======
-//				response.sendRedirect("./home");
->>>>>>> af239ac416be446b0734f55f4d14283cf12430aa
 			} else {
 				request.getRequestDispatcher("WEB-INF/views/jsp/register.jsp").forward(request, response);
 			}

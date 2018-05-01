@@ -2,6 +2,7 @@
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<jsp:include page="menu.jsp"></jsp:include>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -31,5 +32,15 @@
 			<hr>
 		</c:forEach>
 	</c:if>
+	
+	<div class="card text-white bg-secondary mb-3"
+	style="max-width: 40rem;">
+	<div class="card-header"><a href="accounts/add" id="dash_btn">Add new Account</div>
+	<div class="card-body">
+	<h5 class="card-title">Primary card title</h5>
+	<p class="card-text">Some quick example text to build on the
+	card title and make up the bulk of the card's content.</p>
+	</div>
+	</div>
 </body>
 </html>

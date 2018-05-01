@@ -22,7 +22,7 @@
 	
 	
 		Account type:<form:select path="type">
-			<form:option value="-" label="--Select Currency" />
+			<%-- <form:option value="-" label="--Select Currency" /> --%>
 			<form:options items="${allTypes}" />
 		</form:select>
 
@@ -31,7 +31,7 @@
 		<!-- <button type="submit">Add</button> -->
 	</form:form>
 
-
+<%-- 
 
 	<form action="./addAccount" method="post">
 		<p>Account Name:</p>
@@ -63,6 +63,6 @@
 			<option value="Gift Card">Gift Card</option>
 		</select><br>
 		<button type="submit">Add</button>
-	</form>
+	</form> --%>
 </body>
 </html>

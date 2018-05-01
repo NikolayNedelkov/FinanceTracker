@@ -6,34 +6,32 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashSet;
 
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.financetracker.database.DBConnection;
 import com.financetracker.exceptions.AccountException;
+import com.financetracker.model.accountType.AccountTypeDAO;
+import com.financetracker.model.currencies.CurrencyDAO;
 import com.financetracker.model.users.User;
 
 @Component
 public class AccountDAO {
 
-	private static final String ALL_ACCOUNTS_FOR_USER = "SELECT id, name, balance, last_4_digits, percentage, payment_due_day, currencies_id1, account_type_id FROM financetracker.accounts where user_id=?;";
+	private static final String ALL_ACCOUNTS_FOR_USER = "SELECT a.id, a.name, a.balance, a.last_4_digits, a.percentage, a.payment_due_day, c.currency_type, acct.type FROM accounts a join currencies c on (a.currencies_id1=c.id) join account_types acct on (a.account_type_id=acct.id) where a.user_id=?;";
 	private static final String CHECK_IF_ACCOUNT_EXISTS = "SELECT * FROM accounts a JOIN users u ON (a.user_id=u.id) WHERE a.name =? and u.id=?";
 	private static final String ADD_ACCOUNT_SQL = "insert into accounts (name, balance, last_4_digits, currencies_id1, account_type_id, user_id) values (?, ?, ?, ?, ?, ?);";
-	private static AccountDAO instance = null;
+	@Autowired
+	private CurrencyDAO currencyDAO;
+	@Autowired
+	private AccountTypeDAO accountTypeDAO;
 
-	private AccountDAO() {
-	}
-
-	public static AccountDAO getInstance() throws SQLException, ClassNotFoundException {
-		if (instance == null) {
-			instance = new AccountDAO();
-		}
-		return instance;
-	}
-
-	public int addNewAccount(Account a) throws AccountException {
+	public int addNewAccount(Account a, HttpSession session) throws AccountException {
 		PreparedStatement pstmt;
 		try {
-			if (!accountExists(a)) {
+			if (!accountExists(a, session)) {
 				// first add the account to DB
 				pstmt = DBConnection.getInstance().getConnection().prepareStatement(ADD_ACCOUNT_SQL,
 						Statement.RETURN_GENERATED_KEYS);
@@ -41,9 +39,9 @@ public class AccountDAO {
 				pstmt.setDouble(2, a.getBalance());
 				// bez account nomer ne raboti!!
 				pstmt.setInt(3, Integer.parseInt(a.getLastFourDigits()));
-				pstmt.setInt(4, a.getCurrency());
-				pstmt.setInt(5, a.getType());
-				pstmt.setInt(6, a.getUser().getId());
+				pstmt.setInt(4, currencyDAO.getCurrencyId(a.getCurrency()));
+				pstmt.setInt(5, accountTypeDAO.getAccountTypeId(a.getType()));
+				pstmt.setInt(6, ((User)session.getAttribute("user")).getId());
 
 				pstmt.executeUpdate();
 
@@ -61,12 +59,16 @@ public class AccountDAO {
 		}
 	}
 
-	private boolean accountExists(Account a) throws AccountException {
+	private boolean accountExists(Account a, HttpSession session) throws AccountException {
+		if ((session == null) || (session.getAttribute("user") == null)) {
+			throw new AccountException();
+		}
 		PreparedStatement pstmt;
 		try {
 			pstmt = DBConnection.getInstance().getConnection().prepareStatement(CHECK_IF_ACCOUNT_EXISTS);
 			pstmt.setString(1, a.getAccountName());
-			pstmt.setInt(1, a.getUser().getId());
+			pstmt.setInt(2, ((User) session.getAttribute("user")).getId());
+			//pstmt.setInt(1, a.getUser().getId());
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
 				// return false;
@@ -89,9 +91,9 @@ public class AccountDAO {
 			pstmt.setInt(1, user.getId());
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
-				allAccounts.add(new Account(rs.getInt("id"), user, rs.getString("name"), rs.getDouble("balance"),
-						"" + rs.getInt("last_4_digits"), (byte) (rs.getInt("percentage")), rs.getInt("payment_due_day"),
-						rs.getInt("currencies_id1"), rs.getInt("account_type_id")));
+				allAccounts.add(new Account(rs.getInt("a.id"), user, rs.getString("a.name"), rs.getDouble("a.balance"),
+						"" + rs.getInt("a.last_4_digits"), (byte) (rs.getInt("a.percentage")),
+						rs.getInt("a.payment_due_day"), rs.getString("c.currency_type"), rs.getString("acct.type")));
 			}
 			return allAccounts;
 		} catch (ClassNotFoundException | SQLException e) {

@@ -17,17 +17,6 @@ import com.financetracker.exceptions.CurrencyException;
 public class CurrencyDAO {
 	private static final String GET_CURR_ID = "SELECT id from currencies where currency_type like ?;";
 	private static final String GET_ALL_CURRENCIES = "SELECT currency_type FROM currencies;";
-	private static CurrencyDAO instance = null;
-
-	private CurrencyDAO() {
-	}
-
-	public static CurrencyDAO getInstance() throws SQLException, ClassNotFoundException {
-		if (instance == null) {
-			instance = new CurrencyDAO();
-		}
-		return instance;
-	}
 
 	public int getCurrencyId(String currencyName) throws SQLException, ClassNotFoundException, AccountException {
 		PreparedStatement pst = DBConnection.getInstance().getConnection().prepareStatement(GET_CURR_ID,
@@ -45,9 +34,9 @@ public class CurrencyDAO {
 		List<String> allCurrencies = new ArrayList<String>();
 		Statement st = DBConnection.getInstance().getConnection().createStatement();
 		ResultSet rs = st.executeQuery(GET_ALL_CURRENCIES);
-		if (!rs.next()) {
-			throw new CurrencyException("No currencies in DB");
-		}
+//		if (!rs.next()) {
+//			throw new CurrencyException("No currencies in DB");
+//		}
 		while (rs.next()) {
 			allCurrencies.add((String) rs.getString("currency_type"));
 		}

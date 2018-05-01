@@ -18,17 +18,6 @@ import com.financetracker.model.currencies.CurrencyDAO;
 public class AccountTypeDAO {
 	private static final String GET_ACC_TYPE_ID = "SELECT id from account_types where type like ?;";
 	private static final String GET_ALL_ACCOUNTTYPES = "SELECT type FROM account_types;";
-	private static AccountTypeDAO instance = null;
-
-	private AccountTypeDAO() {
-	}
-
-	public static AccountTypeDAO getInstance() throws SQLException, ClassNotFoundException {
-		if (instance == null) {
-			instance = new AccountTypeDAO();
-		}
-		return instance;
-	}
 
 	public int getAccountTypeId(String typeName) throws SQLException, ClassNotFoundException, AccountException {
 		PreparedStatement pst = DBConnection.getInstance().getConnection().prepareStatement(GET_ACC_TYPE_ID,
@@ -46,11 +35,8 @@ public class AccountTypeDAO {
 		List<String> allAccountTypes = new ArrayList<String>();
 		Statement st = DBConnection.getInstance().getConnection().createStatement();
 		ResultSet rs = st.executeQuery(GET_ALL_ACCOUNTTYPES);
-		if (!rs.next()) {
-			throw new AccountException("No account types in DB");
-		}
 		while (rs.next()) {
-			allAccountTypes.add((String) rs.getString("account_types"));
+			allAccountTypes.add((String) rs.getString("type"));
 		}
 		return allAccountTypes;
 	}

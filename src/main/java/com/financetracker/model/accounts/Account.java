@@ -17,8 +17,8 @@ public class Account {
 	private String lastFourDigits;
 	private float percentage;
 	private int paymentDueDay;
-	private int currency;
-	private int type;
+	private String currency;
+	private String type;
 	// private List<Transaction> transactions;
 
 	// public Account() {
@@ -51,7 +51,7 @@ public class Account {
 	}
 
 	public Account(int account_id, User user, String accountName, double balance, String lastFourDigits,
-			float percentage, int paymentDueDay, int currency, int type) throws AccountException {
+			float percentage, int paymentDueDay, String currency, String type) throws AccountException {
 		this.account_id = account_id;
 		this.user = user;
 		setAccountName(accountName);
@@ -65,7 +65,7 @@ public class Account {
 	}
 
 	public Account(User user, String accountName, double balance, String lastFourDigits, float percentage,
-			int paymentDueDay, int currency, int type) throws AccountException {
+			int paymentDueDay, String currency, String type) throws AccountException {
 		setAccountName(accountName);
 		setType(type);
 		setUser(user);
@@ -142,7 +142,7 @@ public class Account {
 	// return currency;
 	// }
 
-	public int getCurrency() {
+	public String getCurrency() {
 		return currency;
 	}
 
@@ -153,19 +153,19 @@ public class Account {
 	// throw new AccountException();
 	// }
 
-	public void setCurrency(int currency) throws AccountException {
-		if (currency > 0)
+	public void setCurrency(String currency) throws AccountException {
+		if ((currency != null) && (currency.trim().length() > 0))
 			this.currency = currency;
 		else
 			throw new AccountException();
 	}
 
-	public int getType() {
+	public String getType() {
 		return type;
 	}
 
-	public void setType(int type) throws AccountException {
-		if (type > 0) {
+	public void setType(String type) throws AccountException {
+		if ((type != null) && (type.trim().length() > 0)) {
 			this.type = type;
 		} else
 			throw new AccountException("Not a valid accounttype");
