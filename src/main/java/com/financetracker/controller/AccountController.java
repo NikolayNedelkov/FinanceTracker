@@ -80,10 +80,10 @@ public class AccountController {
 			if (accountDao.addNewAccount(readyAccount, session) > 0) {
 				
 				//Check the redirect PROBLEM!!!  + accauntDAO.addAccount : dobavqm akaunta i v kolekciqta na usera, ne samo v bazata
-				return "redirect:./";
+				return "redirect:/accounts";
 			} else {
 				request.setAttribute("error", "The account couldn't be added!");
-				return "redirect:./";
+				return "redirect:/accounts";
 			}
 		} catch (AccountException e) {
 			e.printStackTrace();

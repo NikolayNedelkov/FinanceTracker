@@ -67,7 +67,7 @@
 						<li><a href="profile.jsp" id="profile_btn"><i
 								class="fa fa-fw fa-location-arrow"></i>
 								<div class="inline">My profile</div></a></li>
-						<li><a href="logout.jsp" id="logoutbtn"><i
+						<li><a href="./logout" id="logoutbtn"><i
 								class="fa fa-fw fa-power-off"></i>
 								<div class="inline">Log out</div></a></li>
 					</ul></li>
