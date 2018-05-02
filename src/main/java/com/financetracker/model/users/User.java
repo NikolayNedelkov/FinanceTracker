@@ -1,16 +1,18 @@
 package com.financetracker.model.users;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+
+import org.springframework.context.annotation.Scope;
 
 import com.financetracker.exceptions.UserException;
 import com.financetracker.model.accounts.Account;
 import com.financetracker.model.budget.Budget;
 
+
+@Scope("session")
 public class User {
 	private int id;
 	private String firstName;
@@ -37,6 +39,14 @@ public class User {
 		this(email, password);
 		this.id = id;
 		this.lastLoggedIn = lastLoggedIn;
+	}
+	
+	
+
+	public User(int id, String firstName, String lastName, String email, String password, LocalDateTime lastLoggedIn) {
+		this(id, email, password, lastLoggedIn);
+		this.firstName = firstName;
+		this.lastName = lastName;
 	}
 
 	public int getId() {

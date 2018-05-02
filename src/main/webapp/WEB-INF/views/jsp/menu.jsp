@@ -1,6 +1,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <head>
 <meta charset="utf-8">
@@ -60,7 +61,10 @@
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown"><i class="fa fa-user"></i>
 						<div class="inline" id="loginstatus">
-							Hello,<%= request.getSession().getAttribute("firstName")%> <%= request.getSession().getAttribute("lastName")%></div> <b class="caret"></b></a>
+							Hello,
+							<c:out value="${sessionScope.user.firstName }"></c:out>
+							<c:out value="${sessionScope.user.lastName }"></c:out>
+						</div> <b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<li><a href="profile.jsp" id="profile_btn"><i
 								class="fa fa-fw fa-location-arrow"></i>
@@ -75,14 +79,11 @@
 			<div class="collapse navbar-collapse navbar-ex1-collapse">
 				<ul class="nav navbar-nav side-nav">
 
-					<li><a href="home" id="dash_btn"><i
-							class="fas fa-columns"></i>
-							<div class="inline">My Dashboard</div></a>
-							
-							 <a href="accounts"	id="expense_btn"><i class="fas fa-credit-card"></i>
-							<div class="inline">My Accounts</div></a> 
-							
-							<a href="transactions"id="expense_btn"><i class="fas fa-exchange-alt"></i>
+					<li><a href="home" id="dash_btn"><i class="fas fa-columns"></i>
+							<div class="inline">My Dashboard</div></a> <a href="accounts"
+						id="expense_btn"><i class="fas fa-credit-card"></i>
+							<div class="inline">My Accounts</div></a> <a href="transactions"
+						id="expense_btn"><i class="fas fa-exchange-alt"></i>
 							<div class="inline">My Transactions</div></a> <a
 						href="plannedpayments.jsp" id="income_btn"><i
 							class="fas fa-history"></i>

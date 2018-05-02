@@ -9,9 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.financetracker.exceptions.UserException;
 import com.financetracker.model.users.User;
@@ -29,6 +31,7 @@ public class UserController {
 		return "signup-login";
 	}
 	
+	
 	@RequestMapping(method = RequestMethod.POST, value = "/login")
 	private String login(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		String email = request.getParameter("email");
@@ -36,9 +39,10 @@ public class UserController {
 
 		try {
 			if (userDAO.login(email, password)) {
-				session = request.getSession();
+				
 				User user = userDAO.getUserByEmail(email);
 				session.setAttribute("user", user);
+
 				return "redirect:/home";
 			} else {
 				return "login";

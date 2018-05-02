@@ -13,7 +13,7 @@ import com.financetracker.exceptions.UserException;
 
 @Component
 public class UserDAO implements IUserDAO {
-	private static final String GET_USER_BY_EMAIL = "SELECT id, password, last_loged_in FROM users where email like ?;";
+	private static final String GET_USER_BY_EMAIL = "SELECT first_name, last_name, id, password, last_loged_in FROM users where email like ?;";
 	private static final String LOGIN_USER_SQL = "SELECT * FROM users WHERE email=? and password=sha1(?)";
 	private static final String ADD_USER_SQL = "INSERT INTO users(first_name, last_name, email, password) VALUES (?, ?, ?, sha1(?));";
 	private static final String CHECK_USER_IF_EXISTS = "SELECT * FROM users where email =?";
@@ -106,10 +106,12 @@ public class UserDAO implements IUserDAO {
 
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
+				String firstName = rs.getString("first_name");
+				String lastName = rs.getString("last_name");
 				int id = rs.getInt("id");
 				String password = rs.getString("password");
 				LocalDateTime lastLoggedIn = rs.getTimestamp("last_loged_in").toLocalDateTime();
-				User user = new User(id, email, password, lastLoggedIn);
+				User user = new User(id, firstName, lastName, email, password, lastLoggedIn);
 				pstmt.close();
 				return user;
 			} else {
