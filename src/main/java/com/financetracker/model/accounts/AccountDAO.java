@@ -20,6 +20,8 @@ import com.financetracker.model.users.User;
 @Component
 public class AccountDAO {
 
+	private static final String UPDATE_ACCOUNT = "update accounts set name=?, balance=?, last_4_digits=?, currencies_id1=?, account_type_id=? where id=?;";
+	private static final String GET_ACCOUNT_BY_ID = "SELECT a.id, a.name, a.balance, a.last_4_digits, a.percentage, a.payment_due_day, c.currency_type, acct.type FROM accounts a join currencies c on (a.currencies_id1=c.id) join account_types acct on (a.account_type_id=acct.id) where a.id=?;";
 	private static final String ALL_ACCOUNTS_FOR_USER = "SELECT a.id, a.name, a.balance, a.last_4_digits, a.percentage, a.payment_due_day, c.currency_type, acct.type FROM accounts a join currencies c on (a.currencies_id1=c.id) join account_types acct on (a.account_type_id=acct.id) where a.user_id=?;";
 	private static final String CHECK_IF_ACCOUNT_EXISTS = "SELECT * FROM accounts a JOIN users u ON (a.user_id=u.id) WHERE a.name =? and u.id=?";
 	private static final String ADD_ACCOUNT_SQL = "insert into accounts (name, balance, last_4_digits, currencies_id1, account_type_id, user_id) values (?, ?, ?, ?, ?, ?);";
@@ -41,7 +43,7 @@ public class AccountDAO {
 				pstmt.setInt(3, Integer.parseInt(a.getLastFourDigits()));
 				pstmt.setInt(4, currencyDAO.getCurrencyId(a.getCurrency()));
 				pstmt.setInt(5, accountTypeDAO.getAccountTypeId(a.getType()));
-				pstmt.setInt(6, ((User)session.getAttribute("user")).getId());
+				pstmt.setInt(6, ((User) session.getAttribute("user")).getId());
 
 				pstmt.executeUpdate();
 
@@ -68,13 +70,10 @@ public class AccountDAO {
 			pstmt = DBConnection.getInstance().getConnection().prepareStatement(CHECK_IF_ACCOUNT_EXISTS);
 			pstmt.setString(1, a.getAccountName());
 			pstmt.setInt(2, ((User) session.getAttribute("user")).getId());
-			//pstmt.setInt(1, a.getUser().getId());
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
-				// return false;
 				return true;
 			} else {
-				// return true;
 				return false;
 			}
 		} catch (ClassNotFoundException | SQLException e) {
@@ -101,6 +100,52 @@ public class AccountDAO {
 			throw new AccountException("Account can't be added, database issue", e);
 		}
 	}
+
+	// Validaciq posle
+	public Account getAccountById(int id) throws AccountException {
+		try {
+			PreparedStatement pst = DBConnection.getInstance().getConnection().prepareStatement(GET_ACCOUNT_BY_ID,
+					Statement.RETURN_GENERATED_KEYS);
+			pst.setInt(1, id);
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				Account account = new Account(rs.getInt("a.id"), rs.getString("a.name"), rs.getDouble("a.balance"),
+						"" + rs.getInt("a.last_4_digits"), (byte) (rs.getInt("a.percentage")),
+						rs.getInt("a.payment_due_day"), rs.getString("c.currency_type"), rs.getString("acct.type"));
+				return account;
+			} else
+				throw new AccountException("Couldn't retrieve an account with id " + id);
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new AccountException("DB-issue!");
+		}
+	}
+
+	public void updateAccount(Account updated) {
+		try {
+			Account notUpdated = this.getAccountById(updated.getAccount_id());
+			AccountComparator comparator = new AccountComparator();
+			if (comparator.compare(notUpdated, updated) == 0) {
+				return;
+			}
+			PreparedStatement pst = DBConnection.getInstance().getConnection().prepareStatement(UPDATE_ACCOUNT);
+			pst.setString(1, updated.getAccountName());
+			pst.setDouble(2, updated.getBalance());
+			pst.setInt(3, Integer.parseInt(updated.getLastFourDigits()));
+			pst.setInt(4, currencyDAO.getCurrencyId(updated.getCurrency()));
+			pst.setInt(5, accountTypeDAO.getAccountTypeId(updated.getType()));
+			pst.setInt(6, updated.getAccount_id());
+			
+			pst.executeUpdate();
+			DBConnection.getInstance().getConnection().commit();
+			ResultSet resultSet = pst.getGeneratedKeys();
+			
+			//---------------------
+			resultSet.next();
+		} catch (AccountException | ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
 	// public boolean deleteAccount(Account a) {
 	// (rs.getInt("id"), rs.getString("name"), rs.getBigDecimal("balance"), balance,
 	// currency, type));

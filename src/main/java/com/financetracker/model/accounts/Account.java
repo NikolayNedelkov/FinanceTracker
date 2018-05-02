@@ -8,7 +8,7 @@ import com.financetracker.exceptions.AccountException;
 import com.financetracker.model.transactions.Transaction;
 import com.financetracker.model.users.User;
 
-public class Account {
+public class Account{
 	private int account_id;
 	private User user;
 	private String accountName;
@@ -69,6 +69,18 @@ public class Account {
 		setAccountName(accountName);
 		setType(type);
 		setUser(user);
+		this.balance = balance;
+		setCurrency(currency);
+		this.lastFourDigits = lastFourDigits;
+		this.percentage = percentage;
+		this.paymentDueDay = paymentDueDay;
+	}
+
+	public Account(int account_id, String accountName, double balance, String lastFourDigits, float percentage,
+			int paymentDueDay, String currency, String type) throws AccountException {
+		this.account_id = account_id;
+		setAccountName(accountName);
+		setType(type);
 		this.balance = balance;
 		setCurrency(currency);
 		this.lastFourDigits = lastFourDigits;
@@ -145,7 +157,9 @@ public class Account {
 	public String getCurrency() {
 		return currency;
 	}
-
+	
+	
+	
 	// public void setCurrency(Currency currency) throws AccountException {
 	// if (currency != null)
 	// this.currency = currency;
