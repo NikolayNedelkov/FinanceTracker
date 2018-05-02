@@ -1,5 +1,6 @@
 package com.financetracker.model.accounts;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -120,29 +121,32 @@ public class AccountDAO {
 		}
 	}
 
-	public void updateAccount(Account updated) {
+	public void updateAccount(Account updated) throws AccountException {
 		try {
 			Account notUpdated = this.getAccountById(updated.getAccount_id());
 			AccountComparator comparator = new AccountComparator();
-			if (comparator.compare(notUpdated, updated) == 0) {
-				return;
-			}
-			PreparedStatement pst = DBConnection.getInstance().getConnection().prepareStatement(UPDATE_ACCOUNT);
+//			if (comparator.compare(notUpdated, updated) == 0) {
+//				return;
+//			}
+			Connection connection=DBConnection.getInstance().getConnection();
+			connection.setAutoCommit(false);
+			PreparedStatement pst = connection.prepareStatement(UPDATE_ACCOUNT, Statement.RETURN_GENERATED_KEYS);
 			pst.setString(1, updated.getAccountName());
 			pst.setDouble(2, updated.getBalance());
 			pst.setInt(3, Integer.parseInt(updated.getLastFourDigits()));
 			pst.setInt(4, currencyDAO.getCurrencyId(updated.getCurrency()));
 			pst.setInt(5, accountTypeDAO.getAccountTypeId(updated.getType()));
-			pst.setInt(6, updated.getAccount_id());
+			pst.setInt(6, notUpdated.getAccount_id());
 			
 			pst.executeUpdate();
-			DBConnection.getInstance().getConnection().commit();
-			ResultSet resultSet = pst.getGeneratedKeys();
+			connection.commit();
+			connection.setAutoCommit(true);
 			
-			//---------------------
-			resultSet.next();
+//			ResultSet resultSet = pst.getGeneratedKeys();
+//			return resultSet.next();
 		} catch (AccountException | ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
+			throw new AccountException("Could not update the account");
 		}
 	}
 
