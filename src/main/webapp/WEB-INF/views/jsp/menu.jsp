@@ -60,12 +60,12 @@
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown"><i class="fa fa-user"></i>
 						<div class="inline" id="loginstatus">
-							Hello,<%= request.getSession().getAttribute("email")%></div> <b class="caret"></b></a>
+							Hello,<%= request.getSession().getAttribute("firstName")%> <%= request.getSession().getAttribute("lastName")%></div> <b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<li><a href="profile.jsp" id="profile_btn"><i
 								class="fa fa-fw fa-location-arrow"></i>
 								<div class="inline">My profile</div></a></li>
-						<li><a href="./logout" id="logoutbtn"><i
+						<li><a href="logout" id="logoutbtn"><i
 								class="fa fa-fw fa-power-off"></i>
 								<div class="inline">Log out</div></a></li>
 					</ul></li>

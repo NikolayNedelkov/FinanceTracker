@@ -17,16 +17,25 @@ public class UserDAO implements IUserDAO {
 	private static final String LOGIN_USER_SQL = "SELECT * FROM users WHERE email=? and password=sha1(?)";
 	private static final String ADD_USER_SQL = "INSERT INTO users(first_name, last_name, email, password) VALUES (?, ?, ?, sha1(?));";
 	private static final String CHECK_USER_IF_EXISTS = "SELECT * FROM users where email =?";
+	private static final String UPDATE_USER_LOG_IN_TIME = "UPDATE users set last_loged_in=current_timestamp WHERE email=? and password=sha1(?);";
 
 	@Override
-	public boolean login(String email, String password) throws UserException {
+	public boolean login(String email, String password) throws UserException, ClassNotFoundException, SQLException {
 		PreparedStatement pstmt;
 		try {
+			//user check login
+			DBConnection.getInstance().getConnection().setAutoCommit(false);
 			pstmt = DBConnection.getInstance().getConnection().prepareStatement(LOGIN_USER_SQL);
 			pstmt.setString(1, email);
 			pstmt.setString(2, password);
-
 			ResultSet resultSet = pstmt.executeQuery();
+			//update user last log in
+			pstmt = DBConnection.getInstance().getConnection().prepareStatement(UPDATE_USER_LOG_IN_TIME);
+			pstmt.setString(1, email);
+			pstmt.setString(2, password);
+			DBConnection.getInstance().getConnection().commit();
+			int rs = pstmt.executeUpdate();
+
 
 			if (resultSet.next()) {
 				return true;
@@ -34,8 +43,11 @@ public class UserDAO implements IUserDAO {
 				return false;
 			}
 		} catch (SQLException | ClassNotFoundException e) {
+			DBConnection.getInstance().getConnection().rollback();
 			e.printStackTrace();
 			throw new UserException("Can't connect to Database !", e);
+		} finally {
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		}
 	}
 
