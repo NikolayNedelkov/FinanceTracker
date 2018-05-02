@@ -16,6 +16,10 @@ body {
   font-size: 20px;
 }
 
+ul li {
+	list-style-type: none;
+}
+
 .inline {
   display: inline-block;
   margin-left: 5px;

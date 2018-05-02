@@ -6,23 +6,42 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.stereotype.Component;
 
 import com.financetracker.database.DBConnection;
 import com.financetracker.exceptions.TransactionException;
+import com.financetracker.model.accounts.Account;
 
+@Component
 public class TransactionDAO {
 	private static final String DEPOSIT_CATEGORIES_SQL = "SELECT categories.name FROM categories WHERE categories.is_income = 1";
 	private static final String EXPENSE_CATEGORIES_SQL = "SELECT categories.name FROM categories WHERE categories.is_income = 0";
 	private static final String ADD_TRANSACTION_SQL = "INSERT INTO transactions VALUES (null,?,?,?,?,?,?)";
 	private static final String REMOVE_TRANSACTION_SQL = "DELETE FROM transactions WHERE transactions.id=?";
-	private static TransactionDAO transaction = null;
+	private static final String GET_ALL_TRANSACTIONS_SQL = "SELECT `payee/payer`,amount, date_paid,accounts_id,categories_id,is_income FROM transactions where accounts_id=?";
 
-	public static synchronized TransactionDAO getInstance() {
-		if (transaction == null) {
-			TransactionDAO.transaction = new TransactionDAO();
+	public List<Transaction> getAllTransactions(int accountID) throws TransactionException, SQLException {
+		try {
+			//TODO:DBConnection should be component with autowired annotation
+			Connection connection = DBConnection.getInstance().getConnection();
+			PreparedStatement statement = connection.prepareStatement(GET_ALL_TRANSACTIONS_SQL);
+			statement.setInt(1, accountID);
+			ResultSet resultSet = statement.executeQuery();
+			List<Transaction> allTransactions = new ArrayList<Transaction>();
+			while (resultSet.next()) {
+				allTransactions.add(new Transaction(resultSet.getString("payee/payer"),resultSet.getDouble("amount"),
+						(resultSet.getTimestamp("date_paid").toLocalDateTime().toLocalDate()),accountID,
+						resultSet.getInt("categories_id"),resultSet.getBoolean("is_income")));
+			}
+			return allTransactions;
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			throw new TransactionException("Cannot get transactions, please try again later!", e);
 		}
-		return TransactionDAO.transaction;
+
 	}
 
 	public int addTransaction(Transaction transaction) throws TransactionException, SQLException {
@@ -38,13 +57,13 @@ public class TransactionDAO {
 			pstmt.setTimestamp(3, Timestamp.valueOf(transaction.getDate().atStartOfDay()));
 			pstmt.setInt(4, transaction.getAccountID());
 			pstmt.setInt(5, transaction.getCategory());
-			pstmt.setBoolean(6, transaction.isIncome());
+			pstmt.setBoolean(6, transaction.getIsIncome());
 			pstmt.executeUpdate();
 			ResultSet resultSet = pstmt.getGeneratedKeys();
 			resultSet.next();
 			Statement statement = connection.createStatement();
 			double amount = transaction.getAmount();
-			if (!transaction.isIncome()) {
+			if (!transaction.getIsIncome()) {
 				amount *= -1;
 			}
 			statement.executeUpdate(
@@ -76,14 +95,14 @@ public class TransactionDAO {
 	}
 
 	public List<String> getExpenseCategories() throws SQLException, ClassNotFoundException {
-		Connection connection =  DBConnection.getInstance().getConnection();
+		Connection connection = DBConnection.getInstance().getConnection();
 		Statement statement = connection.createStatement();
 		List<String> expenseCategories = (List<String>) statement.executeQuery(EXPENSE_CATEGORIES_SQL);
 		return expenseCategories;
 	}
-	
+
 	public List<String> getDepositCategories() throws SQLException, ClassNotFoundException {
-		Connection connection =  DBConnection.getInstance().getConnection();
+		Connection connection = DBConnection.getInstance().getConnection();
 		Statement statement = connection.createStatement();
 		List<String> depositCategories = (List<String>) statement.executeQuery(DEPOSIT_CATEGORIES_SQL);
 		return depositCategories;

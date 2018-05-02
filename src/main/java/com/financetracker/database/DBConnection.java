@@ -4,12 +4,15 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class DBConnection {
 	private final Connection connection;
 	
 	private static final String DB_HOST = "127.0.0.1";
 	private static final String DB_USER = "root";
-	private static final String DB_PASS = "ggYTJR7Q!";
+	private static final String DB_PASS = "s0611dd2";
 	private static final String DB_PORT = "3306";
 	private static final String DB_SCHEMA = "financetracker";
 

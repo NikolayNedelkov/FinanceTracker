@@ -36,7 +36,7 @@ public class AccountController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String addAccounts(Model model, HttpSession session, HttpServletRequest request) {
 		if ((session == null) || (session.getAttribute("user") == null)) {
-			return "login";
+			return "signup-login";
 		}
 		try {
 			User loggedUser = (User) session.getAttribute("user");
