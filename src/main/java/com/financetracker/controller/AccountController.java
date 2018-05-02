@@ -106,16 +106,20 @@ public class AccountController {
 		}
 	}
 
-	
 	// ne updateva v bazata
 	@RequestMapping(value = "/acc/{account_id}", method = RequestMethod.POST)
 	public String editAccount(@ModelAttribute Account updatedAccount, @PathVariable("account_id") Integer accountId) {
 		try {
+			// System.out.println(updatedAccount.getAccount_id());
+			// AccountComparator comparator = new AccountComparator();
+			// System.out.println(comparator.compare(accountDao.getAccountById(updatedAccount.getAccount_id()),
+			// updatedAccount) == 0);
+			//!!!!!!!! tuka e greshkata, vrushta mi stariq akaunt v bazata
+//			Account updated = accountDao.getAccountById(updatedAccount.getAccount_id());
 //			System.out.println(updatedAccount.getAccount_id());
-//			AccountComparator comparator = new AccountComparator();
-//			System.out.println(comparator.compare(accountDao.getAccountById(updatedAccount.getAccount_id()), updatedAccount) == 0);
-			accountDao.getAccountById(updatedAccount.getAccount_id());
+			accountDao.updateAccount(updatedAccount);
 			return "redirect:/accounts";
+
 		} catch (AccountException e) {
 			e.printStackTrace();
 			return "error";
