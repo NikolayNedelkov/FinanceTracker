@@ -17,7 +17,7 @@ public class Transaction {
 		
 	}
 
-	public Transaction(String payee, double amount,LocalDate date, int account, boolean isIncome, int category)
+	public Transaction(String payee, double amount,LocalDate date, int account, int category,boolean isIncome)
 			throws TransactionException {
 		setPayee(payee);
 		setAmount(amount);
@@ -96,7 +96,7 @@ public class Transaction {
 
 	}
 
-	public boolean isIncome() {
+	public boolean getIsIncome() {
 		return isIncome;
 	}
 

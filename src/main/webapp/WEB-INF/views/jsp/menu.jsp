@@ -60,9 +60,7 @@
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
 					data-toggle="dropdown"><i class="fa fa-user"></i>
 						<div class="inline" id="loginstatus">
-							Hello,
-							<%=request.getSession().getAttribute("email")%></div> <b
-						class="caret"></b></a>
+							Hello,<%= request.getSession().getAttribute("email")%></div> <b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<li><a href="profile.jsp" id="profile_btn"><i
 								class="fa fa-fw fa-location-arrow"></i>
@@ -77,12 +75,14 @@
 			<div class="collapse navbar-collapse navbar-ex1-collapse">
 				<ul class="nav navbar-nav side-nav">
 
-					<li><a href="home.jsp" id="dash_btn"><i
+					<li><a href="home" id="dash_btn"><i
 							class="fas fa-columns"></i>
-							<div class="inline">My Dashboard</div></a> <a href="accounts"
-						id="expense_btn"><i class="fas fa-credit-card"></i>
-							<div class="inline">My Accounts</div></a> <a href="transactions.jsp"
-						id="expense_btn"><i class="fas fa-exchange-alt"></i>
+							<div class="inline">My Dashboard</div></a>
+							
+							 <a href="accounts"	id="expense_btn"><i class="fas fa-credit-card"></i>
+							<div class="inline">My Accounts</div></a> 
+							
+							<a href="transactions"id="expense_btn"><i class="fas fa-exchange-alt"></i>
 							<div class="inline">My Transactions</div></a> <a
 						href="plannedpayments.jsp" id="income_btn"><i
 							class="fas fa-history"></i>
@@ -106,9 +106,12 @@
 		<!-- Bootstrap Core JavaScript -->
 		<script src="js/bootstrap.min.js"></script>
 
-		<!-- JavaScript -->
-		<script src="js/budget.js"></script>
+		<!-- JavaScript 
 
+		<script src="js/budget.js" type="text/javascript"></script>
+		<script src="js/Chart.bundle.js" type="text/javascript"></script>
+		<script src="js/budget.js" type="text/javascript"></script>
+-->
 		<script
 			src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.2.0/list.min.js"></script>
 </body>

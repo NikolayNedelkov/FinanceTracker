@@ -70,7 +70,7 @@
             <label>
               Email Address<span class="req">*</span>
             </label>
-            <input type="email"required autocomplete="off" name="email"/>
+            <input type="email"required autocomplete="on" name="email"/>
            </div>
           
           <div class="field-wrap">
