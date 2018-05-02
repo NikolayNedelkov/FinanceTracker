@@ -154,6 +154,7 @@
 							<table class="table table-hover" class="col-lg-12 itemlog list">
 								<thead>
 									<tr>
+									<th scope="col"></th>
 										<th scope="col">Balance</th>
 										<th scope="col">Currency</th>
 										<th scope="col">Accounttype</th>
