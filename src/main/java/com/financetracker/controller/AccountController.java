@@ -38,13 +38,13 @@ public class AccountController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String addAccounts(Model model, HttpSession session, HttpServletRequest request) {
 		if ((session == null) || (session.getAttribute("user") == null)) {
-			return "redirect:/signup-login";
+			return "redirect:/";
 		}
 		try {
 			User loggedUser = (User) session.getAttribute("user");
 			HashSet<Account> usersAccounts = accountDao.getAllAccountsForUser(loggedUser);
 			loggedUser.setAccounts(usersAccounts);
-			return "redirect:/accounts";
+			return "accounts";
 
 		} catch (AccountException e) {
 			e.printStackTrace();
@@ -70,7 +70,7 @@ public class AccountController {
 			e.printStackTrace();
 
 			// tuka nqma da e home, vremenno
-			return "redirect:/home";
+			return "redirect:home";
 		}
 	}
 
@@ -99,7 +99,7 @@ public class AccountController {
 			List<String> accountTypes = accountTypeDAO.getAccountTypesFromDB();
 			model.addAttribute("allCurrencies", currencies);
 			model.addAttribute("allTypes", accountTypes);
-			return "redirect:/account";
+			return "account";
 		} catch (AccountException | ClassNotFoundException | SQLException | CurrencyException e) {
 			e.printStackTrace();
 			return "error";

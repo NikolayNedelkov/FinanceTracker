@@ -3,13 +3,14 @@ package com.financetracker.model.transactions;
 import java.time.LocalDate;
 
 import com.financetracker.exceptions.TransactionException;
+import com.financetracker.model.accounts.Account;
 
 public class Transaction {
 	private int id;
 	private String payee;
 	private double amount;
 	private LocalDate date;
-	private int accountID;
+	private Account account;
 	private boolean isIncome;
 	private int category;
 	
@@ -17,7 +18,7 @@ public class Transaction {
 		
 	}
 
-	public Transaction(String payee, double amount,LocalDate date, int account, int category,boolean isIncome)
+	public Transaction(String payee, double amount,LocalDate date, Account account, int category,boolean isIncome)
 			throws TransactionException {
 		setPayee(payee);
 		setAmount(amount);
@@ -83,13 +84,13 @@ public class Transaction {
 		}
 	}
 
-	public int getAccountID() {
-		return accountID;
+	public Account getAccount() {
+		return account;
 	}
 
-	public void setAccount(int accountID) throws TransactionException {
-		if (accountID > 0) {
-			this.accountID = accountID;
+	public void setAccount(Account account) throws TransactionException {
+		if (account != null) {
+			this.account = account;
 		}else {
 			throw new TransactionException("Invalid account!");
 		}

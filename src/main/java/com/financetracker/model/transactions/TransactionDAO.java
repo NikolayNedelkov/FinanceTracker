@@ -9,11 +9,14 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.financetracker.database.DBConnection;
+import com.financetracker.exceptions.AccountException;
 import com.financetracker.exceptions.TransactionException;
 import com.financetracker.model.accounts.Account;
+import com.financetracker.model.accounts.AccountDAO;
 
 @Component
 public class TransactionDAO {
@@ -23,17 +26,20 @@ public class TransactionDAO {
 	private static final String REMOVE_TRANSACTION_SQL = "DELETE FROM transactions WHERE transactions.id=?";
 	private static final String GET_ALL_TRANSACTIONS_SQL = "SELECT `payee/payer`,amount, date_paid,accounts_id,categories_id,is_income FROM transactions where accounts_id=?";
 
-	public List<Transaction> getAllTransactions(int accountID) throws TransactionException, SQLException {
+	@Autowired
+	private AccountDAO accountDAO;
+	
+	public List<Transaction> getAllTransactions(Account account) throws TransactionException, SQLException, AccountException {
 		try {
 			//TODO:DBConnection should be component with autowired annotation
 			Connection connection = DBConnection.getInstance().getConnection();
 			PreparedStatement statement = connection.prepareStatement(GET_ALL_TRANSACTIONS_SQL);
-			statement.setInt(1, accountID);
+			statement.setInt(1, account.getAccount_id());
 			ResultSet resultSet = statement.executeQuery();
 			List<Transaction> allTransactions = new ArrayList<Transaction>();
 			while (resultSet.next()) {
 				allTransactions.add(new Transaction(resultSet.getString("payee/payer"),resultSet.getDouble("amount"),
-						(resultSet.getTimestamp("date_paid").toLocalDateTime().toLocalDate()),accountID,
+						(resultSet.getTimestamp("date_paid").toLocalDateTime().toLocalDate()),accountDAO.getAccountById(resultSet.getInt("accounts_id")),
 						resultSet.getInt("categories_id"),resultSet.getBoolean("is_income")));
 			}
 			return allTransactions;
@@ -55,7 +61,7 @@ public class TransactionDAO {
 			pstmt.setString(1, transaction.getPayee());
 			pstmt.setDouble(2, transaction.getAmount());
 			pstmt.setTimestamp(3, Timestamp.valueOf(transaction.getDate().atStartOfDay()));
-			pstmt.setInt(4, transaction.getAccountID());
+			pstmt.setInt(4, transaction.getAccount().getAccount_id());
 			pstmt.setInt(5, transaction.getCategory());
 			pstmt.setBoolean(6, transaction.getIsIncome());
 			pstmt.executeUpdate();
@@ -67,7 +73,7 @@ public class TransactionDAO {
 				amount *= -1;
 			}
 			statement.executeUpdate(
-					"UPDATE accounts SET balance=balance + " + amount + "WHERE id=" + transaction.getAccountID());
+					"UPDATE accounts SET balance=balance + " + amount + "WHERE id=" + transaction.getAccount().getAccount_id());
 			return resultSet.getInt(1);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();

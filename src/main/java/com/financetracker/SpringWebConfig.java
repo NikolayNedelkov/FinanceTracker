@@ -21,28 +21,34 @@ import org.springframework.web.servlet.view.JstlView;
 @EnableWebMvc
 @ComponentScan("com.financetracker")
 public class SpringWebConfig extends WebMvcConfigurerAdapter {
-	
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    	registry.addResourceHandler("/uploaded/**").addResourceLocations("file:///C:\\uploaded\\");
-    	registry.addResourceHandler("/images/**").addResourceLocations("/static/images/");
-        registry.addResourceHandler("/css/**").addResourceLocations("/static/css/");
-        registry.addResourceHandler("/js/**").addResourceLocations("/static/js/");
-        registry.addResourceHandler("/pdfs/**").addResourceLocations("/static/pdf/");
-        registry.addResourceHandler("/fonts/**").addResourceLocations("/static/fonts/font-awesome-4.7.0/css");
-        registry.addResourceHandler("/bootstrap/**").addResourceLocations("/static/vendor/bootstrap/css");
-    }
-	
+
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/uploaded/**").addResourceLocations("file:///C:\\uploaded\\");
+		registry.addResourceHandler("/images/**").addResourceLocations("FinalProject/static/images/");
+		registry.addResourceHandler("/css/**").addResourceLocations("/static/css/");
+		registry.addResourceHandler("/accounts/css/**").addResourceLocations("/static/css/");
+		registry.addResourceHandler("/accounts/js/**").addResourceLocations("/static/js/");
+		
+		registry.addResourceHandler("/accounts/acc/css/**").addResourceLocations("/static/css/");
+		registry.addResourceHandler("/accounts/acc/js/**").addResourceLocations("/static/js/");
+		
+		registry.addResourceHandler("/js/**").addResourceLocations("/static/js/");
+		registry.addResourceHandler("/pdfs/**").addResourceLocations("/static/pdf/");
+		registry.addResourceHandler("/fonts/**").addResourceLocations("/static/fonts/font-awesome-4.7.0/css");
+		registry.addResourceHandler("/bootstrap/**").addResourceLocations("/static/vendor/bootstrap/css");
+	}
+
 	@Bean
 	public InternalResourceViewResolver getInternalResourceViewResolver() {
 		InternalResourceViewResolver resolver = new InternalResourceViewResolver();
 		resolver.setViewClass(JstlView.class);
 		resolver.setPrefix("/WEB-INF/views/jsp/");
 		resolver.setSuffix(".jsp");
-		
+
 		return resolver;
 	}
-	
+
 	// localization configuration
 	@Bean
 	public MessageSource messageSource() {
@@ -50,19 +56,19 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
 		messageSource.setBasename("messages");
 		return messageSource;
 	}
-	
+
 	@Bean
 	public LocaleResolver localeResolver() {
 		SessionLocaleResolver resolver = new SessionLocaleResolver();
 		resolver.setDefaultLocale(Locale.ENGLISH);
 		return resolver;
 	}
-	
+
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		LocaleChangeInterceptor changeInterceptor = new LocaleChangeInterceptor();
 		changeInterceptor.setParamName("language");
 		registry.addInterceptor(changeInterceptor);
 	}
-	
+
 }
