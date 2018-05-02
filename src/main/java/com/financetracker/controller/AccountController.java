@@ -38,13 +38,13 @@ public class AccountController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String addAccounts(Model model, HttpSession session, HttpServletRequest request) {
 		if ((session == null) || (session.getAttribute("user") == null)) {
-			return "signup-login";
+			return "redirect:/signup-login";
 		}
 		try {
 			User loggedUser = (User) session.getAttribute("user");
 			HashSet<Account> usersAccounts = accountDao.getAllAccountsForUser(loggedUser);
 			loggedUser.setAccounts(usersAccounts);
-			return "accounts";
+			return "redirect:/accounts";
 
 		} catch (AccountException e) {
 			e.printStackTrace();
@@ -70,7 +70,7 @@ public class AccountController {
 			e.printStackTrace();
 
 			// tuka nqma da e home, vremenno
-			return "redirect:home";
+			return "redirect:/home";
 		}
 	}
 
@@ -99,23 +99,27 @@ public class AccountController {
 			List<String> accountTypes = accountTypeDAO.getAccountTypesFromDB();
 			model.addAttribute("allCurrencies", currencies);
 			model.addAttribute("allTypes", accountTypes);
-			return "account";
+			return "redirect:/account";
 		} catch (AccountException | ClassNotFoundException | SQLException | CurrencyException e) {
 			e.printStackTrace();
 			return "error";
 		}
 	}
 
-	
 	// ne updateva v bazata
 	@RequestMapping(value = "/acc/{account_id}", method = RequestMethod.POST)
 	public String editAccount(@ModelAttribute Account updatedAccount, @PathVariable("account_id") Integer accountId) {
 		try {
+			// System.out.println(updatedAccount.getAccount_id());
+			// AccountComparator comparator = new AccountComparator();
+			// System.out.println(comparator.compare(accountDao.getAccountById(updatedAccount.getAccount_id()),
+			// updatedAccount) == 0);
+			//!!!!!!!! tuka e greshkata, vrushta mi stariq akaunt v bazata
+//			Account updated = accountDao.getAccountById(updatedAccount.getAccount_id());
 //			System.out.println(updatedAccount.getAccount_id());
-//			AccountComparator comparator = new AccountComparator();
-//			System.out.println(comparator.compare(accountDao.getAccountById(updatedAccount.getAccount_id()), updatedAccount) == 0);
-			accountDao.getAccountById(updatedAccount.getAccount_id());
+			accountDao.updateAccount(updatedAccount);
 			return "redirect:/accounts";
+
 		} catch (AccountException e) {
 			e.printStackTrace();
 			return "error";
