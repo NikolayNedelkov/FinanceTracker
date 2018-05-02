@@ -21,34 +21,35 @@
 			<li class="tab"><a href="#login">Log In</a></li>
 			<li class="tab active"><a href="#signup">Sign Up</a></li>
 		</ul>
-<div class="tab-content">
-		<div id="login">
-			<h1>Welcome To Finance Tracker!</h1>
+		<div class="tab-content">
+			<div id="login">
+				<h1>Welcome To Finance Tracker!</h1>
 
-			<form action="login" method="post">
+				<form action="login" method="post">
 
-				<div class="field-wrap">
-					<label> Email Address<span class="req">*</span>
-					</label> <input type="email" required autocomplete="on" name="email" />
-				</div>
+					<div class="field-wrap">
+						<label> Email Address<span class="req">*</span>
+						</label> <input type="email" required autocomplete="on" name="email" />
+					</div>
 
-				<div class="field-wrap">
-					<label> Password<span class="req">*</span>
-					</label> <input type="password" required autocomplete="off" name="password" />
-				</div>
+					<div class="field-wrap">
+						<label> Password<span class="req">*</span>
+						</label> <input type="password" required autocomplete="off"
+							name="password" />
+					</div>
 
-				<p class="forgot">
-					<a href="#">Forgot Password?</a>
-				</p>
+					<p class="forgot">
+						<a href="#">Forgot Password?</a>
+					</p>
 
-				<button class="button button-block" />
-				Log In
-				</button>
+					<button class="button button-block" />
+					Log In
+					</button>
 
-			</form>
+				</form>
 
-		</div>
-		
+			</div>
+
 			<div id="signup">
 				<h1>Sign Up for Free</h1>
 
