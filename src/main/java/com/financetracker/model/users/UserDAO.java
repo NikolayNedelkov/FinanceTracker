@@ -6,26 +6,17 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 
+import org.springframework.stereotype.Component;
+
 import com.financetracker.database.DBConnection;
 import com.financetracker.exceptions.UserException;
 
+@Component
 public class UserDAO implements IUserDAO {
 	private static final String GET_USER_BY_EMAIL = "SELECT id, password, last_loged_in FROM users where email like ?;";
 	private static final String LOGIN_USER_SQL = "SELECT * FROM users WHERE email=? and password=sha1(?)";
 	private static final String ADD_USER_SQL = "INSERT INTO users(first_name, last_name, email, password) VALUES (?, ?, ?, sha1(?));";
 	private static final String CHECK_USER_IF_EXISTS = "SELECT * FROM users where email =?";
-	private static UserDAO userDAO = null;
-
-	private UserDAO() {
-
-	}
-
-	public static UserDAO getInstance() {
-		if (userDAO == null) {
-			userDAO = new UserDAO();
-		}
-		return userDAO;
-	}
 
 	@Override
 	public boolean login(String email, String password) throws UserException {
