@@ -1,15 +1,9 @@
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<%@ page import="com.financetracker.model.transactions.Transaction"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <jsp:include page="menu.jsp"></jsp:include>
-<%-- <link type="text/css" href="<%=request.getContextPath() %>/css/bootstrap.css" rel="stylesheet"/>
-<head>
-    <link href="<c:url value="/static/css/bootstrap.min.css" />" rel="stylesheet">
-    <link href="<c:url value="/static/css/custom.css" />"rel="stylesheet">
-    <script src="<c:url value="/resources/js/main.js" />"></script>
-</head> --%>
+
 <div id="page-wrapper">
 
 	<div class="container-fluid">

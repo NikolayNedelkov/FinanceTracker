@@ -1,32 +1,66 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
-</head>
-<body>
-	<h2>Edit account</h2>
-	<form:form commandName="currentAccount">
-	Account Name:<form:input path="accountName" />
-		<br>
-	Balance:<form:input path="balance" />
-		<br>
-	Account number::<form:input path="lastFourDigits" />
-		<br>
-		<p>(Optional last 4 digits)</p>
-		Currency:<form:select path="currency">
-			<br>
-			<form:option value="-" label="--Select Currency" />
-			<form:options items="${allCurrencies}" />
-		</form:select>
-		Account type:<form:select path="type">
-			<form:option value="type" />
-			<form:options items="${allTypes}" />
-		</form:select>
-		<input type="submit" value="Submit" />
-	</form:form>
-</body>
-</html>
+<jsp:include page="menu.jsp"></jsp:include>
+
+<div id="page-wrapper">
+
+	<div class="container-fluid">
+		<div class="row center">
+			<h2>
+				<span class="bold">My Accounts</span>
+			</h2>
+		</div>
+
+		<form id="addExpenseForm" action="" method="post">
+			<form:form commandName="currentAccount">
+			<div class="expense_name">
+					<div class="inline modalcss">Account Name:</div>
+					<form:input type="text" class="form-control" id="addexpense_name"
+						name="accountName" path="accountName" />
+				</div>
+				
+				<div class="expense_name">
+					<div class="inline modalcss">Balance:</div>
+					<form:input type="number" class="form-control" id="addexpense_name"
+						name="accountName" path="balance" />
+				</div>
+			
+			<div class="expense_name">
+					<div class="inline modalcss">Account number:</div>
+					<form:input type="text" class="form-control" id="addexpense_name"
+						name="accountName" path="lastFourDigits" />
+				</div>
+
+				<div class="expense_name">
+					<div class="inline modalcss">Currency:</div>
+
+					<form:select class="form-control" path="currency">
+						<form:option value="-" label="--Select Currency" />
+						<form:options items="${allCurrencies}" />
+					</form:select>
+				</div>
+
+				<div class="expense_name">
+					<div class="inline modalcss">Account type:</div>
+
+					<form:select class="form-control" path="type">
+						<form:option value="-" label="--Select type" />
+						<form:options items="${allTypes}" />
+					</form:select>
+				</div>
+							<div class="modal-footer">
+					<button type="submit" class="btn btn-secondary"
+						data-dismiss="modal">Submit changes</button>
+					<button type="submit" class="btn btn-primary">Back</button>
+				</div>
+			</form:form>
+
+
+			<!--  id="addExpenseOn_btn" -->
+
+
+		</form>
+	</div>
+</div>			
+			
