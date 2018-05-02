@@ -202,16 +202,16 @@
 
 					<div class="expense_name">
 						<div class="inline modalcss">Enter type:</div>
-						<select class="form-control" class="addExpense_category_option"
-							name="typeSelect">
-							<option value="withdrawal">Withdrawal</option>
-							<option value="deposit">Deposit</option>
+						<select class="form-control" id='type' class="addExpense_category_option"
+							name="typeSelect" onchange='loadCategories()'>
+							<option value="0">Withdrawal</option>
+							<option value="1">Deposit</option>
 						</select>
 					</div>
 
 					<div class="expense_category">
 						<div class="inline modalcss">Category:</div>
-						<select class="form-control" name="expense_categories">
+						<select id='categories' class="form-control" name="expense_categories">
 							<option value="1">Home</option>
 						</select>
 					</div>
@@ -299,3 +299,11 @@
 	<script src="js/budget.js" type="text/javascript"></script>
 	<script src="js/Chart.bundle.js" type="text/javascript"></script>
 	<script src="js/budget.js" type="text/javascript"></script>
+	
+	<script>
+	function loadCategories() {
+		var type = document.getElementById('type').value;
+		options=
+		document.getElementById('categories').innerHTML = options;
+	}
+	</script>

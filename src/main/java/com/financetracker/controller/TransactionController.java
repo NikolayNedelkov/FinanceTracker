@@ -53,10 +53,8 @@ public class TransactionController {
 			return "error";
 		} 
 		return "transactions";
-
-		
-
 	}
+	
 	@RequestMapping(value="/add", method=RequestMethod.POST)
 	protected String addTransaction(HttpServletRequest request, HttpSession session) {
 		if ((session == null) || (session.getAttribute("user") == null)) {
