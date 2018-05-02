@@ -1,68 +1,110 @@
+
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+<%@ page import="com.financetracker.model.transactions.Transaction"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<jsp:include page="menu.jsp"></jsp:include>
+<%-- <link type="text/css" href="<%=request.getContextPath() %>/css/bootstrap.css" rel="stylesheet"/>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
-</head>
-<body>
+    <link href="<c:url value="/static/css/bootstrap.min.css" />" rel="stylesheet">
+    <link href="<c:url value="/static/css/custom.css" />"rel="stylesheet">
+    <script src="<c:url value="/resources/js/main.js" />"></script>
+</head> --%>
+<div id="page-wrapper">
 
-	<form:form commandName="account">
-	Account Name:<form:input path="accountName" /><br>
-	Balance:<form:input path="balance" /><br>
-	Account number::<form:input path="lastFourDigits" /><br>
-		<p>(Optional last 4 digits)</p>
+	<div class="container-fluid">
+		<div class="row center">
+			<h2>
+				<span class="bold">My Profile</span>
+			</h2>
+		</div>
+
+		<form id="addExpenseForm" action="" method="post">
+
+
+			<div class="expense_name">
+				<div class="inline modalcss">First Name:</div>
+				<input type="text" class="form-control" id="addexpense_name"
+					name="payee" disabled="disabled">
+			</div>
+			<div class="expense_name">
+				<div class="inline modalcss">Last Name:</div>
+				<input type="text" class="form-control" id="addexpense_name"
+					name="payee" disabled="disabled">
+			</div>
+			<div class="expense_name">
+				<div class="inline modalcss">Email :</div>
+				<input type="text" class="form-control" id="addexpense_name"
+					name="payee" disabled="disabled">
+			</div>
+
+
+
+
+
+
+
+
+
+
+<!-- Raboti!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 -->
+			<form:form commandName="account">
+				<div class="expense_name">
+					<div class="inline modalcss">
+						Account Name:</div>
+						<form:input type="text" class="form-control" id="addexpense_name"
+							name="accountName" path="accountName" />
+					</div>
+					
+					<div class="expense_name">
+					<div class="inline modalcss">
+					Currency:</div>
+					
+					<form:select class="form-control" path="currency">
+					<form:option value="-" label="--Select Currency" />
+					<form:options items="${allCurrencies}" />
+					</form:select>
+					
+				</div>	
+					
+					
+					
+<!-- Do tuk!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 -->					
+					
+					
+					
+					
+	Balance:<form:input path="balance" />
+				<br>
+	Account number::<form:input path="lastFourDigits" />
+				<br>
+				<p>(Optional last 4 digits)</p>
 	
-	Currency:<form:select path="currency"><br>
-			<form:option value="-" label="--Select Currency" />
-			<form:options items="${allCurrencies}" />
-		</form:select>
+	Currency:<form:select path="currency">
+					<br>
+					<form:option value="-" label="--Select Currency" />
+					<form:options items="${allCurrencies}" />
+				</form:select>
 	
 	
-		Account type:<form:select path="type"><br>
-			<%-- <form:option value="-" label="--Select Currency" /> --%>
-			<form:options items="${allTypes}" />
-		</form:select>
+		Account type:<form:select path="type">
+					<br>
+					<%-- <form:option value="-" label="--Select Currency" /> --%>
+					<form:options items="${allTypes}" />
+				</form:select>
 
-		<input type="submit" value="Add Account" />
+				<input type="submit" value="Add Account" />
 
-		<!-- <button type="submit">Add</button> -->
-	</form:form>
+				<!-- <button type="submit">Add</button> -->
+			</form:form>
 
-<%-- 
 
-	<form action="./addAccount" method="post">
-		<p>Account Name:</p>
-		<input type="text" name="account name" required="required"> <br>
-		<p>Balance:</p>
-		<input type="text" name="balance" required="required"> <br>
-		<p>Account number:</p>
-		<input type="text" name="last 4 digits">
-		<p>(Optional last 4 digits)</p>
-		<br>
-		<p>Currency:</p>
-		<select name="currency" required="required">
-			<option value="BGN">BGN</option>
-			<option value="EUR">EUR</option>
-			<option value="USD">USD</option>
-			<option value="GBP">GBP</option>
-			<option value="AUD">AUD</option>
-		</select>
-		<p>Account type:</p>
-		<br> <select name="type" required="required">
+			<!--  id="addExpenseOn_btn" -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Save</button>
+				<button type="submit" class="btn btn-primary">Back</button>
+			</div>
 
-			<option value="Credit Card">Credit Card</option>
-			<option value="Loan">Loan</option>
-			<option value="Pension">Pension</option>
-			<option value="IRA">IRA</option>
-			<option value="Other Investment">Other Investment</option>
-			<option value="Cash">Cash</option>
-			<option value="PayPal">PayPal</option>
-			<option value="Gift Card">Gift Card</option>
-		</select><br>
-		<button type="submit">Add</button>
-	</form> --%>
-</body>
-</html>
+		</form>
+	</div>
+</div>

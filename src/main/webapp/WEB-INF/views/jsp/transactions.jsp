@@ -194,9 +194,9 @@
 						<div class="inline modalcss">Choose Account:</div>
 						<select class="form-control" class="addExpense_category_option"
 							name="accountSelect">
-							<option value="general">General</option>
-							<option value="personal">Personal</option>
-							<option value="food">Food</option>
+							<c:forEach items="${ sessionScope.user.accounts }" var="account">
+								<option value="${ account.accountName }">${ account.accountName }</option>
+							</c:forEach>
 						</select>
 					</div>
 

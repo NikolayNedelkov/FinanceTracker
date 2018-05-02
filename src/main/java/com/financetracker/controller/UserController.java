@@ -1,6 +1,8 @@
 package com.financetracker.controller;
 
 
+import java.util.HashSet;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -10,7 +12,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.financetracker.exceptions.AccountException;
 import com.financetracker.exceptions.UserException;
+import com.financetracker.model.accounts.Account;
+import com.financetracker.model.accounts.AccountDAO;
 import com.financetracker.model.users.User;
 import com.financetracker.model.users.UserDAO;
 
@@ -20,7 +25,9 @@ public class UserController {
 
 	@Autowired
 	private UserDAO userDAO;
-
+	@Autowired
+	private AccountDAO accountDao;
+	
 	@RequestMapping(method = RequestMethod.POST, value = "/login")
 	private String login(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		String email = request.getParameter("email");
@@ -30,12 +37,15 @@ public class UserController {
 			if (userDAO.login(email, password)) {
 				session = request.getSession();
 				User user = userDAO.getUserByEmail(email);
+				HashSet<Account> userAccounts = accountDao.getAllAccountsForUser(user);
 				session.setAttribute("user", user);
+				user.setAccounts(userAccounts);
+				//session.setAttribute("userAccounts", userAccounts);
 				return "redirect:/home";
 			} else {
 				return "login";
 			}
-		} catch (UserException e) {
+		} catch (UserException | AccountException e) {
 			e.printStackTrace();
 			return "error";
 		}

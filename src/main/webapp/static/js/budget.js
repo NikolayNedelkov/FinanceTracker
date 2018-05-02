@@ -81,17 +81,17 @@
 
 
     // Open the edit expense modal when the item is clicked
-    $(document).on('click', '.clickable', function(e) {
+    $(document).on('click', '.list-group-item.list-group-item-warning', function(e) {
         // // Put the original content into the editbox
-         foreditexpense_name = $(this).attr('expense_name');
-         foreditexpense_amt = $(this).attr('expense_amt');
-         foreditexpense_note = $(this).attr('expense_note');
+        // foreditexpense_name = $(this).attr('expense_name');
+        // foreditexpense_amt = $(this).attr('expense_amt');
+        // foreditexpense_note = $(this).attr('expense_note');
 
-         $('#editexpense_name').attr('placeholder', foreditexpense_name);
-         $('#editexpense_amt').attr('placeholder', foreditexpense_amt);
-         $('#editexpense_note').attr('placeholder', foreditexpense_note);
+        // $('#editexpense_name').attr('placeholder', foreditexpense_name);
+        // $('#editexpense_amt').attr('placeholder', foreditexpense_amt);
+        // $('#editexpense_note').attr('placeholder', foreditexpense_note);
 
-         //Get the expense id
+        // Get the expense id
         editexpense_id = $(this).attr('id');
 
         // Open the modal
@@ -101,7 +101,10 @@
 
     // Edit expense
     $("#editExpenseOn_btn").on('click', function() {
-        
+        // Check login status
+        if ($("#loginstatus").html() == "Guest") {
+            alert("Please log in first!");
+        } else {
             var editexpense_name = $('#editexpense_name').val();
             var editexpense_amt = $('#editexpense_amt').val();
             // console.log(editexpense_id);
@@ -113,7 +116,11 @@
                 var editexpense_category = $("#editExpense_category_option option:selected").val();
                 var editexpense_note = $('#editexpense_note').val();
 
- 
+                // console.log(expense_name);
+                // console.log(expense_amt);
+                // console.log(expense_category);
+                // console.log(expense_note);
+
                 // Post data to php
                 $.ajax({
                         method: "POST",
@@ -134,7 +141,9 @@
                             displayItem();
                         }
                     });
+
             }
+        }
     }); // End of editExpense function
 
     // Delete expense
@@ -541,14 +550,16 @@
 
 
     // Bind the button and open the modal
+    $("#register_btn").on('click', function() {
+        $("#registerModal").modal();
+    });
+
+    $("#login_btn").on('click', function() {
+        $("#loginModal").modal();
+    });
 
     $("#addtransaction").on('click', function() {
         $("#addExpenseModal").modal();
-        showdash();
-    });
-    
-    $(".clickable").on('click', function() {
-        $("#editExpenseModal").modal();
         showdash();
     });
 

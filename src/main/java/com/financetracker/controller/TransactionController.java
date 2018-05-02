@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -33,37 +34,39 @@ public class TransactionController {
 	@Autowired
 	private AccountDAO accountDAO;
 	
-	@RequestMapping(method=RequestMethod.GET)
-	protected String showTransactions(Model model, HttpSession session){
+	@RequestMapping(method = RequestMethod.GET)
+	protected String showTransactions(Model model, HttpSession session) {
 		if ((session == null) || (session.getAttribute("user") == null)) {
 			return "signup-login";
 		}
-		 
-		 try {
-			 User currentUser = (User) session.getAttribute("user");
-			 List<Transaction> allUserTransactions = new ArrayList<>();
+
+		try {
+			User currentUser = (User) session.getAttribute("user");
+			List<Transaction> allUserTransactions = new ArrayList<>();
 			HashSet<Account> currentUserAccounts = accountDAO.getAllAccountsForUser(currentUser);
-			
-			for(Account account: currentUserAccounts) {
-				allUserTransactions.addAll(transactionDAO.getAllTransactions(account.getAccount_id()));
+
+			for (Account account : currentUserAccounts) {
+				allUserTransactions.addAll(transactionDAO.getAllTransactions(account));
 			}
 			model.addAttribute("allUserTransactions", allUserTransactions);
 		} catch (AccountException | TransactionException | SQLException e) {
 			e.printStackTrace();
 			return "error";
-		} 
+		}
 		return "transactions";
 
-		
-
 	}
+	
+	
 	@RequestMapping(value="/add", method=RequestMethod.POST)
-	protected String addTransaction(HttpServletRequest request, HttpSession session) {
+	protected String addTransaction(@ModelAttribute Transaction readyTransaction, HttpServletRequest request, HttpSession session) {
 		if ((session == null) || (session.getAttribute("user") == null)) {
 			return "redirect:/signup-login";
 		}
 
 		try {
+			//session.getAttribute("userAccounts");
+			
 			String payee = request.getParameter("payee");
 			double amount = Double.parseDouble(request.getParameter("amount"));
 			LocalDate date = LocalDate.parse(request.getParameter("date"));
@@ -73,9 +76,9 @@ public class TransactionController {
 				isIncome = false;
 			}
 			int category = Integer.parseInt(request.getParameter("expense_categories"));
-			Transaction transaction = new Transaction(payee, amount, date, 9, category, isIncome);
+			//Transaction transaction = new Transaction(payee, amount, date, , category, isIncome);
 			
-			transactionDAO.addTransaction(transaction);
+			transactionDAO.addTransaction(readyTransaction);
 			
 			return "redirect:/transactions";
 
