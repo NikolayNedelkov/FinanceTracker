@@ -12,7 +12,7 @@ public class DBConnection {
 	
 	private static final String DB_HOST = "localhost";
 	private static final String DB_USER = "root";
-	private static final String DB_PASS = "7879";
+	private static final String DB_PASS = "ggYTJR7Q!";
 	private static final String DB_PORT = "3306";
 	private static final String DB_SCHEMA = "financetracker";
 

@@ -80,7 +80,7 @@
 				<ul class="nav navbar-nav side-nav">
 
 					<li><a href="home" id="dash_btn"><i class="fas fa-columns"></i>
-							<div class="inline">My Dashboard</div></a> <a href="accounts"
+							<div class="inline">My Dashboard</div></a> <a href="./accounts"
 						id="expense_btn"><i class="fas fa-credit-card"></i>
 							<div class="inline">My Accounts</div></a> <a href="transactions"
 						id="expense_btn"><i class="fas fa-exchange-alt"></i>

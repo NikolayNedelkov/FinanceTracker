@@ -49,7 +49,7 @@
 								</select>
 							</div>
 						</div>
-						<button type="button" class="btn btn-primary" id="addtransaction">Add
+						<button onclick="location.href='./transactions/add';" type="button" class="btn btn-primary" id="addtransaction">Add
 							a new transaction</button>
 					</div>
 
@@ -89,7 +89,7 @@
 											<td class="item_category"><c:out
 													value="${transaction.category}"></c:out></td>
 											<td class="item_note"><c:out
-													value="${transaction.accountID}"></c:out></td>
+													value="${transaction.account.accountName}"></c:out></td>
 											<td><c:out value="${transaction.date}"></c:out></td>
 										</tr>
 									</c:forEach>
@@ -153,14 +153,17 @@
 
 </div>
 <!-- /.container-fluid -->
+
+
+
+<!-- </div>
+/#page-wrapper
 </div>
-<!-- /#page-wrapper -->
-</div>
-<!-- /#wrapper -->
+/#wrapper -->
 
 
 
-<div class="modal fade" id="addExpenseModal">
+<%-- <div class="modal fade" id="addExpenseModal">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -194,9 +197,9 @@
 						<div class="inline modalcss">Choose Account:</div>
 						<select class="form-control" class="addExpense_category_option"
 							name="accountSelect">
-							<option value="general">General</option>
-							<option value="personal">Personal</option>
-							<option value="food">Food</option>
+							<c:forEach items="${ sessionScope.user.accounts }" var="account">
+								<option value="${ account.accountName }">${ account.accountName }</option>
+							</c:forEach>
 						</select>
 					</div>
 
@@ -294,7 +297,7 @@
 		</div>
 		<!-- /.modal-dialog -->
 	</div>
-	<!-- /.editExpenseModal -->
+	<!-- /.editExpenseModal --> --%>
 
 	<script src="js/budget.js" type="text/javascript"></script>
 	<script src="js/Chart.bundle.js" type="text/javascript"></script>

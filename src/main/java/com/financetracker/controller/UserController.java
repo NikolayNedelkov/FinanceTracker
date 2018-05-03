@@ -106,6 +106,5 @@ public class UserController {
 	private String forgotPassword(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		return "forgotPassword";
 	}
-	
-
 }
+

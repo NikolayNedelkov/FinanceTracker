@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -33,30 +34,59 @@ public class TransactionController {
 	@Autowired
 	private AccountDAO accountDAO;
 	
-	@RequestMapping(method=RequestMethod.GET)
-	protected String showTransactions(Model model, HttpSession session){
+	@RequestMapping(method = RequestMethod.GET)
+	protected String showTransactions(Model model, HttpSession session) {
 		if ((session == null) || (session.getAttribute("user") == null)) {
 			return "signup-login";
 		}
-		 
-		 try {
-			 User currentUser = (User) session.getAttribute("user");
-			 List<Transaction> allUserTransactions = new ArrayList<>();
+
+		try {
+			User currentUser = (User) session.getAttribute("user");
+			List<Transaction> allUserTransactions = new ArrayList<>();
 			HashSet<Account> currentUserAccounts = accountDAO.getAllAccountsForUser(currentUser);
-			
-			for(Account account: currentUserAccounts) {
-				allUserTransactions.addAll(transactionDAO.getAllTransactions(account.getAccount_id()));
+
+			for (Account account : currentUserAccounts) {
+				allUserTransactions.addAll(transactionDAO.getAllTransactions(account));
 			}
 			model.addAttribute("allUserTransactions", allUserTransactions);
 		} catch (AccountException | TransactionException | SQLException e) {
 			e.printStackTrace();
 			return "error";
-		} 
+		}
 		return "transactions";
 
-		
-
 	}
+	
+//	@RequestMapping(value = "/add", method = RequestMethod.GET)
+//	public String addTransaction(HttpSession session, Model model) {
+//		Transaction transaction = new Transaction();
+//		try {
+//			HashSet<Account> allAccounts=accountDAO.getAllAccountsForUser((User) session.getAttribute("user"));
+//			model.addAttribute("transaction", transaction);
+//			model.addAttribute("allAccounts", allAccounts);
+//			return "newTransaction";
+//		} catch (AccountException e) {
+//			e.printStackTrace();
+//			return "error";
+//		}
+//			
+//	}
+	
+	@RequestMapping(value="/add", method=RequestMethod.GET)
+	protected String addTransaction(HttpSession session) {
+		User loggedUser = (User) session.getAttribute("user");
+		HashSet<Account> usersAccounts;
+		try {
+			usersAccounts = accountDAO.getAllAccountsForUser(loggedUser);
+			loggedUser.setAccounts(usersAccounts);
+			return "newTransaction";
+		} catch (AccountException e) {
+			e.printStackTrace();
+			return "error";
+		}
+		
+	}
+	
 	@RequestMapping(value="/add", method=RequestMethod.POST)
 	protected String addTransaction(HttpServletRequest request, HttpSession session) {
 		if ((session == null) || (session.getAttribute("user") == null)) {
@@ -64,6 +94,8 @@ public class TransactionController {
 		}
 
 		try {
+			//session.getAttribute("userAccounts");
+			
 			String payee = request.getParameter("payee");
 			double amount = Double.parseDouble(request.getParameter("amount"));
 			LocalDate date = LocalDate.parse(request.getParameter("date"));
@@ -72,17 +104,19 @@ public class TransactionController {
 			if (request.getParameter("typeSelect").equals("withdrawal")) {
 				isIncome = false;
 			}
-			int category = Integer.parseInt(request.getParameter("expense_categories"));
-			Transaction transaction = new Transaction(payee, amount, date, 9, category, isIncome);
+			int category = Integer.parseInt(request.getParameter("category"));
+			System.out.println(request.getParameter("accountSelect"));
+			String accountName=request.getParameter("accountSelect");
+			Account a=accountDAO.getAccountByName(accountName);
 			
+			Transaction transaction = new Transaction(payee, amount, date, a, category, isIncome);
 			transactionDAO.addTransaction(transaction);
 			
 			return "redirect:/transactions";
 
-		} catch (TransactionException | SQLException  e) {
+		} catch (TransactionException | AccountException | SQLException  e) {
 			e.printStackTrace();
 			return "error";
 		}
-
 	}
 }
