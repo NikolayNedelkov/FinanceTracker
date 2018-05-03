@@ -12,12 +12,13 @@ import com.financetracker.model.users.User;
 
 
 @Component
-public class BudgetDAO {
+public class BudgetDAO implements IBudgetDAO {
 
 	private static final String CALCULATE_INCOME = "SELECT SUM(t.amount) FROM users u JOIN accounts a ON (u.id=a.user_id) JOIN transactions t on (a.id=t.accounts_id) WHERE u.id=? and t.is_income = '1'";
 	private static final String CALCULATE_EXPENSE = "SELECT SUM(t.amount) FROM users u JOIN accounts a ON (u.id=a.user_id) JOIN transactions t on (a.id=t.accounts_id) WHERE u.id=? and t.is_income = '0'";
 
 
+	@Override
 	public double calculateIncome(User user) throws UserException {
 		PreparedStatement pstmt;
 		try {
@@ -39,6 +40,7 @@ public class BudgetDAO {
 		}
 	}
 	
+	@Override
 	public double calculateExpense(User user) throws UserException {
 		PreparedStatement pstmt;
 		try {
@@ -59,6 +61,7 @@ public class BudgetDAO {
 		}
 	}
 	
+	@Override
 	public Budget getBudget(User u) throws UserException {
 		double totalIncome = this.calculateIncome(u);
 		double totalExpense=this.calculateExpense(u);

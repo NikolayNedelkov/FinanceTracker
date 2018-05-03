@@ -16,18 +16,19 @@ import com.financetracker.database.DBConnection;
 import com.financetracker.exceptions.AccountException;
 import com.financetracker.exceptions.TransactionException;
 import com.financetracker.model.accounts.Account;
-import com.financetracker.model.accounts.AccountDAO;
+import com.financetracker.model.accounts.IAccountDAO;
 
 @Component
-public class TransactionDAO {
+public class TransactionDAO implements ITransactionDAO {
 	
 	private static final String ADD_TRANSACTION_SQL = "INSERT INTO transactions VALUES (null,?,?,?,?,?,?)";
 	private static final String REMOVE_TRANSACTION_SQL = "DELETE FROM transactions WHERE transactions.id=?";
 	private static final String GET_ALL_TRANSACTIONS_SQL = "SELECT `payee/payer`,amount, date_paid,accounts_id,categories_id,is_income FROM transactions where accounts_id=?";
 
 	@Autowired
-	private AccountDAO accountDAO;
+	private IAccountDAO accountDAO;
 
+	@Override
 	public List<Transaction> getAllTransactions(Account account)
 			throws TransactionException, SQLException, AccountException {
 		try {
@@ -51,6 +52,7 @@ public class TransactionDAO {
 
 	}
 
+	@Override
 	public int addTransaction(Transaction transaction) throws TransactionException, SQLException {
 		PreparedStatement pstmt;
 		Connection connection = null;
@@ -85,6 +87,7 @@ public class TransactionDAO {
 		}
 	}
 
+	@Override
 	public int removeTransaction(Transaction transaction) {
 		PreparedStatement pstmt;
 		try {

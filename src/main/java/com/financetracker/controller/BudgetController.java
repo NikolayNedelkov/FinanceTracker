@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.financetracker.exceptions.UserException;
 import com.financetracker.model.budget.Budget;
-import com.financetracker.model.budget.BudgetDAO;
+import com.financetracker.model.budget.IBudgetDAO;
 import com.financetracker.model.users.User;
 
 @Controller
@@ -17,7 +17,7 @@ import com.financetracker.model.users.User;
 public class BudgetController {
 
 	@Autowired
-	private BudgetDAO budgetDao;
+	private IBudgetDAO budgetDao;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String getBudget(HttpSession session) {

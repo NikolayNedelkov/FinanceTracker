@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.financetracker.exceptions.UserException;
+import com.financetracker.model.users.IUserDAO;
 import com.financetracker.model.users.User;
-import com.financetracker.model.users.UserDAO;
 
 @Controller
 public class UserController {
 
 	@Autowired
-	private UserDAO userDAO;
+	private IUserDAO userDAO;
 
 	
 	@RequestMapping(method = RequestMethod.GET, value="/index")
