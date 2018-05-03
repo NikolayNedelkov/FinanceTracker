@@ -11,7 +11,7 @@
 
 		<!-- Page Heading -->
 		<div class="row center">
-			<h2>My Transactions</h2>
+			<h2>Add new transaction</h2>
 		</div>
 		<!-- /.row -->
 
@@ -49,9 +49,6 @@
 								</select>
 							</div>
 						</div>
-							<button type="button" class="btn btn-primary" id="addtransaction" onclick="location.href='./transactions/add';">Add a new
-								transaction</button>
-					</div>
 
 
 					<div id="search">
@@ -59,43 +56,6 @@
 							Search: <input type="text" class="form-control search"
 								id="search_content">
 						</div>
-
-
-						<div class=" col-lg-12 itemlog list">
-
-							<table class="table table-hover" class="col-lg-12 itemlog list">
-								<thead>
-									<tr>
-										<th scope="col">Transaction Payee/Payer</th>
-										<th scope="col">Amount</th>
-										<th scope="col">Type</th>
-										<th scope="col">Category</th>
-										<th scope="col">Account</th>
-										<th scope="col">Date</th>
-									</tr>
-								</thead>
-								<tbody>
-									<c:forEach items="${allUserTransactions}" var="transaction">
-										<tr class="item_name clickable">
-											<th scope="row" class="item_name clickable"><c:out
-													value="${transaction.payee}"></c:out></th>
-											<td class="item_amt"><c:out
-													value="${transaction.amount}"></c:out></td>
-											<td><c:if test="${transaction.isIncome} == true">
-													<c:out value="Income"></c:out>
-												</c:if> <c:if test="${transaction.isIncome} == false">
-													<c:out value="Expense"></c:out>
-												</c:if></td>
-											<td class="item_category"><c:out
-													value="${transaction.category}"></c:out></td>
-											<td><c:out value="${transaction.date}"></c:out></td>
-										</tr>
-									</c:forEach>
-								</tbody>
-							</table>
-
-						</div>
-						<!-- itemlog -->
 					</div>
 					<!-- search -->
 				</div>
@@ -131,16 +91,16 @@
 	<!-- dashlog -->
 
 
+
 </div>
 <!-- /.container-fluid -->
 </div>
 <!-- /#page-wrapper -->
-</div>
+
 <!-- /#wrapper -->
 
 
 
-<div class="modal fade" id="addExpenseModal">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -182,9 +142,8 @@
 
 					<div class="expense_name">
 						<div class="inline modalcss">Enter type:</div>
-						<select class="form-control" id='type'
-							class="addExpense_category_option" name="typeSelect"
-							onchange='loadCategories()'>
+						<select class="form-control" id='type' class="addExpense_category_option"
+							name="typeSelect" onchange='loadCategories()'>
 							<option value="0">Withdrawal</option>
 							<option value="1">Deposit</option>
 						</select>
@@ -192,8 +151,7 @@
 
 					<div class="expense_category">
 						<div class="inline modalcss">Category:</div>
-						<select id='categories' class="form-control"
-							name="expense_categories">
+						<select id='categories' class="form-control" name="expense_categories">
 						</select>
 					</div>
 
@@ -279,12 +237,12 @@
 
 	<script src="js/budget.js" type="text/javascript"></script>
 	<script src="js/Chart.bundle.js" type="text/javascript"></script>
-
+	
 	<script>
 	function loadCategories() {
 		var type = document.getElementById('type').value;
 		var xhr = new XMLHttpRequest();
-		xhr.open("GET", "./transactions/add?typeSelect="+type, true);
+		xhr.open("GET", "./transactions/add?typeSelect="+ type, true);
 		xhr.send(null);
 		
 		xhr.addEventListener('load', () => {
