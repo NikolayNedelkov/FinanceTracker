@@ -24,7 +24,7 @@ public class BudgetDAO {
 			if (user != null) {
 				pstmt = DBConnection.getInstance().getConnection().prepareStatement(CALCULATE_INCOME);
 				pstmt.setInt(1, user.getId());
-				pstmt.executeUpdate();
+				pstmt.executeQuery();
 
 				ResultSet resultSet = pstmt.getGeneratedKeys();
 				resultSet.next();
@@ -45,7 +45,7 @@ public class BudgetDAO {
 			if (user != null) {
 				pstmt = DBConnection.getInstance().getConnection().prepareStatement(CALCULATE_EXPENSE);
 				pstmt.setInt(1, user.getId());
-				pstmt.executeUpdate();
+				pstmt.executeQuery();
 
 				ResultSet resultSet = pstmt.getGeneratedKeys();
 				resultSet.next();

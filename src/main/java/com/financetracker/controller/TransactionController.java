@@ -121,7 +121,7 @@ public class TransactionController {
 			LocalDate date = LocalDate.parse(request.getParameter("date"));
 			//int accountID = Integer.parseInt(request.getParameter("account"));
 			boolean isIncome = true;
-			if (request.getParameter("typeSelect").equals("withdrawal")) {
+			if (request.getParameter("typeSelect").equals("0")) {
 				isIncome = false;
 			}
 			int category = Integer.parseInt(request.getParameter("category"));

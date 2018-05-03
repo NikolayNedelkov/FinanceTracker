@@ -22,7 +22,6 @@ public class BudgetController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String getBudget(HttpSession session) {
 
-		if (session.getAttribute("user") != null) {
 			User user = (User) session.getAttribute("user");
 			try {
 				Budget budget = budgetDao.getBudget(user);
@@ -31,7 +30,6 @@ public class BudgetController {
 			} catch (UserException e) {
 				return "error";
 			}
-		}
-		return "error";
+		
 	}
 }
