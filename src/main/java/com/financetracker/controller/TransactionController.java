@@ -65,23 +65,6 @@ public class TransactionController {
 	
 
 	
-	
-
-//	@RequestMapping(value = "/add", method = RequestMethod.GET)
-//	public String addTransaction(HttpSession session, Model model) {
-//		Transaction transaction = new Transaction();
-//		try {
-//			HashSet<Account> allAccounts=accountDAO.getAllAccountsForUser((User) session.getAttribute("user"));
-//			model.addAttribute("transaction", transaction);
-//			model.addAttribute("allAccounts", allAccounts);
-//			return "newTransaction";
-//		} catch (AccountException e) {
-//			e.printStackTrace();
-//			return "error";
-//		}
-//			
-//	}
-	
 	@RequestMapping(value = "/add/getCategories", method = RequestMethod.GET)
 	public @ResponseBody void doGet(HttpServletRequest request, HttpServletResponse response) throws TransactionException {
 			
@@ -122,6 +105,7 @@ public class TransactionController {
 			String payee = request.getParameter("payee");
 			double amount = Double.parseDouble(request.getParameter("amount"));
 			LocalDate date = LocalDate.parse(request.getParameter("date"));
+
 			boolean isIncome;
 			
 			if (request.getParameter("typeSelect").equals("false")) {

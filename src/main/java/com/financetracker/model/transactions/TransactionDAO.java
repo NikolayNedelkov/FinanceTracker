@@ -27,19 +27,21 @@ public class TransactionDAO {
 
 	@Autowired
 	private AccountDAO accountDAO;
-	
-	public List<Transaction> getAllTransactions(Account account) throws TransactionException, SQLException, AccountException {
+
+	public List<Transaction> getAllTransactions(Account account)
+			throws TransactionException, SQLException, AccountException {
 		try {
-			//TODO:DBConnection should be component with autowired annotation
+			// TODO:DBConnection should be component with autowired annotation
 			Connection connection = DBConnection.getInstance().getConnection();
 			PreparedStatement statement = connection.prepareStatement(GET_ALL_TRANSACTIONS_SQL);
 			statement.setInt(1, account.getAccount_id());
 			ResultSet resultSet = statement.executeQuery();
 			List<Transaction> allTransactions = new ArrayList<Transaction>();
 			while (resultSet.next()) {
-				allTransactions.add(new Transaction(resultSet.getString("payee/payer"),resultSet.getDouble("amount"),
-						(resultSet.getTimestamp("date_paid").toLocalDateTime().toLocalDate()),accountDAO.getAccountById(resultSet.getInt("accounts_id")),
-						resultSet.getInt("categories_id"),resultSet.getBoolean("is_income")));
+				allTransactions.add(new Transaction(resultSet.getString("payee/payer"), resultSet.getDouble("amount"),
+						(resultSet.getTimestamp("date_paid").toLocalDateTime().toLocalDate()),
+						accountDAO.getAccountById(resultSet.getInt("accounts_id")), resultSet.getInt("categories_id"),
+						resultSet.getBoolean("is_income")));
 			}
 			return allTransactions;
 		} catch (ClassNotFoundException e) {
@@ -62,7 +64,7 @@ public class TransactionDAO {
 			pstmt.setTimestamp(3, Timestamp.valueOf(transaction.getDate().atStartOfDay()));
 			pstmt.setInt(4, transaction.getAccount().getAccount_id());
 			pstmt.setInt(5, transaction.getCategory());
-			pstmt.setBoolean(6, transaction.getIsIncome());
+			pstmt.setInt(6, (transaction.getIsIncome() ? 1 : 0));
 			pstmt.executeUpdate();
 			ResultSet resultSet = pstmt.getGeneratedKeys();
 			resultSet.next();
@@ -71,8 +73,8 @@ public class TransactionDAO {
 			if (!transaction.getIsIncome()) {
 				amount *= -1;
 			}
-			statement.executeUpdate(
-					"UPDATE accounts SET balance=balance + " + amount + "WHERE id=" + transaction.getAccount().getAccount_id());
+			statement.executeUpdate("UPDATE accounts SET balance=balance + " + amount + "WHERE id="
+					+ transaction.getAccount().getAccount_id());
 			return resultSet.getInt(1);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
