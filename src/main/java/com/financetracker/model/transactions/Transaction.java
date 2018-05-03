@@ -14,6 +14,10 @@ public class Transaction {
 	private boolean isIncome;
 	private int category;
 	
+	public void setIncome(boolean isIncome) {
+		this.isIncome = isIncome;
+	}
+
 	public Transaction() {
 		
 	}

@@ -49,7 +49,7 @@
 								</select>
 							</div>
 						</div>
-						<button type="button" class="btn btn-primary" id="addtransaction">Add
+						<button onclick="location.href='./transactions/add';" type="button" class="btn btn-primary" id="addtransaction">Add
 							a new transaction</button>
 					</div>
 
@@ -153,14 +153,17 @@
 
 </div>
 <!-- /.container-fluid -->
+
+
+
+<!-- </div>
+/#page-wrapper
 </div>
-<!-- /#page-wrapper -->
-</div>
-<!-- /#wrapper -->
+/#wrapper -->
 
 
 
-<div class="modal fade" id="addExpenseModal">
+<%-- <div class="modal fade" id="addExpenseModal">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -294,7 +297,7 @@
 		</div>
 		<!-- /.modal-dialog -->
 	</div>
-	<!-- /.editExpenseModal -->
+	<!-- /.editExpenseModal --> --%>
 
 	<script src="js/budget.js" type="text/javascript"></script>
 	<script src="js/Chart.bundle.js" type="text/javascript"></script>

@@ -57,6 +57,20 @@ public class TransactionController {
 
 	}
 	
+	@RequestMapping(value = "/add", method = RequestMethod.GET)
+	public String addTransaction(HttpSession session, Model model) {
+		Transaction transaction = new Transaction();
+		try {
+			HashSet<Account> allAccounts=accountDAO.getAllAccountsForUser((User) session.getAttribute("user"));
+			model.addAttribute("transaction", transaction);
+			model.addAttribute("allAccounts", allAccounts);
+			return "newTransaction";
+		} catch (AccountException e) {
+			e.printStackTrace();
+			return "error";
+		}
+			
+	}
 	
 	@RequestMapping(value="/add", method=RequestMethod.POST)
 	protected String addTransaction(@ModelAttribute Transaction readyTransaction, HttpServletRequest request, HttpSession session) {
@@ -65,21 +79,26 @@ public class TransactionController {
 		}
 
 		try {
-			//session.getAttribute("userAccounts");
+			//session.getAttribute("userAccounts");			
+//			String payee = request.getParameter("payee");
+//			double amount = Double.parseDouble(request.getParameter("amount"));
+//			LocalDate date = LocalDate.parse(request.getParameter("date"));
+//			//int accountID = Integer.parseInt(request.getParameter("account"));
 			
-			String payee = request.getParameter("payee");
-			double amount = Double.parseDouble(request.getParameter("amount"));
-			LocalDate date = LocalDate.parse(request.getParameter("date"));
-			//int accountID = Integer.parseInt(request.getParameter("account"));
 			boolean isIncome = true;
-			if (request.getParameter("typeSelect").equals("withdrawal")) {
+			if (request.getParameter("type").equals("false")) {
 				isIncome = false;
 			}
-			int category = Integer.parseInt(request.getParameter("expense_categories"));
+			readyTransaction.setIncome(isIncome);
+
+			//Vremenno, posle shte e s ajax
+			readyTransaction.setCategory(1);
+			
+			
+			//int category = Integer.parseInt(request.getParameter("expense_categories"));
 			//Transaction transaction = new Transaction(payee, amount, date, , category, isIncome);
 			
-			transactionDAO.addTransaction(readyTransaction);
-			
+			transactionDAO.addTransaction(readyTransaction);	
 			return "redirect:/transactions";
 
 		} catch (TransactionException | SQLException  e) {
