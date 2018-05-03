@@ -1,12 +1,15 @@
 package com.financetracker.controller;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +23,11 @@ import com.financetracker.exceptions.AccountException;
 import com.financetracker.exceptions.TransactionException;
 import com.financetracker.model.accounts.Account;
 import com.financetracker.model.accounts.AccountDAO;
+import com.financetracker.model.categories.CategoryDAO;
 import com.financetracker.model.transactions.Transaction;
 import com.financetracker.model.transactions.TransactionDAO;
 import com.financetracker.model.users.User;
+import com.google.gson.Gson;
 
 @Controller
 @RequestMapping(value="/transactions")
@@ -33,6 +38,9 @@ public class TransactionController {
 	
 	@Autowired
 	private AccountDAO accountDAO;
+	
+	@Autowired
+	private CategoryDAO categoryDAO;
 	
 	@RequestMapping(method = RequestMethod.GET)
 	protected String showTransactions(Model model, HttpSession session) {
@@ -54,9 +62,30 @@ public class TransactionController {
 			return "error";
 		}
 		return "transactions";
-
 	}
 	
+
+	@RequestMapping(value="/add")
+	protected void getCategories(HttpServletRequest request, HttpServletResponse response) {
+		
+		try {
+			String transactionType = request.getParameter("isIncome");
+			TreeSet<String>categories = categoryDAO.getCategories(transactionType);
+			response.setContentType("application/json");
+			response.getWriter().println(new Gson().toJson(categories));
+		} catch (SQLException | TransactionException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+<<<<<<< HEAD
+
+	@RequestMapping(value = "/add", method = RequestMethod.GET)
+	public String addTransaction(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			HashSet<Account> allAccounts=accountDAO.getAllAccountsForUser((User) session.getAttribute("user"));			
+			return "addNewTransaction";
+=======
 //	@RequestMapping(value = "/add", method = RequestMethod.GET)
 //	public String addTransaction(HttpSession session, Model model) {
 //		Transaction transaction = new Transaction();
@@ -80,6 +109,7 @@ public class TransactionController {
 			usersAccounts = accountDAO.getAllAccountsForUser(loggedUser);
 			loggedUser.setAccounts(usersAccounts);
 			return "newTransaction";
+>>>>>>> f0c1b6819d79519304fe2ac7ee6fd436639e996d
 		} catch (AccountException e) {
 			e.printStackTrace();
 			return "error";

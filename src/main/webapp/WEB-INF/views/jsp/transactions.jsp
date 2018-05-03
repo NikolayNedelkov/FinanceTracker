@@ -49,10 +49,11 @@
 								</select>
 							</div>
 						</div>
-						<button onclick="location.href='./transactions/add';" type="button" class="btn btn-primary" id="addtransaction">Add
-							a new transaction</button>
-					</div>
 
+						<button type="button" class="btn btn-primary" id="addtransaction"
+							onclick="location.href='./transactions/add';">Add a new
+							transaction</button>
+					</div>
 
 					<div id="search">
 						<div id="search_btn" class="inline" style="display: block;">
@@ -90,6 +91,7 @@
 													value="${transaction.category}"></c:out></td>
 											<td class="item_note"><c:out
 													value="${transaction.account.accountName}"></c:out></td>
+
 											<td><c:out value="${transaction.date}"></c:out></td>
 										</tr>
 									</c:forEach>
@@ -132,24 +134,6 @@
 	</div>
 	<!-- dashlog -->
 
-	<div class="row">
-		<div class="col-lg-12 summarylog">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					Total Expense:
-					<div id="totalexpense"></div>
-				</div>
-				<div class="panel-body">
-					Total Income:
-					<div id="totalincome"></div>
-				</div>
-				<div class="panel-heading">
-					Net:
-					<div id="net"></div>
-				</div>
-			</div>
-		</div>
-	</div>
 
 </div>
 <!-- /.container-fluid -->
@@ -205,17 +189,18 @@
 
 					<div class="expense_name">
 						<div class="inline modalcss">Enter type:</div>
-						<select class="form-control" class="addExpense_category_option"
-							name="typeSelect">
-							<option value="withdrawal">Withdrawal</option>
-							<option value="deposit">Deposit</option>
+						<select class="form-control" id='type'
+							class="addExpense_category_option" name="typeSelect"
+							onchange='loadCategories()'>
+							<option value="0">Withdrawal</option>
+							<option value="1">Deposit</option>
 						</select>
 					</div>
 
 					<div class="expense_category">
 						<div class="inline modalcss">Category:</div>
-						<select class="form-control" name="expense_categories">
-							<option value="1">Home</option>
+						<select id='categories' class="form-control"
+							name="expense_categories">
 						</select>
 					</div>
 
@@ -299,6 +284,23 @@
 	</div>
 	<!-- /.editExpenseModal --> --%>
 
-	<script src="js/budget.js" type="text/javascript"></script>
-	<script src="js/Chart.bundle.js" type="text/javascript"></script>
-	<script src="js/budget.js" type="text/javascript"></script>
+<script src="js/budget.js" type="text/javascript"></script>
+<script>
+	function loadCategories() {
+		var type = document.getElementById('type').value;
+		var xhr = new XMLHttpRequest();
+		xhr.open("GET", "/transactions/add?isIncome=" + type, true);
+		xhr.send(null);
+		
+		xhr.addEventListener('load', () => {
+			var categories = JSON.parse(xhr.responseText);
+			var html = '';
+			for (var index=0; index < categories.length; index++) {
+				html += "<option> " + categories[index] + " </option>";
+			}
+			document.getElementById('categories').innerHTML = html;
+		});
+		
+
+	}
+	</script>
