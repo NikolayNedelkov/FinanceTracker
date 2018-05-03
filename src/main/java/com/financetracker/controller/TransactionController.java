@@ -78,14 +78,7 @@ public class TransactionController {
 		}
 	}
 	
-<<<<<<< HEAD
 
-	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String addTransaction(HttpServletRequest request, HttpServletResponse response) {
-		try {
-			HashSet<Account> allAccounts=accountDAO.getAllAccountsForUser((User) session.getAttribute("user"));			
-			return "addNewTransaction";
-=======
 //	@RequestMapping(value = "/add", method = RequestMethod.GET)
 //	public String addTransaction(HttpSession session, Model model) {
 //		Transaction transaction = new Transaction();
@@ -109,7 +102,6 @@ public class TransactionController {
 			usersAccounts = accountDAO.getAllAccountsForUser(loggedUser);
 			loggedUser.setAccounts(usersAccounts);
 			return "newTransaction";
->>>>>>> f0c1b6819d79519304fe2ac7ee6fd436639e996d
 		} catch (AccountException e) {
 			e.printStackTrace();
 			return "error";
