@@ -15,9 +15,9 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.financetracker.exceptions.AccountException;
 import com.financetracker.exceptions.TransactionException;
@@ -34,14 +34,13 @@ import com.google.gson.Gson;
 public class TransactionController {
 	
 	@Autowired
-	private TransactionDAO transactionDAO;
-	
+	public TransactionDAO transactionDAO;
 	@Autowired
-	private AccountDAO accountDAO;
-	
+	public AccountDAO accountDAO;
 	@Autowired
-	private CategoryDAO categoryDAO;
-	
+	public CategoryDAO categoryDAO;
+
+
 	@RequestMapping(method = RequestMethod.GET)
 	protected String showTransactions(Model model, HttpSession session) {
 		if ((session == null) || (session.getAttribute("user") == null)) {
@@ -65,27 +64,9 @@ public class TransactionController {
 	}
 	
 
-	@RequestMapping(value="/add")
-	protected void getCategories(HttpServletRequest request, HttpServletResponse response) {
-		
-		try {
-			String transactionType = request.getParameter("isIncome");
-			TreeSet<String>categories = categoryDAO.getCategories(transactionType);
-			response.setContentType("application/json");
-			response.getWriter().println(new Gson().toJson(categories));
-		} catch (SQLException | TransactionException | IOException e) {
-			e.printStackTrace();
-		}
-	}
 	
-<<<<<<< HEAD
+	
 
-	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String addTransaction(HttpServletRequest request, HttpServletResponse response) {
-		try {
-			HashSet<Account> allAccounts=accountDAO.getAllAccountsForUser((User) session.getAttribute("user"));			
-			return "addNewTransaction";
-=======
 //	@RequestMapping(value = "/add", method = RequestMethod.GET)
 //	public String addTransaction(HttpSession session, Model model) {
 //		Transaction transaction = new Transaction();
@@ -101,15 +82,29 @@ public class TransactionController {
 //			
 //	}
 	
+	@RequestMapping(value = "/add/getCategories", method = RequestMethod.GET)
+	public @ResponseBody void doGet(HttpServletRequest request, HttpServletResponse response) throws TransactionException {
+			
+			try {
+				String transactionType = request.getParameter("typeSelect");
+				TreeSet<String> categories = categoryDAO.getCategories(transactionType);
+				response.setContentType("application/json");
+				response.getWriter().println(new Gson().toJson(categories));
+				
+			} catch (IOException | SQLException e) {
+				e.printStackTrace();
+				throw new TransactionException("Cannot get categories!");
+			} 
+	}
+	
 	@RequestMapping(value="/add", method=RequestMethod.GET)
-	protected String addTransaction(HttpSession session) {
+	protected String getUserAccounts(HttpSession session) {
 		User loggedUser = (User) session.getAttribute("user");
 		HashSet<Account> usersAccounts;
 		try {
 			usersAccounts = accountDAO.getAllAccountsForUser(loggedUser);
 			loggedUser.setAccounts(usersAccounts);
 			return "newTransaction";
->>>>>>> f0c1b6819d79519304fe2ac7ee6fd436639e996d
 		} catch (AccountException e) {
 			e.printStackTrace();
 			return "error";
@@ -124,22 +119,22 @@ public class TransactionController {
 		}
 
 		try {
-			//session.getAttribute("userAccounts");
-			
 			String payee = request.getParameter("payee");
 			double amount = Double.parseDouble(request.getParameter("amount"));
 			LocalDate date = LocalDate.parse(request.getParameter("date"));
-			//int accountID = Integer.parseInt(request.getParameter("account"));
-			boolean isIncome = true;
-			if (request.getParameter("typeSelect").equals("withdrawal")) {
-				isIncome = false;
-			}
-			int category = Integer.parseInt(request.getParameter("category"));
-			System.out.println(request.getParameter("accountSelect"));
-			String accountName=request.getParameter("accountSelect");
-			Account a=accountDAO.getAccountByName(accountName);
+			boolean isIncome;
 			
-			Transaction transaction = new Transaction(payee, amount, date, a, category, isIncome);
+			if (request.getParameter("typeSelect").equals("false")) {
+				isIncome = false;
+			}else {
+				isIncome = true;
+			}
+			
+			int category = categoryDAO.getCategoryID(request.getParameter("category"));
+			String accountName=request.getParameter("accountSelect");
+			Account account = accountDAO.getAccountByName(accountName);
+			
+			Transaction transaction = new Transaction(payee, amount, date, account, category, isIncome);
 			transactionDAO.addTransaction(transaction);
 			
 			return "redirect:/transactions";
