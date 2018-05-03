@@ -43,7 +43,7 @@ public class UserController {
 
 				return "redirect:/home";
 			} else {
-				return "login";
+				return "signup-login";
 			}
 		} catch (UserException | ClassNotFoundException | SQLException e) {
 			e.printStackTrace();

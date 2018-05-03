@@ -41,7 +41,7 @@
 			<!--  id="addExpenseOn_btn" -->
 			<div class="modal-footer">
 				<button type="submit" class="btn btn-secondary" data-dismiss="modal">Update</button>
-				<button type="button" class="btn btn-primary">Back</button>
+				<button type="button" onclick="location.href = './myProfile';"class="btn btn-primary">Back</button>
 			</div>
 		</form>
 	</div>
