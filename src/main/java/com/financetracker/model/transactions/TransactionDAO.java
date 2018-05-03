@@ -20,8 +20,7 @@ import com.financetracker.model.accounts.AccountDAO;
 
 @Component
 public class TransactionDAO {
-	private static final String DEPOSIT_CATEGORIES_SQL = "SELECT categories.name FROM categories WHERE categories.is_income = 1";
-	private static final String EXPENSE_CATEGORIES_SQL = "SELECT categories.name FROM categories WHERE categories.is_income = 0";
+	
 	private static final String ADD_TRANSACTION_SQL = "INSERT INTO transactions VALUES (null,?,?,?,?,?,?)";
 	private static final String REMOVE_TRANSACTION_SQL = "DELETE FROM transactions WHERE transactions.id=?";
 	private static final String GET_ALL_TRANSACTIONS_SQL = "SELECT `payee/payer`,amount, date_paid,accounts_id,categories_id,is_income FROM transactions where accounts_id=?";
@@ -100,19 +99,5 @@ public class TransactionDAO {
 			e.printStackTrace();
 			return 0;
 		}
-	}
-
-	public List<String> getExpenseCategories() throws SQLException, ClassNotFoundException {
-		Connection connection = DBConnection.getInstance().getConnection();
-		Statement statement = connection.createStatement();
-		List<String> expenseCategories = (List<String>) statement.executeQuery(EXPENSE_CATEGORIES_SQL);
-		return expenseCategories;
-	}
-
-	public List<String> getDepositCategories() throws SQLException, ClassNotFoundException {
-		Connection connection = DBConnection.getInstance().getConnection();
-		Statement statement = connection.createStatement();
-		List<String> depositCategories = (List<String>) statement.executeQuery(DEPOSIT_CATEGORIES_SQL);
-		return depositCategories;
 	}
 }

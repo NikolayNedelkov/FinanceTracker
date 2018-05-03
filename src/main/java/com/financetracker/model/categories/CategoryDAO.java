@@ -17,7 +17,22 @@ public class CategoryDAO {
 
 	
 	private static final String GET_ALL_CATEGORIES_SQL = "SELECT categories.name FROM categories WHERE categories.is_income = ?";
+	private static final String GET_CATEGORY_ID_SQL = "SELECT categories.id FROM categories WHERE categories.name = ?";
 
+	public int getCategoryID(String category) throws TransactionException {
+		try {
+			Connection connection = DBConnection.getInstance().getConnection();
+			PreparedStatement statement = connection.prepareStatement(GET_CATEGORY_ID_SQL);
+			statement.setString(1,category);
+			ResultSet resultSet = statement.executeQuery();
+			resultSet.next();
+			return resultSet.getInt(1);
+		} catch (SQLException | ClassNotFoundException e) {
+			e.printStackTrace();
+			throw new TransactionException("Cannot find category name!", e);
+		}
+	}
+	
 	public TreeSet<String> getCategories(String isIncome) throws SQLException, TransactionException{
 		try {
 			Connection connection = DBConnection.getInstance().getConnection();
