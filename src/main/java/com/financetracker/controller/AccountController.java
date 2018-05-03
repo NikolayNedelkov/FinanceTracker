@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.financetracker.exceptions.AccountException;
 import com.financetracker.exceptions.CurrencyException;
-import com.financetracker.model.accountType.AccountTypeDAO;
+import com.financetracker.model.accountType.IAccountTypeDAO;
 import com.financetracker.model.accounts.Account;
 import com.financetracker.model.accounts.AccountComparator;
-import com.financetracker.model.accounts.AccountDAO;
-import com.financetracker.model.currencies.CurrencyDAO;
+import com.financetracker.model.accounts.IAccountDAO;
+import com.financetracker.model.currencies.ICurrencyDAO;
 import com.financetracker.model.users.User;
 
 @Controller
@@ -29,11 +29,11 @@ import com.financetracker.model.users.User;
 public class AccountController {
 
 	@Autowired
-	private AccountDAO accountDao;
+	private IAccountDAO accountDao;
 	@Autowired
-	private CurrencyDAO currencyDAO;
+	private ICurrencyDAO currencyDAO;
 	@Autowired
-	private AccountTypeDAO accountTypeDAO;
+	private IAccountTypeDAO accountTypeDAO;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String addAccounts(Model model, HttpSession session, HttpServletRequest request) {

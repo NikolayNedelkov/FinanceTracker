@@ -14,12 +14,12 @@ import org.springframework.stereotype.Component;
 
 import com.financetracker.database.DBConnection;
 import com.financetracker.exceptions.AccountException;
-import com.financetracker.model.accountType.AccountTypeDAO;
-import com.financetracker.model.currencies.CurrencyDAO;
+import com.financetracker.model.accountType.IAccountTypeDAO;
+import com.financetracker.model.currencies.ICurrencyDAO;
 import com.financetracker.model.users.User;
 
 @Component
-public class AccountDAO {
+public class AccountDAO implements IAccountDAO {
 
 	private static final String UPDATE_ACCOUNT = "update accounts set name=?, balance=?, last_4_digits=?, currencies_id1=?, account_type_id=? where id=?;";
 	private static final String GET_ACCOUNT_BY_ID = "SELECT a.id, a.name, a.balance, a.last_4_digits, a.percentage, a.payment_due_day, c.currency_type, acct.type FROM accounts a join currencies c on (a.currencies_id1=c.id) join account_types acct on (a.account_type_id=acct.id) where a.id=?;";
@@ -28,10 +28,11 @@ public class AccountDAO {
 	private static final String CHECK_IF_ACCOUNT_EXISTS = "SELECT * FROM accounts a JOIN users u ON (a.user_id=u.id) WHERE a.name =? and u.id=?";
 	private static final String ADD_ACCOUNT_SQL = "insert into accounts (name, balance, last_4_digits, currencies_id1, account_type_id, user_id) values (?, ?, ?, ?, ?, ?);";
 	@Autowired
-	private CurrencyDAO currencyDAO;
+	private ICurrencyDAO currencyDAO;
 	@Autowired
-	private AccountTypeDAO accountTypeDAO;
+	private IAccountTypeDAO accountTypeDAO;
 
+	@Override
 	public int addNewAccount(Account a, HttpSession session) throws AccountException {
 		PreparedStatement pstmt;
 		try {
@@ -84,6 +85,7 @@ public class AccountDAO {
 		}
 	}
 
+	@Override
 	public HashSet<Account> getAllAccountsForUser(User user) throws AccountException {
 		HashSet<Account> allAccounts = new HashSet<Account>();
 		PreparedStatement pstmt;
@@ -104,6 +106,7 @@ public class AccountDAO {
 	}
 
 	// Validaciq posle
+	@Override
 	public Account getAccountById(int id) throws AccountException {
 		try {
 			PreparedStatement pst = DBConnection.getInstance().getConnection().prepareStatement(GET_ACCOUNT_BY_ID,
@@ -122,6 +125,7 @@ public class AccountDAO {
 		}
 	}
 	
+	@Override
 	public Account getAccountByName(String name) throws AccountException {
 		try {
 			PreparedStatement pst = DBConnection.getInstance().getConnection().prepareStatement(GET_ACCOUNT_BY_NAME,
@@ -140,6 +144,7 @@ public class AccountDAO {
 		}
 	}
 
+	@Override
 	public void updateAccount(Account updated) throws AccountException {
 		try {
 			Account notUpdated = this.getAccountById(updated.getAccount_id());

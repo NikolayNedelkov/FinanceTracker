@@ -55,7 +55,6 @@ public class UserDAO implements IUserDAO {
 			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		}
 	}
-
 	@Override
 	public int register(User user) throws UserException {
 		PreparedStatement pstmt;
@@ -103,6 +102,7 @@ public class UserDAO implements IUserDAO {
 		}
 	}
 
+	@Override
 	public User getUserByEmail(String email) throws UserException {
 		PreparedStatement pstmt;
 		try {
@@ -128,6 +128,7 @@ public class UserDAO implements IUserDAO {
 		}
 	}
 	
+	@Override
 	public void changePassword(int id, String password, String newPassword, String newPassword2) throws UserException {
 		PreparedStatement pstmt;
 		try {

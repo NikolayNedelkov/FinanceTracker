@@ -36,6 +36,7 @@
 				<div class="inline modalcss">Choose Account:</div>
 
 				<select class="form-control" name="accountSelect">
+				<option value="" disabled selected>Please select an existing account</option>
 					<c:forEach items="${ sessionScope.user.accounts }" var="account">
 						<option value="${ account.accountName }">${ account.accountName }</option>
 					</c:forEach>
@@ -46,27 +47,56 @@
 			<div class="expense_name">
 				<div class="inline modalcss">Enter type:</div>
 
-				<select name="typeSelect">
-					<option value="0">Withdrawal</option>
-					<option value="1">Deposit</option>
+				<select class="form-control addExpense_category_option" id="type"
+					name="typeSelect" onchange='loadCategories()'>
+					<option disabled selected>Please select a transaction type</option>
+					<option value="false">Withdrawal</option>
+					<option value="true">Deposit</option>
 				</select>
 			</div>
-			
-			
+
+
 			<div class="expense_name">
 				<div class="inline modalcss">Category:</div>
-					<select name="category">
-						<option value="1">Car</option>
-					</select>
-			</div>	
+				
+				<select class="form-control addExpense_category_option" id="categories" name="category">
+				</select>
+			</div>
+
 
 
 			<!--  id="addExpenseOn_btn" -->
 			<div class="modal-footer">
-				<button type="submit" class="btn btn-secondary" data-dismiss="modal">Save</button>
-				<button type="submit" class="btn btn-primary">Back</button>
+				<button type="submit" class="btn btn-primary" data-dismiss="modal">Save</button>
+				<button type="submit" class="btn btn-secondary">Back</button>
 			</div>
 
 		</form>
 	</div>
 </div>
+
+
+<script>
+	function loadCategories() {
+		var type = document.getElementById('type').value;
+		var xhr = new XMLHttpRequest();
+		xhr.open("GET", "add/getCategories?typeSelect="+ type, true);
+		xhr.send(null);
+		
+		xhr.addEventListener('load', () => {
+			var categories = JSON.parse(xhr.responseText.split(","));
+			var select = document.getElementById("categories"); 
+			
+			for (var index=0; index < categories.length; index++) {
+				var opt = categories[index];
+			    var el = document.createElement("option");
+			    
+			    el.textContent = opt;
+			    el.value = opt;
+			    select.appendChild(el);
+			}
+			
+			document.getElementById('categories').innerHTML = html;
+		});
+	}
+	</script>

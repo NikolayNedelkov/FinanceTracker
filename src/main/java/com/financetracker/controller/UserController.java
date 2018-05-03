@@ -18,14 +18,14 @@ import com.financetracker.exceptions.AccountException;
 import com.financetracker.exceptions.UserException;
 import com.financetracker.model.accounts.Account;
 import com.financetracker.model.accounts.AccountDAO;
+import com.financetracker.model.users.IUserDAO;
 import com.financetracker.model.users.User;
-import com.financetracker.model.users.UserDAO;
 
 @Controller
 public class UserController {
 
 	@Autowired
-	private UserDAO userDAO;
+	private IUserDAO userDAO;
 
 	@Autowired
 	private AccountDAO accountDao;
@@ -51,7 +51,7 @@ public class UserController {
 				user.setAccounts(userAccounts);
 				return "redirect:/home";
 			} else {
-				return "login";
+				return "signup-login";
 			}
 		} catch (UserException | ClassNotFoundException | SQLException | AccountException e) {
 			e.printStackTrace();
