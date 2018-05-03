@@ -9,13 +9,13 @@ import com.financetracker.model.transactions.TransactionDAO;
 
 @Controller
 public class RestController {
-	@Autowired
-	public TransactionDAO transactionDAO;
-	@Autowired
-	public AccountDAO accountDAO;
-	@Autowired
-	public CategoryDAO categoryDAO;
-
-	public RestController() {
-	}
+//	@Autowired
+//	public TransactionDAO transactionDAO;
+//	@Autowired
+//	public AccountDAO accountDAO;
+//	@Autowired
+//	public CategoryDAO categoryDAO;
+//
+//	public RestController() {
+//	}
 }

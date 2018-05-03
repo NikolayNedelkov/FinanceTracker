@@ -88,7 +88,7 @@
 						href="plannedpayments.jsp" id="income_btn"><i
 							class="fas fa-history"></i>
 							<div class="inline">My Planned Payments</div></a> <a
-						href="budget.jsp" id="summary_btn"><i
+						href="./budget" id="summary_btn"><i
 							class="fas fa-money-bill-alt"></i>
 							<div class="inline">My budget</div></a> <a href="charts.jsp"
 						id="credit_btn"><i class="fas fa-chart-line"></i>
