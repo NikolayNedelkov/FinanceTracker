@@ -104,8 +104,9 @@ public class TransactionController {
 			if (request.getParameter("typeSelect").equals("withdrawal")) {
 				isIncome = false;
 			}
-			int category = Integer.parseInt(request.getParameter("expense_categories"));
-			String accountName=request.getParameter("account");
+			int category = Integer.parseInt(request.getParameter("category"));
+			System.out.println(request.getParameter("accountSelect"));
+			String accountName=request.getParameter("accountSelect");
 			Account a=accountDAO.getAccountByName(accountName);
 			
 			Transaction transaction = new Transaction(payee, amount, date, a, category, isIncome);

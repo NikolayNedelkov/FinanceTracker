@@ -47,16 +47,16 @@
 				<div class="inline modalcss">Enter type:</div>
 
 				<select name="typeSelect">
-					<option value="withdrawal">Withdrawal</option>
-					<option value="deposit">Deposit</option>
+					<option value="0">Withdrawal</option>
+					<option value="1">Deposit</option>
 				</select>
 			</div>
 			
 			
 			<div class="expense_name">
 				<div class="inline modalcss">Category:</div>
-					<select name="typeSelect">
-						<option value="1">TestCategory</option>
+					<select name="category">
+						<option value="1">Car</option>
 					</select>
 			</div>	
 
