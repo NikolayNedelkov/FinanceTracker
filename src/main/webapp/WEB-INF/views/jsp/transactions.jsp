@@ -49,10 +49,11 @@
 								</select>
 							</div>
 						</div>
-							<button type="button" class="btn btn-primary" id="addtransaction" onclick="location.href='./transactions/add';">Add a new
-								transaction</button>
-					</div>
 
+						<button type="button" class="btn btn-primary" id="addtransaction"
+							onclick="location.href='./transactions/add';">Add a new
+							transaction</button>
+					</div>
 
 					<div id="search">
 						<div id="search_btn" class="inline" style="display: block;">
@@ -133,14 +134,17 @@
 
 </div>
 <!-- /.container-fluid -->
+
+
+
+<!-- </div>
+/#page-wrapper
 </div>
-<!-- /#page-wrapper -->
-</div>
-<!-- /#wrapper -->
+/#wrapper -->
 
 
 
-<div class="modal fade" id="addExpenseModal">
+<%-- <div class="modal fade" id="addExpenseModal">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -275,16 +279,14 @@
 		</div>
 		<!-- /.modal-dialog -->
 	</div>
-	<!-- /.editExpenseModal -->
+	<!-- /.editExpenseModal --> --%>
 
-	<script src="js/budget.js" type="text/javascript"></script>
-	<script src="js/Chart.bundle.js" type="text/javascript"></script>
-
-	<script>
+<script src="js/budget.js" type="text/javascript"></script>
+<script>
 	function loadCategories() {
 		var type = document.getElementById('type').value;
 		var xhr = new XMLHttpRequest();
-		xhr.open("GET", "./transactions/add?typeSelect="+type, true);
+		xhr.open("GET", "/transactions/add?isIncome=" + type, true);
 		xhr.send(null);
 		
 		xhr.addEventListener('load', () => {

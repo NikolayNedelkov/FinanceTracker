@@ -64,20 +64,31 @@ public class TransactionController {
 		return "transactions";
 	}
 	
-	@RequestMapping(value="/add", method = RequestMethod.GET)
-	protected String getCategories(HttpServletRequest request, HttpServletResponse response) {
+
+	@RequestMapping(value="/add")
+	protected void getCategories(HttpServletRequest request, HttpServletResponse response) {
 		
 		try {
-			int transactionType = Integer.parseInt(request.getParameter("typeSelect"));
+			String transactionType = request.getParameter("isIncome");
 			TreeSet<String>categories = categoryDAO.getCategories(transactionType);
 			response.setContentType("application/json");
 			response.getWriter().println(new Gson().toJson(categories));
 		} catch (SQLException | TransactionException | IOException e) {
 			e.printStackTrace();
+		}
+	}
+	
+
+	@RequestMapping(value = "/add", method = RequestMethod.GET)
+	public String addTransaction(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			HashSet<Account> allAccounts=accountDAO.getAllAccountsForUser((User) session.getAttribute("user"));			
+			return "addNewTransaction";
+		} catch (AccountException e) {
+			e.printStackTrace();
 			return "error";
 		}
-		return "transactions";
-
+			
 	}
 	
 	@RequestMapping(value="/add", method=RequestMethod.POST)
@@ -87,21 +98,26 @@ public class TransactionController {
 		}
 
 		try {
-			//session.getAttribute("userAccounts");
+			//session.getAttribute("userAccounts");			
+//			String payee = request.getParameter("payee");
+//			double amount = Double.parseDouble(request.getParameter("amount"));
+//			LocalDate date = LocalDate.parse(request.getParameter("date"));
+//			//int accountID = Integer.parseInt(request.getParameter("account"));
 			
-			String payee = request.getParameter("payee");
-			double amount = Double.parseDouble(request.getParameter("amount"));
-			LocalDate date = LocalDate.parse(request.getParameter("date"));
-			//int accountID = Integer.parseInt(request.getParameter("account"));
 			boolean isIncome = true;
-			if (request.getParameter("typeSelect").equals("withdrawal")) {
+			if (request.getParameter("type").equals("false")) {
 				isIncome = false;
 			}
-			int category = Integer.parseInt(request.getParameter("expense_categories"));
+			readyTransaction.setIncome(isIncome);
+
+			//Vremenno, posle shte e s ajax
+			readyTransaction.setCategory(1);
+			
+			
+			//int category = Integer.parseInt(request.getParameter("expense_categories"));
 			//Transaction transaction = new Transaction(payee, amount, date, , category, isIncome);
 			
-			transactionDAO.addTransaction(readyTransaction);
-			
+			transactionDAO.addTransaction(readyTransaction);	
 			return "redirect:/transactions";
 
 		} catch (TransactionException | SQLException  e) {

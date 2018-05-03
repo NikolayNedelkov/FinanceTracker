@@ -18,11 +18,17 @@ public class CategoryDAO {
 	
 	private static final String GET_ALL_CATEGORIES_SQL = "SELECT categories.name FROM categories WHERE categories.is_income = ?";
 
-	public TreeSet<String> getCategories(int isIncome) throws SQLException, TransactionException{
+	public TreeSet<String> getCategories(String isIncome) throws SQLException, TransactionException{
 		try {
 			Connection connection = DBConnection.getInstance().getConnection();
 			PreparedStatement statement = connection.prepareStatement(GET_ALL_CATEGORIES_SQL);
-			statement.setInt(1, isIncome);
+			
+			if(isIncome.equals("true")) {
+				statement.setBoolean(1, true);
+			}else {
+				statement.setBoolean(1, false);
+			}
+			
 			ResultSet resultSet = statement.executeQuery();
 			TreeSet<String> categories = new TreeSet<>();
 			while (resultSet.next()) {
