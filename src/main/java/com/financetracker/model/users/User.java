@@ -23,6 +23,10 @@ public class User {
 	private Budget budget;
 	private Set<Account> accounts;
 
+	public User() {
+		
+	}
+	
 	public User(String email, String password) {
 		this.email = email;
 		this.password = password;
