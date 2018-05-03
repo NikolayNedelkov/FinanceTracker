@@ -99,7 +99,7 @@
 
 		<!-- Page Heading -->
 		<div class="row center">
-			<h2>My Transactions</h2>
+			<h2>My Accounts</h2>
 		</div>
 		<!-- /.row -->
 
@@ -157,7 +157,7 @@
 									<th scope="col"></th>
 										<th scope="col">Balance</th>
 										<th scope="col">Currency</th>
-										<th scope="col">Accounttype</th>
+										<th scope="col">Account type</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -165,12 +165,13 @@
 										var="account">
 										<tr class="item_name clickable">
 											<th scope="row" class="item_name clickable"><c:out
-													value="${account.accountName}" /> <input type="button"
-												onclick="location.href='./accounts/acc/${ account.account_id }';"
-												value="Edit account" /></th>
+													value="${account.accountName}" /></th>
 											<td class="item_amt"><c:out value="${account.balance}" /></td>
 											<td class="item_amt"><c:out value="${account.currency}" /></td>
 											<td class="item_category"><c:out value="${account.type}" /></td>
+											<td> <input type="button" id="editbtn" class = "btn btn-primary"
+												onclick="location.href='./accounts/acc/${ account.account_id }';"
+												value="Edit account" /></td>
 										</tr>
 									</c:forEach>
 								</tbody>

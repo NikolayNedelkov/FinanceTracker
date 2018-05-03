@@ -66,7 +66,7 @@
 							<c:out value="${sessionScope.user.lastName }"></c:out>
 						</div> <b class="caret"></b></a>
 					<ul class="dropdown-menu">
-						<li><a href="profile.jsp" id="profile_btn"><i
+						<li><a href="myProfile" id="profile_btn"><i
 								class="fa fa-fw fa-location-arrow"></i>
 								<div class="inline">My profile</div></a></li>
 						<li><a href="logout" id="logoutbtn"><i
@@ -98,8 +98,6 @@
 			</div>
 			<!-- /.navbar-collapse -->
 		</nav>
-
-
 
 		<!-- additional jQuery -->
 		<script src="js/jquery.js"></script>

@@ -39,7 +39,7 @@
 					</div>
 
 					<p class="forgot">
-						<a href="#">Forgot Password?</a>
+						<a href="./forgotPassword">Forgot Password?</a>
 					</p>
 
 					<button class="button button-block" />
