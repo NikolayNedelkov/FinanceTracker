@@ -13,16 +13,20 @@ public class Transaction {
 	private Account account;
 	private boolean isIncome;
 	private int category;
-	
+
 	public void setIncome(boolean isIncome) {
 		this.isIncome = isIncome;
 	}
 
 	public Transaction() {
-		
+
 	}
 
-	public Transaction(String payee, double amount,LocalDate date, Account account, int category,boolean isIncome)
+	public Transaction(Account account) {
+		this.account = account;
+	}
+
+	public Transaction(String payee, double amount, LocalDate date, Account account, int category, boolean isIncome)
 			throws TransactionException {
 		setPayee(payee);
 		setAmount(amount);
@@ -70,18 +74,18 @@ public class Transaction {
 	public void setAmount(double amount) throws TransactionException {
 		if (amount > 0) {
 			this.amount = amount;
-		}else {
+		} else {
 			throw new TransactionException("Invalid amount for transaction!");
 		}
-		
+
 	}
-	
+
 	public LocalDate getDate() {
 		return date;
 	}
-	
+
 	private void setDate(LocalDate date) throws TransactionException {
-		if(date != null) {
+		if (date != null) {
 			this.date = date;
 		} else {
 			throw new TransactionException("Invalid date!");
@@ -95,7 +99,7 @@ public class Transaction {
 	public void setAccount(Account account) throws TransactionException {
 		if (account != null) {
 			this.account = account;
-		}else {
+		} else {
 			throw new TransactionException("Invalid account!");
 		}
 
@@ -112,13 +116,10 @@ public class Transaction {
 	public void setCategory(int category) throws TransactionException {
 		if (category > 0) {
 			this.category = category;
-		}else {
+		} else {
 			throw new TransactionException("Invalid category!");
 		}
-	
-	}
 
-	
-	
+	}
 
 }

@@ -1,7 +1,7 @@
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ page import="com.financetracker.model.transactions.Transaction"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <jsp:include page="menu.jsp"></jsp:include>
 
@@ -10,74 +10,62 @@
 	<div class="container-fluid">
 		<div class="row center">
 			<h2>
-				<span class="bold">New Transaction</span>
+				<span class="bold">Add new Transaction</span>
 			</h2>
 		</div>
 
 		<form id="addExpenseForm" action="" method="post">
-
-			<form:form commandName="transaction">
-				<div class="expense_name">
-					<div class="inline modalcss">Payee/Payer name:</div>
-					<form:input type="text" class="form-control" id="addexpense_name"
-						name="payee" path="payee" />
-				</div>
-
-				<div class="expense_name">
-					<div class="inline modalcss">Date of transaction:</div>
-					<form:input type="date" class="form-control" id="addexpense_name"
-						name="date" path="date" />
-				</div>
-
-				<div class="expense_name">
-					<div class="inline modalcss">Enter the amount:</div>
-					<form:input type="number" class="form-control" id="addexpense_name"
-						name="amount" path="amount" />
-				</div>
+			<div class="expense_name">
+				<div class="inline modalcss">Payee/Payer name:</div>
+				<input type="text" class="form-control" id="addexpense_name"
+					name="payee">
+			</div>
+			<div class="expense_name">
+				<div class="inline modalcss">Date of transaction:</div>
+				<input type="date" class="form-control" id="addexpense_name"
+					name="date">
+			</div>
+			<div class="expense_name">
+				<div class="inline modalcss">Enter the amount:</div>
+				<input type="number" class="form-control" id="addexpense_name"
+					name="amount">
+			</div>
 
 
+			<div class="expense_name">
+				<div class="inline modalcss">Choose Account:</div>
 
-				<div class="expense_name">
-					<div class="inline modalcss">Account type:</div>
-
-					<form:select class="form-control" path="account">
-						<form:option value="-" label="--Select type" />
-						<form:options items="${allAccounts}" />
-					</form:select>
-				</div>
-
-
-
-				<div class="expense_name">
-					<div class="inline modalcss">Enter type:</div>
-					<form:radiobutton path="isIncome" value="true" />
-					<form:radiobutton path="isIncome" value="false" />
-					<%-- 					<form:select name= "type" class="form-control" path="isIncome">
-						<form:option value="-" label="--Select type" />
-						<form:option value="false" label=""/>
-						<form:option value="true" label="" />
-					</form:select> --%>
-				</div>
+				<select class="form-control" name="accountSelect">
+					<c:forEach items="${ sessionScope.user.accounts }" var="account">
+						<option value="${ account.accountName }">${ account.accountName }</option>
+					</c:forEach>
+				</select>
+			</div>
 
 
-				<div class="expense_name">
-					<div class="inline modalcss">Category:</div>
+			<div class="expense_name">
+				<div class="inline modalcss">Enter type:</div>
 
-					<form:select class="form-control" path="category">
-						<form:option value="1" label="--TestCategory" />
+				<select name="typeSelect">
+					<option value="withdrawal">Withdrawal</option>
+					<option value="deposit">Deposit</option>
+				</select>
+			</div>
+			
+			
+			<div class="expense_name">
+				<div class="inline modalcss">Category:</div>
+					<select name="typeSelect">
+						<option value="1">TestCategory</option>
+					</select>
+			</div>	
 
-						<!-- Ajax will be here -->
 
-					</form:select>
-				</div>
-
-
-				<div class="modal-footer">
-					<button type="submit" class="btn btn-primary" data-dismiss="modal">Add
-						Transaction</button>
-					<button type="submit" class="btn btn-secondary">Back</button>
-				</div>
-			</form:form>
+			<!--  id="addExpenseOn_btn" -->
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-secondary" data-dismiss="modal">Save</button>
+				<button type="submit" class="btn btn-primary">Back</button>
+			</div>
 
 		</form>
 	</div>

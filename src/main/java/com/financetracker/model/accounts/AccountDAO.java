@@ -23,6 +23,7 @@ public class AccountDAO {
 
 	private static final String UPDATE_ACCOUNT = "update accounts set name=?, balance=?, last_4_digits=?, currencies_id1=?, account_type_id=? where id=?;";
 	private static final String GET_ACCOUNT_BY_ID = "SELECT a.id, a.name, a.balance, a.last_4_digits, a.percentage, a.payment_due_day, c.currency_type, acct.type FROM accounts a join currencies c on (a.currencies_id1=c.id) join account_types acct on (a.account_type_id=acct.id) where a.id=?;";
+	private static final String GET_ACCOUNT_BY_NAME = "SELECT a.id, a.name, a.balance, a.last_4_digits, a.percentage, a.payment_due_day, c.currency_type, acct.type FROM accounts a join currencies c on (a.currencies_id1=c.id) join account_types acct on (a.account_type_id=acct.id) where a.name like ?;";
 	private static final String ALL_ACCOUNTS_FOR_USER = "SELECT a.id, a.name, a.balance, a.last_4_digits, a.percentage, a.payment_due_day, c.currency_type, acct.type FROM accounts a join currencies c on (a.currencies_id1=c.id) join account_types acct on (a.account_type_id=acct.id) where a.user_id=?;";
 	private static final String CHECK_IF_ACCOUNT_EXISTS = "SELECT * FROM accounts a JOIN users u ON (a.user_id=u.id) WHERE a.name =? and u.id=?";
 	private static final String ADD_ACCOUNT_SQL = "insert into accounts (name, balance, last_4_digits, currencies_id1, account_type_id, user_id) values (?, ?, ?, ?, ?, ?);";
@@ -116,6 +117,24 @@ public class AccountDAO {
 				return account;
 			} else
 				throw new AccountException("Couldn't retrieve an account with id " + id);
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new AccountException("DB-issue!");
+		}
+	}
+	
+	public Account getAccountByName(String name) throws AccountException {
+		try {
+			PreparedStatement pst = DBConnection.getInstance().getConnection().prepareStatement(GET_ACCOUNT_BY_NAME,
+					Statement.RETURN_GENERATED_KEYS);
+			pst.setString(1, name);
+			ResultSet rs = pst.executeQuery();
+			if (rs.next()) {
+				Account account = new Account(rs.getInt("a.id"), rs.getString("a.name"), rs.getDouble("a.balance"),
+						"" + rs.getInt("a.last_4_digits"), (byte) (rs.getInt("a.percentage")),
+						rs.getInt("a.payment_due_day"), rs.getString("c.currency_type"), rs.getString("acct.type"));
+				return account;
+			} else
+				throw new AccountException("Couldn't retrieve an account with name: " + name);
 		} catch (ClassNotFoundException | SQLException e) {
 			throw new AccountException("DB-issue!");
 		}

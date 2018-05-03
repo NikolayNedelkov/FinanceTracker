@@ -57,54 +57,65 @@ public class TransactionController {
 
 	}
 	
-	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String addTransaction(HttpSession session, Model model) {
-		Transaction transaction = new Transaction();
+//	@RequestMapping(value = "/add", method = RequestMethod.GET)
+//	public String addTransaction(HttpSession session, Model model) {
+//		Transaction transaction = new Transaction();
+//		try {
+//			HashSet<Account> allAccounts=accountDAO.getAllAccountsForUser((User) session.getAttribute("user"));
+//			model.addAttribute("transaction", transaction);
+//			model.addAttribute("allAccounts", allAccounts);
+//			return "newTransaction";
+//		} catch (AccountException e) {
+//			e.printStackTrace();
+//			return "error";
+//		}
+//			
+//	}
+	
+	@RequestMapping(value="/add", method=RequestMethod.GET)
+	protected String addTransaction(HttpSession session) {
+		User loggedUser = (User) session.getAttribute("user");
+		HashSet<Account> usersAccounts;
 		try {
-			HashSet<Account> allAccounts=accountDAO.getAllAccountsForUser((User) session.getAttribute("user"));
-			model.addAttribute("transaction", transaction);
-			model.addAttribute("allAccounts", allAccounts);
+			usersAccounts = accountDAO.getAllAccountsForUser(loggedUser);
+			loggedUser.setAccounts(usersAccounts);
 			return "newTransaction";
 		} catch (AccountException e) {
 			e.printStackTrace();
 			return "error";
 		}
-			
+		
 	}
 	
 	@RequestMapping(value="/add", method=RequestMethod.POST)
-	protected String addTransaction(@ModelAttribute Transaction readyTransaction, HttpServletRequest request, HttpSession session) {
+	protected String addTransaction(HttpServletRequest request, HttpSession session) {
 		if ((session == null) || (session.getAttribute("user") == null)) {
 			return "redirect:/signup-login";
 		}
 
 		try {
-			//session.getAttribute("userAccounts");			
-//			String payee = request.getParameter("payee");
-//			double amount = Double.parseDouble(request.getParameter("amount"));
-//			LocalDate date = LocalDate.parse(request.getParameter("date"));
-//			//int accountID = Integer.parseInt(request.getParameter("account"));
+			//session.getAttribute("userAccounts");
 			
+			String payee = request.getParameter("payee");
+			double amount = Double.parseDouble(request.getParameter("amount"));
+			LocalDate date = LocalDate.parse(request.getParameter("date"));
+			//int accountID = Integer.parseInt(request.getParameter("account"));
 			boolean isIncome = true;
-			if (request.getParameter("type").equals("false")) {
+			if (request.getParameter("typeSelect").equals("withdrawal")) {
 				isIncome = false;
 			}
-			readyTransaction.setIncome(isIncome);
-
-			//Vremenno, posle shte e s ajax
-			readyTransaction.setCategory(1);
+			int category = Integer.parseInt(request.getParameter("expense_categories"));
+			String accountName=request.getParameter("account");
+			Account a=accountDAO.getAccountByName(accountName);
 			
+			Transaction transaction = new Transaction(payee, amount, date, a, category, isIncome);
+			transactionDAO.addTransaction(transaction);
 			
-			//int category = Integer.parseInt(request.getParameter("expense_categories"));
-			//Transaction transaction = new Transaction(payee, amount, date, , category, isIncome);
-			
-			transactionDAO.addTransaction(readyTransaction);	
 			return "redirect:/transactions";
 
-		} catch (TransactionException | SQLException  e) {
+		} catch (TransactionException | AccountException | SQLException  e) {
 			e.printStackTrace();
 			return "error";
 		}
-
 	}
 }
