@@ -4,25 +4,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.springframework.stereotype.Component;
+
 import com.financetracker.database.DBConnection;
 import com.financetracker.exceptions.UserException;
 import com.financetracker.model.users.User;
 
+
+@Component
 public class BudgetDAO {
 
 	private static final String CALCULATE_INCOME = "SELECT SUM(t.amount) FROM users u JOIN accounts a ON (u.id=a.user_id) JOIN transactions t on (a.id=t.accounts_id) WHERE u.id=? and t.is_income = '1'";
 	private static final String CALCULATE_EXPENSE = "SELECT SUM(t.amount) FROM users u JOIN accounts a ON (u.id=a.user_id) JOIN transactions t on (a.id=t.accounts_id) WHERE u.id=? and t.is_income = '0'";
-	private static BudgetDAO budgetDAO = null;
 
-	private BudgetDAO() {
-	}
-
-	public static BudgetDAO getInstance() throws SQLException, ClassNotFoundException {
-		if (budgetDAO == null) {
-			budgetDAO = new BudgetDAO();
-		}
-		return budgetDAO;
-	}
 
 	public double calculateIncome(User user) throws UserException {
 		PreparedStatement pstmt;
@@ -64,6 +58,13 @@ public class BudgetDAO {
 		} catch (SQLException | ClassNotFoundException e) {
 			throw new UserException("You account budget cannot be calculated ", e);
 		}
+	}
+	
+	public Budget getBudget(User u) throws UserException {
+		double totalIncome=this.calculateIncome(u);
+		double totalExpense=this.calculateExpense(u);
+		Budget budget = new Budget(totalIncome, totalExpense);
+		return budget;
 	}
 	
 }

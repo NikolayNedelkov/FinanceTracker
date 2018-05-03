@@ -1,28 +1,32 @@
 package com.financetracker.model.budget;
 
 public class Budget {
-	private double income;
-	private double expese;
+	private double totalIncome;
+	private double totalExpense;
+	
+	public Budget() {
+		
+	}
 	
 	public Budget(double income, double expese) {
-		this.income = income;
-		this.expese = expese;
+		this.totalIncome = income;
+		this.totalExpense = expese;
 	}
 
-	public double getIncome() {
-		return income;
+	public double getTotalIncome() {
+		return totalIncome;
 	}
 
-	public void setIncome(double income) {
-		this.income = income;
+	public void setTotalIncome(double income) {
+		this.totalIncome = income;
 	}
 
-	public double getExpese() {
-		return expese;
+	public double getTotalExpese() {
+		return totalExpense;
 	}
 
-	public void setExpese(double expese) {
-		this.expese = expese;
+	public void setTotalExpese(double expese) {
+		this.totalExpense = expese;
 	}
 	
 	
