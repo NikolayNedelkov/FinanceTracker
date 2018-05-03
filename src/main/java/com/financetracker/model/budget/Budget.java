@@ -21,7 +21,7 @@ public class Budget {
 		this.totalIncome = income;
 	}
 
-	public double getTotalExpese() {
+	public double gettotalExpense() {
 		return totalExpense;
 	}
 
