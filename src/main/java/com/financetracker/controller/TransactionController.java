@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -66,7 +67,7 @@ public class TransactionController {
 
 	
 	@RequestMapping(value = "/add/getCategories", method = RequestMethod.GET)
-	public @ResponseBody void doGet(HttpServletRequest request, HttpServletResponse response) throws TransactionException {
+	public @ResponseBody void getCategories(HttpServletRequest request, HttpServletResponse response) throws TransactionException {
 			
 			try {
 				String transactionType = request.getParameter("typeSelect");
@@ -124,6 +125,20 @@ public class TransactionController {
 			return "redirect:/transactions";
 
 		} catch (TransactionException | AccountException | SQLException  e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+	
+	@RequestMapping(value="/delete/{id}", method=RequestMethod.GET)
+	public String deleteTransaction(@PathVariable("id") Integer id,HttpSession session) {
+		if ((session == null) || (session.getAttribute("user") == null)) {
+			return "redirect:/signup-login";
+		}
+		try {
+			transactionDAO.deleteTransaction(id);
+			return "redirect:/transactions";
+		} catch (TransactionException e) {
 			e.printStackTrace();
 			return "error";
 		}

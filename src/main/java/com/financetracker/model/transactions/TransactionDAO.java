@@ -23,7 +23,7 @@ public class TransactionDAO {
 	
 	private static final String ADD_TRANSACTION_SQL = "INSERT INTO transactions VALUES (null,?,?,?,?,?,?)";
 	private static final String REMOVE_TRANSACTION_SQL = "DELETE FROM transactions WHERE transactions.id=?";
-	private static final String GET_ALL_TRANSACTIONS_SQL = "SELECT `payee/payer`,amount, date_paid,accounts_id,categories_id,is_income FROM transactions where accounts_id=?";
+	private static final String GET_ALL_TRANSACTIONS_SQL = "SELECT id,`payee/payer`,amount, date_paid,accounts_id,categories_id,is_income FROM transactions where accounts_id=?";
 
 	@Autowired
 	private AccountDAO accountDAO;
@@ -38,7 +38,7 @@ public class TransactionDAO {
 			ResultSet resultSet = statement.executeQuery();
 			List<Transaction> allTransactions = new ArrayList<Transaction>();
 			while (resultSet.next()) {
-				allTransactions.add(new Transaction(resultSet.getString("payee/payer"), resultSet.getDouble("amount"),
+				allTransactions.add(new Transaction(resultSet.getInt("id"),resultSet.getString("payee/payer"), resultSet.getDouble("amount"),
 						(resultSet.getTimestamp("date_paid").toLocalDateTime().toLocalDate()),
 						accountDAO.getAccountById(resultSet.getInt("accounts_id")), resultSet.getInt("categories_id"),
 						resultSet.getBoolean("is_income")));
@@ -85,19 +85,16 @@ public class TransactionDAO {
 		}
 	}
 
-	public int removeTransaction(Transaction transaction) {
+	public void deleteTransaction(int transactionID) throws TransactionException {
 		PreparedStatement pstmt;
 		try {
-			pstmt = DBConnection.getInstance().getConnection().prepareStatement(REMOVE_TRANSACTION_SQL,
-					Statement.RETURN_GENERATED_KEYS);
-			pstmt.setInt(1, transaction.getId());
+			pstmt = DBConnection.getInstance().getConnection().prepareStatement(REMOVE_TRANSACTION_SQL);
+			pstmt.setInt(1, transactionID);
 			pstmt.executeUpdate();
-			ResultSet resultSet = pstmt.getGeneratedKeys();
-			resultSet.next();
-			return resultSet.getInt(1);
+		
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
-			return 0;
+			throw new TransactionException("Cannot delete transaction, please try again!", e);
 		}
 	}
 }
