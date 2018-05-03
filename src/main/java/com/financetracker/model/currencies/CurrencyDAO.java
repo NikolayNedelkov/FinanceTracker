@@ -14,10 +14,11 @@ import com.financetracker.exceptions.AccountException;
 import com.financetracker.exceptions.CurrencyException;
 
 @Component
-public class CurrencyDAO {
+public class CurrencyDAO implements ICurrencyDAO {
 	private static final String GET_CURR_ID = "SELECT id from currencies where currency_type like ?;";
 	private static final String GET_ALL_CURRENCIES = "SELECT currency_type FROM currencies;";
 
+	@Override
 	public int getCurrencyId(String currencyName) throws SQLException, ClassNotFoundException, AccountException {
 		PreparedStatement pst = DBConnection.getInstance().getConnection().prepareStatement(GET_CURR_ID,
 				Statement.RETURN_GENERATED_KEYS);
@@ -29,7 +30,7 @@ public class CurrencyDAO {
 			throw new AccountException("Not such currency in DB!");
 		}
 	}
-
+	@Override
 	public List<String> getCurrenciesFromDB() throws ClassNotFoundException, SQLException, CurrencyException {
 		List<String> allCurrencies = new ArrayList<String>();
 		Statement st = DBConnection.getInstance().getConnection().createStatement();

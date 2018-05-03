@@ -13,12 +13,13 @@ import com.financetracker.database.DBConnection;
 import com.financetracker.exceptions.TransactionException;
 
 @Component
-public class CategoryDAO {
+public class CategoryDAO implements ICategoryDAO {
 
 	
 	private static final String GET_ALL_CATEGORIES_SQL = "SELECT categories.name FROM categories WHERE categories.is_income = ?";
 	private static final String GET_CATEGORY_ID_SQL = "SELECT categories.id FROM categories WHERE categories.name = ?";
 
+	@Override
 	public int getCategoryID(String category) throws TransactionException {
 		try {
 			Connection connection = DBConnection.getInstance().getConnection();
@@ -33,6 +34,7 @@ public class CategoryDAO {
 		}
 	}
 	
+	@Override
 	public TreeSet<String> getCategories(String isIncome) throws SQLException, TransactionException{
 		try {
 			Connection connection = DBConnection.getInstance().getConnection();

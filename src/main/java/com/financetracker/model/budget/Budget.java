@@ -21,11 +21,11 @@ public class Budget {
 		this.totalIncome = income;
 	}
 
-	public double getTotalExpese() {
+	public double gettotalExpense() {
 		return totalExpense;
 	}
 
-	public void setTotalExpese(double expese) {
+	public void settotalExpense(double expese) {
 		this.totalExpense = expese;
 	}
 	

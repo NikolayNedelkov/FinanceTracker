@@ -23,10 +23,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.financetracker.exceptions.AccountException;
 import com.financetracker.exceptions.TransactionException;
 import com.financetracker.model.accounts.Account;
-import com.financetracker.model.accounts.AccountDAO;
-import com.financetracker.model.categories.CategoryDAO;
+import com.financetracker.model.accounts.IAccountDAO;
+import com.financetracker.model.categories.ICategoryDAO;
+import com.financetracker.model.transactions.ITransactionDAO;
 import com.financetracker.model.transactions.Transaction;
-import com.financetracker.model.transactions.TransactionDAO;
 import com.financetracker.model.users.User;
 import com.google.gson.Gson;
 
@@ -35,11 +35,11 @@ import com.google.gson.Gson;
 public class TransactionController {
 	
 	@Autowired
-	public TransactionDAO transactionDAO;
+	public ITransactionDAO transactionDAO;
 	@Autowired
-	public AccountDAO accountDAO;
+	public IAccountDAO accountDAO;
 	@Autowired
-	public CategoryDAO categoryDAO;
+	public ICategoryDAO categoryDAO;
 
 
 	@RequestMapping(method = RequestMethod.GET)
