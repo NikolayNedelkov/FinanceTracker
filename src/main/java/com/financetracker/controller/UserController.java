@@ -3,6 +3,7 @@ package com.financetracker.controller;
 
 
 import java.sql.SQLException;
+import java.util.HashSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,7 +14,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.financetracker.exceptions.AccountException;
 import com.financetracker.exceptions.UserException;
+import com.financetracker.model.accounts.Account;
+import com.financetracker.model.accounts.AccountDAO;
 import com.financetracker.model.users.User;
 import com.financetracker.model.users.UserDAO;
 
@@ -23,6 +27,8 @@ public class UserController {
 	@Autowired
 	private UserDAO userDAO;
 
+	@Autowired
+	private AccountDAO accountDao;
 	
 	@RequestMapping(method = RequestMethod.GET, value="/index")
 	private String startPage(){
@@ -40,12 +46,14 @@ public class UserController {
 				
 				User user = userDAO.getUserByEmail(email);
 				session.setAttribute("user", user);
-
+				HashSet<Account> userAccounts = accountDao.getAllAccountsForUser(user);
+				session.setAttribute("user", user);
+				user.setAccounts(userAccounts);
 				return "redirect:/home";
 			} else {
 				return "login";
 			}
-		} catch (UserException | ClassNotFoundException | SQLException e) {
+		} catch (UserException | ClassNotFoundException | SQLException | AccountException e) {
 			e.printStackTrace();
 			return "error";
 		}
