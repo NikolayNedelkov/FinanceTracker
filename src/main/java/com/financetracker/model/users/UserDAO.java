@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 
+import javax.websocket.Session;
+
 import org.springframework.stereotype.Component;
 
 import com.financetracker.database.DBConnection;
@@ -18,6 +20,9 @@ public class UserDAO implements IUserDAO {
 	private static final String ADD_USER_SQL = "INSERT INTO users(first_name, last_name, email, password) VALUES (?, ?, ?, sha1(?));";
 	private static final String CHECK_USER_IF_EXISTS = "SELECT * FROM users where email =?";
 	private static final String UPDATE_USER_LOG_IN_TIME = "UPDATE users set last_loged_in=current_timestamp WHERE email=? and password=sha1(?);";
+	private static final String FIND_USER_BY_ID_AND_PASSWORD = "SELECT password FROM users WHERE id = ? and password like sha1(?);";
+	private static final String UPDATE_USER_PASSWORD = "UPDATE users set password=sha1(?) Where id=?";
+	
 
 	@Override
 	public boolean login(String email, String password) throws UserException, ClassNotFoundException, SQLException {
@@ -120,6 +125,32 @@ public class UserDAO implements IUserDAO {
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 			throw new UserException("User with that email already exists!", e);
+		}
+	}
+	
+	public void changePassword(int id, String password, String newPassword, String newPassword2) throws UserException {
+		PreparedStatement pstmt;
+		try {
+			pstmt = DBConnection.getInstance().getConnection().prepareStatement(FIND_USER_BY_ID_AND_PASSWORD,Statement.RETURN_GENERATED_KEYS);
+			pstmt.setInt(1, id);
+			pstmt.setString(2, password);
+			
+			ResultSet rs = pstmt.executeQuery();
+			if(rs.next()) {
+				if(newPassword.equals(newPassword2)) {
+					pstmt = DBConnection.getInstance().getConnection().prepareStatement(UPDATE_USER_PASSWORD);
+					pstmt.setString(1, newPassword);
+					pstmt.setInt(2, id);
+					
+					pstmt.executeUpdate();
+				} else {
+					throw new UserException("New Passwords are not equal");
+				}
+			}else {
+				throw new UserException("User dont exist");
+			}
+		} catch (Exception e) {
+			throw new UserException("DB is not working", e);
 		}
 	}
 }
