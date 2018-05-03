@@ -99,8 +99,6 @@
 			<!-- /.navbar-collapse -->
 		</nav>
 
-
-
 		<!-- additional jQuery -->
 		<script src="js/jquery.js"></script>
 
