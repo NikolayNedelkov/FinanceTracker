@@ -89,7 +89,7 @@
 											<td class="item_category"><c:out
 													value="${transaction.category}"></c:out></td>
 											<td class="item_note"><c:out
-													value="${transaction.accountID}"></c:out></td>
+													value="${transaction.account.accountName}"></c:out></td>
 											<td><c:out value="${transaction.date}"></c:out></td>
 										</tr>
 									</c:forEach>
