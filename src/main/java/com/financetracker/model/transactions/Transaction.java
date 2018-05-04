@@ -35,6 +35,17 @@ public class Transaction {
 		this.isIncome = isIncome;
 		setCategory(category);
 	}
+	
+	public Transaction(int id, String payee, double amount, LocalDate date, Account account, int category, boolean isIncome)
+			throws TransactionException {
+		setId(id);
+		setPayee(payee);
+		setAmount(amount);
+		setDate(date);
+		setAccount(account);
+		this.isIncome = isIncome;
+		setCategory(category);
+	}
 
 	public boolean isValidString(String string) {
 		if (string != null && string.trim().length() > 0) {
