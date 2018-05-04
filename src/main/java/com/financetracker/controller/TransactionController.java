@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
@@ -71,7 +72,7 @@ public class TransactionController {
 			
 			try {
 				String transactionType = request.getParameter("typeSelect");
-				TreeSet<String> categories = categoryDAO.getCategories(transactionType);
+				SortedSet<String> categories = categoryDAO.getCategoriesByType(transactionType);
 				response.setContentType("application/json");
 				response.getWriter().println(new Gson().toJson(categories));
 				
