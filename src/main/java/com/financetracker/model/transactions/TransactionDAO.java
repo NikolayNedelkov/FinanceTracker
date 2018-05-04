@@ -20,7 +20,7 @@ import com.financetracker.model.accounts.IAccountDAO;
 
 @Component
 public class TransactionDAO implements ITransactionDAO {
-	
+
 	private static final String ADD_TRANSACTION_SQL = "INSERT INTO transactions VALUES (null,?,?,?,?,?,?)";
 	private static final String REMOVE_TRANSACTION_SQL = "DELETE FROM transactions WHERE transactions.id=?";
 	private static final String GET_ALL_TRANSACTIONS_SQL = "SELECT id,`payee/payer`,amount, date_paid,accounts_id,categories_id,is_income FROM transactions where accounts_id=?";
@@ -39,7 +39,8 @@ public class TransactionDAO implements ITransactionDAO {
 			ResultSet resultSet = statement.executeQuery();
 			List<Transaction> allTransactions = new ArrayList<Transaction>();
 			while (resultSet.next()) {
-				allTransactions.add(new Transaction(resultSet.getInt("id"),resultSet.getString("payee/payer"), resultSet.getDouble("amount"),
+				allTransactions.add(new Transaction(resultSet.getInt("id"), resultSet.getString("payee/payer"),
+						resultSet.getDouble("amount"),
 						(resultSet.getTimestamp("date_paid").toLocalDateTime().toLocalDate()),
 						accountDAO.getAccountById(resultSet.getInt("accounts_id")), resultSet.getInt("categories_id"),
 						resultSet.getBoolean("is_income")));
@@ -86,6 +87,7 @@ public class TransactionDAO implements ITransactionDAO {
 			connection.setAutoCommit(true);
 		}
 	}
+
 	@Override
 	public void deleteTransaction(int transactionID) throws TransactionException {
 		PreparedStatement pstmt;
@@ -93,7 +95,7 @@ public class TransactionDAO implements ITransactionDAO {
 			pstmt = DBConnection.getInstance().getConnection().prepareStatement(REMOVE_TRANSACTION_SQL);
 			pstmt.setInt(1, transactionID);
 			pstmt.executeUpdate();
-		
+
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 			throw new TransactionException("Cannot delete transaction, please try again!", e);

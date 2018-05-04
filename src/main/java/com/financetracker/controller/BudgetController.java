@@ -31,6 +31,7 @@ public class BudgetController {
 			// get all budgets for all accounts from the BudgetDAO
 			Map<String, List<Double>> budgetByAccount = budgetDao.getBudgetByAccount(user);
 			model.addAttribute("budgetByAccount", budgetByAccount);
+			
 			return "budget";
 		} catch (BudgetException e) {
 			e.printStackTrace();
