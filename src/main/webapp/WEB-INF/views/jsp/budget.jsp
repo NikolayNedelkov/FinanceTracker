@@ -56,6 +56,9 @@
 									<th scope="col"></th>
 									<th scope="col">Income</th>
 									<th scope="col">Outcome</th>
+									<th scope="col">In/Out</th>
+									<th scope="col">Previous</th>
+									<th scope="col">Balance Total</th>
 								</tr>
 							</thead>
 							<tbody>

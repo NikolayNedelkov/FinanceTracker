@@ -10,16 +10,22 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.financetracker.database.DBConnection;
+import com.financetracker.exceptions.AccountException;
 import com.financetracker.exceptions.BudgetException;
 import com.financetracker.exceptions.UserException;
 import com.financetracker.model.accounts.Account;
+import com.financetracker.model.accounts.AccountDAO;
 import com.financetracker.model.users.User;
 
 @Component
 public class BudgetDAO {
+
+	@Autowired
+	private AccountDAO accountDAO;
 
 	private static final String CALCULATE_INCOME = "SELECT SUM(t.amount) FROM users u JOIN accounts a ON (u.id=a.user_id) JOIN transactions t on (a.id=t.accounts_id) WHERE u.id=? and t.is_income = '1'";
 	private static final String CALCULATE_EXPENSE = "SELECT SUM(t.amount) FROM users u JOIN accounts a ON (u.id=a.user_id) JOIN transactions t on (a.id=t.accounts_id) WHERE u.id=? and t.is_income = '0'";
@@ -91,7 +97,7 @@ public class BudgetDAO {
 	}
 
 	private List<Double> inOutForAccount(int accId, User user) throws BudgetException {
-		List<Double> incomeOutcome = new ArrayList<Double>(2);
+		List<Double> incomeOutcome = new ArrayList<Double>(5);
 
 		try {
 			// Get all income transactions for user and account
@@ -100,7 +106,7 @@ public class BudgetDAO {
 
 			pstmt1.setInt(1, user.getId());
 			pstmt1.setInt(2, accId);
-			//pstmt1.executeQuery();
+			// pstmt1.executeQuery();
 			ResultSet rs = pstmt1.executeQuery();
 			// if any transactions found, add them to the list for this account
 			if (rs.next()) {
@@ -116,15 +122,20 @@ public class BudgetDAO {
 
 			pstmt2.setInt(1, user.getId());
 			pstmt2.setInt(2, accId);
-			//pstmt2.executeQuery();
+			// pstmt2.executeQuery();
 			ResultSet rs2 = pstmt2.executeQuery();
 			if (rs2.next()) {
 				incomeOutcome.add(rs2.getDouble(1));
 			} else {
 				incomeOutcome.add(0.0);
 			}
+			double incomeVsOutcome = incomeOutcome.get(0) - incomeOutcome.get(1);
+			incomeOutcome.add(incomeVsOutcome);
+			double accountOldBBalance = ((Account) accountDAO.getAccountById(accId)).getBalance();
+			incomeOutcome.add(accountOldBBalance);
+			incomeOutcome.add(accountOldBBalance + incomeVsOutcome);
 			return incomeOutcome;
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch (ClassNotFoundException | SQLException | AccountException e) {
 			e.printStackTrace();
 			throw new BudgetException("No + or - transaction for this account!", e);
 		}
