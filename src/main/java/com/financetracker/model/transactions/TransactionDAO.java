@@ -86,13 +86,8 @@ public class TransactionDAO implements ITransactionDAO {
 			connection.setAutoCommit(true);
 		}
 	}
-
-<<<<<<< HEAD
-	public void deleteTransaction(int transactionID) throws TransactionException {
-=======
 	@Override
-	public int removeTransaction(Transaction transaction) {
->>>>>>> a081bcaca9900570a4bce37ac374f46816f0e8d0
+	public void deleteTransaction(int transactionID) throws TransactionException {
 		PreparedStatement pstmt;
 		try {
 			pstmt = DBConnection.getInstance().getConnection().prepareStatement(REMOVE_TRANSACTION_SQL);

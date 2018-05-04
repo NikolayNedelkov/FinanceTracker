@@ -68,7 +68,7 @@
 			<!--  id="addExpenseOn_btn" -->
 			<div class="modal-footer">
 				<button type="submit" class="btn btn-primary" data-dismiss="modal">Save</button>
-				<button type="submit" class="btn btn-secondary">Back</button>
+				<button type="button" onclick = "location.href='../transactions';" class="btn btn-secondary">Back</button>
 			</div>
 
 		</form>

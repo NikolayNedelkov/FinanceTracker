@@ -79,18 +79,17 @@
 			<div class="collapse navbar-collapse navbar-ex1-collapse">
 				<ul class="nav navbar-nav side-nav">
 
-					<li><a href="home" id="dash_btn"><i class="fas fa-columns"></i>
-							<div class="inline">My Dashboard</div></a> <a href="accounts"
+					<li><a href="http://localhost:8080/FinalProject/home" id="dash_btn"><i class="fas fa-columns"></i>
+							<div class="inline">My Dashboard</div></a> <a href="http://localhost:8080/FinalProject/accounts"
 						id="expense_btn"><i class="fas fa-credit-card"></i>
-							<div class="inline">My Accounts</div></a> <a href="transactions"
+							<div class="inline">My Accounts</div></a> <a href="http://localhost:8080/FinalProject/transactions"
 						id="expense_btn"><i class="fas fa-exchange-alt"></i>
 							<div class="inline">My Transactions</div></a> <a
-						href="plannedpayments.jsp" id="income_btn"><i
+						href="http://localhost:8080/FinalProject/home" id="income_btn"><i
 							class="fas fa-history"></i>
-							<div class="inline">My Planned Payments</div></a> <a
-						href="./budget" id="summary_btn"><i
-							class="fas fa-money-bill-alt"></i>
-							<div class="inline">My budget</div></a> <a href="charts.jsp"
+							<div class="inline">My Planned Payments</div></a> <a href="http://localhost:8080/FinalProject/budget"
+						id="summary_btn"><i class="fas fa-money-bill-alt"></i>
+							<div class="inline">My budget</div></a> <a href="http://localhost:8080/FinalProject/home"
 						id="credit_btn"><i class="fas fa-chart-line"></i>
 							<div class="inline">Charts and Reports</div></a></li>
 				</ul>

@@ -56,7 +56,7 @@
 				<div class="modal-footer">
 					<button type="submit" class="btn btn-secondary"
 						data-dismiss="modal">Save</button>
-					<button type="submit" class="btn btn-primary">Back</button>
+					<button type="button" onclick = "location.href='../accounts';" class="btn btn-primary">Back</button>
 				</div>
 				<!-- Do tuk!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 -->
 			</form:form>
