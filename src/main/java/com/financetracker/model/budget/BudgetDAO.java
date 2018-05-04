@@ -122,7 +122,6 @@ public class BudgetDAO {
 
 			pstmt2.setInt(1, user.getId());
 			pstmt2.setInt(2, accId);
-			// pstmt2.executeQuery();
 			ResultSet rs2 = pstmt2.executeQuery();
 			if (rs2.next()) {
 				incomeOutcome.add(rs2.getDouble(1));

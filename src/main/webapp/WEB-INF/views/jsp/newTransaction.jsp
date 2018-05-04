@@ -69,6 +69,7 @@
 			<div class="modal-footer">
 				<button type="submit" class="btn btn-primary" data-dismiss="modal">Save</button>
 				<button type="button" onclick="location.href = '../transactions';"class="btn btn-secondary">Back</button>
+
 			</div>
 
 		</form>
