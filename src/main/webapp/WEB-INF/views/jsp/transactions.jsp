@@ -35,20 +35,6 @@
 								<option value="academic">Academic</option>
 							</select>
 						</div>
-						<div class="inline" id="changecolor">
-							Background Color:
-							<div class="changecolor inline">
-								<select class="form-control select" id="backcolor_option">
-									<option>White</option>
-									<option>Red</option>
-									<option>Orange</option>
-									<option>Yellow</option>
-									<option>Green</option>
-									<option>Blue</option>
-									<option>Pink</option>
-								</select>
-							</div>
-						</div>
 
 						<button type="button" class="btn btn-primary" id="addtransaction"
 							onclick="location.href='./transactions/add';">Add a new
@@ -58,13 +44,14 @@
 					<div id="search">
 						<div id="search_btn" class="inline" style="display: block;">
 							Search: <input type="text" class="form-control search"
-								id="search_content">
+								id="search_content" placeholder="Search by payee/payer name">
 						</div>
 
 
 						<div class=" col-lg-12 itemlog list">
 
-							<table class="table table-hover" class="col-lg-12 itemlog list">
+							<table class="table table-hover" id="data_table"
+								class="col-lg-12 itemlog list">
 								<thead>
 									<tr>
 										<th scope="col">Transaction Payee/Payer</th>
@@ -77,28 +64,33 @@
 								</thead>
 								<tbody>
 									<c:forEach items="${allUserTransactions}" var="transaction">
-										<tr class="item_name clickable">
-											<th scope="row" class="item_name clickable"><c:out
+										<tr class="table_row clickable">
+											<th scope="row" class="payee clickable"><c:out
 													value="${transaction.payee}"></c:out></th>
-											<td class="item_amt"><c:out
-													value="${transaction.amount}"></c:out></td>
-											<td><c:if test="${transaction.isIncome} == true">
+											<td class="amount"><c:out value="${transaction.amount}"></c:out></td>
+											<td class="isIncome"><c:if
+													test="${transaction.isIncome} == true">
 													<c:out value="Income"></c:out>
 												</c:if> <c:if test="${transaction.isIncome} == false">
 													<c:out value="Expense"></c:out>
 												</c:if></td>
-											<td class="item_category"><c:out
+											<td class="category"><c:out
 													value="${transaction.category}"></c:out></td>
-											<td class="item_note"><c:out
+											<td class="acc_name"><c:out
 													value="${transaction.account.accountName}"></c:out></td>
 
-											<td><c:out value="${transaction.date}"></c:out></td>
+											<td class="trans_date"><c:out
+													value="${transaction.date}"></c:out></td>
 											<td><input type="button" id="editbtn"
+												class="btn btn-primary"
+												onclick="location.href='./transactions/edit/${transaction.id}';"
+												value="Edit">
+												<input type="button" id="deletebtn"
 												class="btn btn-secondary"
 												onclick="location.href='./transactions/delete/${transaction.id}';"
-												value="Delete"></td>
-												
-
+												value="Delete">
+												</td>
+											
 										</tr>
 									</c:forEach>
 								</tbody>
@@ -117,25 +109,8 @@
 		</div>
 		<!-- /.row -->
 
-		<div id="search">
-			<div id="search_btn" class="inline">
-				Search: <input type="text" class="form-control search"
-					id="search_content">
-			</div>
-			<ul class=" col-lg-12 itemlog list">
-				<li id="fake">
-					<div class="inline item_name"></div>
-					<div class="inline item_amt">
-						<div class="inline currency"></div>
 
-					</div>
-					<div class="inline item_category"></div>
-					<div class="inline item_note"></div>
-				</li>
 
-			</ul>
-			<!-- itemlog -->
-		</div>
 		<!-- search -->
 	</div>
 	<!-- dashlog -->

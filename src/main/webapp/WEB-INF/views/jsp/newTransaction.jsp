@@ -28,7 +28,7 @@
 			<div class="expense_name">
 				<div class="inline modalcss">Enter the amount:</div>
 				<input type="number" class="form-control" id="addexpense_name"
-					name="amount">
+					name="amount" step="0.01">
 			</div>
 
 

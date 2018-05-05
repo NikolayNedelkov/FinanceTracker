@@ -123,20 +123,6 @@
 								<option value="academic">Academic</option>
 							</select>
 						</div>
-						<div class="inline" id="changecolor">
-							Background Color:
-							<div class="changecolor inline">
-								<select class="form-control select" id="backcolor_option">
-									<option>White</option>
-									<option>Red</option>
-									<option>Orange</option>
-									<option>Yellow</option>
-									<option>Green</option>
-									<option>Blue</option>
-									<option>Pink</option>
-								</select>
-							</div>
-						</div>
 						<button onclick="location.href='./accounts/add';" type="button" class="btn btn-primary" id="addtransaction">Add
 							a new account</button>
 					</div>
@@ -151,7 +137,7 @@
 
 						<div class=" col-lg-12 itemlog list">
 
-							<table class="table table-hover" class="col-lg-12 itemlog list">
+							<table class="table table-hover" class="col-lg-12 itemlog list" id="acc-table">
 								<thead>
 									<tr>
 									<th scope="col"></th>
