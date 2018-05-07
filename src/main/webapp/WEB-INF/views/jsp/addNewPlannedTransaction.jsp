@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<%@ page import="com.financetracker.model.transactions.Transaction"%>
+<%@ page import="com.financetracker.model.transactions.PlannedTransaction"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <jsp:include page="menu.jsp"></jsp:include>
 
@@ -9,7 +9,7 @@
 	<div class="container-fluid">
 		<div class="row center">
 			<h2>
-				<span class="bold">Add new Transaction</span>
+				<span class="bold">Add new Planned Transaction</span>
 			</h2>
 		</div>
 
@@ -20,9 +20,9 @@
 					name="payee" required>
 			</div>
 			<div class="expense_name">
-				<div class="inline modalcss">Date of transaction:</div>
+				<div class="inline modalcss">Planned transaction date:</div>
 				<input type="date" class="form-control" id="addexpense_name"
-					name="date" required>
+					name="plannedDate" required>
 			</div>
 			<div class="expense_name">
 				<div class="inline modalcss">Enter the amount:</div>
@@ -61,8 +61,19 @@
 
 				<select class="form-control addExpense_category_option"
 					id="categories" name="category" required>
-					<option disabled selected>Please select a transaction
-						category</option>
+					<option disabled selected>Please select a transaction category</option>
+				</select>
+			</div>
+
+			<div class="expense_name">
+				<div class="inline modalcss">Choose recurrency:</div>
+
+				<select class="form-control" name="recurrencySelect" required>
+					<option value="" disabled selected>Please select
+						recurrency</option>
+					<c:forEach items="${recurrencies}" var="recurrency">
+						<option value="${ recurrency }">${ recurrency }</option>
+					</c:forEach>
 				</select>
 			</div>
 
@@ -73,7 +84,6 @@
 				<button type="submit" class="btn btn-primary" data-dismiss="modal">Save</button>
 				<button type="button" onclick="location.href = '../transactions';"
 					class="btn btn-secondary">Back</button>
-
 			</div>
 
 		</form>
@@ -102,4 +112,6 @@
 			}
 		});
 	}
-	</script>
+</script>
+
+

@@ -1,18 +1,16 @@
 package com.financetracker.model.categories;
 
-import java.sql.SQLException;
 import java.util.SortedSet;
-import java.util.TreeSet;
-
-import com.financetracker.exceptions.TransactionException;
+import com.financetracker.exceptions.CategoryException;
 
 public interface ICategoryDAO {
 
-	int getCategoryID(String category) throws TransactionException;
-
-	SortedSet<String> getCategoriesByType(String isIncome) throws SQLException, TransactionException;
+	int getCategoryIdByName(String category) throws CategoryException;
 	
-	SortedSet<String> getCategoriesByPrefix(String prefix) throws TransactionException;
+	String getCategoryNameById(int id) throws CategoryException;
 
-	SortedSet<String> getAllCategories() throws ClassNotFoundException, SQLException;
+	SortedSet<String> getCategoriesByType(String isIncome) throws CategoryException;
+	
+	SortedSet<String> getAllCategories() throws CategoryException;
+	
 }
