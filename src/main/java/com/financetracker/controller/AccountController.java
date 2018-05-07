@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.financetracker.exceptions.AccountException;
 import com.financetracker.exceptions.CurrencyException;
@@ -41,14 +43,17 @@ public class AccountController {
 	private IAccountTypeDAO accountTypeDAO;
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String addAccounts(Model model, HttpSession session, HttpServletRequest request) {
+	public String addAccounts(
+			@RequestParam(required = false, defaultValue = "Account name", value = "criteria") String criteria,
+			Model model, HttpSession session, HttpServletRequest request) {
 		if ((session == null) || (session.getAttribute("user") == null)) {
 			return "redirect:/";
 		}
 		try {
-			System.out.println(request.getAttribute("criteria"));
+			// System.out.println(request.getAttribute("criteria"));
+			System.out.println("TUK SUM");
 			User loggedUser = (User) session.getAttribute("user");
-			String criteria = "Account type";
+			// String criteria = "Account type";
 			Set<Account> usersAccounts = new TreeSet<Account>();
 			usersAccounts = accountDao.getSortedAccounts(loggedUser, criteria);
 			loggedUser.setAccounts(usersAccounts);
@@ -59,10 +64,6 @@ public class AccountController {
 			return "error";
 		}
 	}
-
-	// private Comparator<Account> getComparator(String criteria) {
-	//
-	// }
 
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
 	public String deleteAccount(HttpSession session, HttpServletRequest request) {

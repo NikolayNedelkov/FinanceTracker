@@ -69,11 +69,24 @@
 								<thead>
 									<tr>
 										<th scope="col"></th>
-										<th scope="col"><a
-											href="http://localhost:8080/FinalProject/accounts"><input
-												name="criteria" type="submit" value="Balance" /></a></th>
-										<th scope="col">Currency</th>
-										<th scope="col">Account type</th>
+										<th scope="col">
+											<form action="./accounts" method="get">
+												<button name="criteria" type="submit" value="Balance"
+													class="link">Balance</button>
+											</form>
+										</th>
+										<th scope="col">
+											<form action="./accounts" method="get">
+												<button name="criteria" type="submit" value="Currency"
+													class="link">Currency</button>
+											</form>
+										</th>
+										<th scope="col">
+											<form action="./accounts" method="get">
+												<button name="criteria" type="submit" value="Account type"
+													class="link">Account type</button>
+											</form>
+										</th>
 									</tr>
 								</thead>
 								<tbody>
