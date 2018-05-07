@@ -46,7 +46,7 @@ public class UserController {
 				
 				User user = userDAO.getUserByEmail(email);
 				session.setAttribute("user", user);
-				HashSet<Account> userAccounts = accountDao.getAllAccountsForUser(user);
+				HashSet<Account> userAccounts = new HashSet<Account>(accountDao.getSortedAccounts(user, ""));
 				session.setAttribute("user", user);
 				user.setAccounts(userAccounts);
 				return "redirect:/home";

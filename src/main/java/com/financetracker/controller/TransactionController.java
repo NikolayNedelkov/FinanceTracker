@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
@@ -51,7 +52,7 @@ public class TransactionController {
 		try {
 			User currentUser = (User) session.getAttribute("user");
 			List<Transaction> allUserTransactions = new ArrayList<>();
-			HashSet<Account> currentUserAccounts = accountDAO.getAllAccountsForUser(currentUser);
+			Set<Account> currentUserAccounts = (Set<Account>) accountDAO.getAllAccountsForUser(currentUser);
 
 			for (Account account : currentUserAccounts) {
 				allUserTransactions.addAll(transactionDAO.getAllTransactions(account));
@@ -86,7 +87,7 @@ public class TransactionController {
 		User loggedUser = (User) session.getAttribute("user");
 		HashSet<Account> usersAccounts;
 		try {
-			usersAccounts = accountDAO.getAllAccountsForUser(loggedUser);
+			usersAccounts = (HashSet<Account>) accountDAO.getAllAccountsForUser(loggedUser);
 			loggedUser.setAccounts(usersAccounts);
 			return "newTransaction";
 		} catch (AccountException e) {

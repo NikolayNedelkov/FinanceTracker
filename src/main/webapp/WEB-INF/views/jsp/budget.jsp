@@ -73,6 +73,13 @@
 									</tr>
 								</c:forEach>
 
+								<tr>
+									<td class="item_amt"><c:out value="Total" /></td>
+									<c:forEach items="${statisticTotal}" var="total">
+										<td class="item_amt"><c:out value="${total}" /></td>
+									</c:forEach>
+								</tr>
+
 
 
 								<%-- 	<c:forEach items="${budgetByAccount}" var="currentAccount"
