@@ -64,11 +64,14 @@
 
 						<div class=" col-lg-12 itemlog list">
 
-							<table class="table table-hover" class="col-lg-12 itemlog list">
+							<table class="table table-hover" class="col-lg-12 itemlog list"
+								id="acc-table">
 								<thead>
 									<tr>
 										<th scope="col"></th>
-										<th scope="col"><a href="http://localhost:8080/FinalProject/accounts"><input name="criteria" type="submit" value="Balance" /></a></th>
+										<th scope="col"><a
+											href="http://localhost:8080/FinalProject/accounts"><input
+												name="criteria" type="submit" value="Balance" /></a></th>
 										<th scope="col">Currency</th>
 										<th scope="col">Account type</th>
 									</tr>

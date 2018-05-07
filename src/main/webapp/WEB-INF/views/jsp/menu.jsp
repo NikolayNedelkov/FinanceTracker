@@ -16,10 +16,9 @@
 <link href="https://fonts.googleapis.com/css?family=Montserrat"
 	rel="stylesheet">
 <!-- Custom CSS -->
+
 <link href="css/custom.css" rel="stylesheet">
 
-<!-- Morris Charts CSS -->
-<link href="css/plugins/morris.css" rel="stylesheet">
 
 <!-- Custom Fonts -->
 <link rel="stylesheet"
@@ -80,17 +79,16 @@
 				<ul class="nav navbar-nav side-nav">
 
 					<li><a href="http://localhost:8080/FinalProject/home" id="dash_btn"><i class="fas fa-columns"></i>
-							<div class="inline">My Dashboard</div></a> <a href="http://localhost:8080/FinalProject/accounts"
-						id="expense_btn"><i class="fas fa-credit-card"></i>
-							<div class="inline">My Accounts</div></a> <a href="http://localhost:8080/FinalProject/transactions"
-						id="expense_btn"><i class="fas fa-exchange-alt"></i>
-							<div class="inline">My Transactions</div></a> <a
-						href="http://localhost:8080/FinalProject/home" id="income_btn"><i
-							class="fas fa-history"></i>
-							<div class="inline">My Planned Payments</div></a> <a href="http://localhost:8080/FinalProject/budget"
-						id="summary_btn"><i class="fas fa-money-bill-alt"></i>
-							<div class="inline">My budget</div></a> <a href="http://localhost:8080/FinalProject/home"
-						id="credit_btn"><i class="fas fa-chart-line"></i>
+							<div class="inline">My Dashboard</div></a> 
+							<a href="http://localhost:8080/FinalProject/accounts" id="expense_btn"><i class="fas fa-credit-card"></i>
+							<div class="inline">My Accounts</div></a> 
+							<a href="http://localhost:8080/FinalProject/transactions" id="expense_btn"><i class="fas fa-exchange-alt"></i>
+							<div class="inline">My Transactions</div></a> 
+							<a href="http://localhost:8080/FinalProject/plannedTransactions" id="income_btn"><i class="fas fa-history"></i>
+							<div class="inline">My Planned Payments</div></a> 
+							<a href="http://localhost:8080/FinalProject/budget" id="summary_btn"><i class="fas fa-money-bill-alt"></i>
+							<div class="inline">My budget</div></a> 
+							<a href="http://localhost:8080/FinalProject/home" id="credit_btn"><i class="fas fa-chart-line"></i>
 							<div class="inline">Charts and Reports</div></a></li>
 				</ul>
 
@@ -104,14 +102,7 @@
 		<!-- Bootstrap Core JavaScript -->
 		<script src="js/bootstrap.min.js"></script>
 
-		<!-- JavaScript 
-
-		<script src="js/budget.js" type="text/javascript"></script>
-		<script src="js/Chart.bundle.js" type="text/javascript"></script>
-		<script src="js/budget.js" type="text/javascript"></script>
--->
-		<script
-			src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.2.0/list.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.2.0/list.min.js"></script>
 </body>
 
 </html>

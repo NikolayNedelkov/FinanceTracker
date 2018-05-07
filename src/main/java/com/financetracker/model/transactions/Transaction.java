@@ -5,28 +5,16 @@ import java.time.LocalDate;
 import com.financetracker.exceptions.TransactionException;
 import com.financetracker.model.accounts.Account;
 
-public class Transaction {
+public class Transaction{
 	private int id;
 	private String payee;
 	private double amount;
 	private LocalDate date;
 	private Account account;
 	private boolean isIncome;
-	private int category;
+	private String category;
 
-	public void setIncome(boolean isIncome) {
-		this.isIncome = isIncome;
-	}
-
-	public Transaction() {
-
-	}
-
-	public Transaction(Account account) {
-		this.account = account;
-	}
-
-	public Transaction(String payee, double amount, LocalDate date, Account account, int category, boolean isIncome)
+	public Transaction(String payee, double amount, LocalDate date, Account account, String category, boolean isIncome)
 			throws TransactionException {
 		setPayee(payee);
 		setAmount(amount);
@@ -36,12 +24,21 @@ public class Transaction {
 		setCategory(category);
 	}
 	
-	public Transaction(int id, String payee, double amount, LocalDate date, Account account, int category, boolean isIncome)
+	public Transaction(int id, String payee, double amount, LocalDate date, Account account, String category, boolean isIncome)
 			throws TransactionException {
 		setId(id);
 		setPayee(payee);
 		setAmount(amount);
 		setDate(date);
+		setAccount(account);
+		this.isIncome = isIncome;
+		setCategory(category);
+	}
+	
+	public Transaction(String payee, double amount, Account account, String category, boolean isIncome)
+			throws TransactionException {
+		setPayee(payee);
+		setAmount(amount);
 		setAccount(account);
 		this.isIncome = isIncome;
 		setCategory(category);
@@ -115,22 +112,24 @@ public class Transaction {
 		}
 
 	}
+	public void setIncome(boolean isIncome) {
+		this.isIncome = isIncome;
+	}
 
 	public boolean getIsIncome() {
 		return isIncome;
 	}
 
-	public int getCategory() {
+	public String getCategory() {
 		return category;
 	}
 
-	public void setCategory(int category) throws TransactionException {
-		if (category > 0) {
+	public void setCategory(String category) throws TransactionException {
+		if (category != null) {
 			this.category = category;
 		} else {
 			throw new TransactionException("Invalid category!");
 		}
 
 	}
-
 }

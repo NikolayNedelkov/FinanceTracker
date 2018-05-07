@@ -29,7 +29,7 @@
 				<div class="expense_name">
 					<div class="inline modalcss">Balance:</div>
 					<form:input type="number" class="form-control" id="addexpense_name"
-						name="accountName" path="balance" />
+						name="accountName" step="0.01" path="balance" />
 				</div>
 
 				<div class="expense_name">

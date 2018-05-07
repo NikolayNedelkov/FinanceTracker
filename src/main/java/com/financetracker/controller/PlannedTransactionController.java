@@ -1,14 +1,10 @@
 package com.financetracker.controller;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.SortedSet;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,59 +14,78 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.financetracker.exceptions.AccountException;
 import com.financetracker.exceptions.CategoryException;
+import com.financetracker.exceptions.PlannedTransactionException;
+import com.financetracker.exceptions.RecurrencyException;
 import com.financetracker.exceptions.TransactionException;
 import com.financetracker.model.accounts.Account;
 import com.financetracker.model.accounts.IAccountDAO;
 import com.financetracker.model.categories.ICategoryDAO;
-import com.financetracker.model.transactions.ITransactionDAO;
-import com.financetracker.model.transactions.Transaction;
+import com.financetracker.model.transactions.PlannedTransaction;
+import com.financetracker.model.transactions.PlannedTransactionDAO;
 import com.financetracker.model.users.User;
+import com.financetracker.recurrencies.IRecurrencyDAO;
 import com.google.gson.Gson;
 
 @Controller
-@RequestMapping(value="/transactions")
-public class TransactionController {
+@RequestMapping(value = "/plannedTransactions")
+public class PlannedTransactionController {
+
 	
+	//IPlannedTransactionDAO
 	@Autowired
-	public ITransactionDAO transactionDAO;
+	public PlannedTransactionDAO plannedTransactionDAO;
 	@Autowired
 	public IAccountDAO accountDAO;
 	@Autowired
 	public ICategoryDAO categoryDAO;
+	@Autowired
+	public IRecurrencyDAO recurrencyDAO;
+	
 
-//TODO:get transactions with db query
 	@RequestMapping(method = RequestMethod.GET)
-	protected String showTransactions(Model model, HttpSession session) {
+	protected String showPlannedTransactions(Model model, HttpSession session) {
 		if ((session == null) || (session.getAttribute("user") == null)) {
 			return "signup-login";
 		}
 
 		try {
 			SortedSet<String> categories = categoryDAO.getAllCategories();
-			User currentUser = (User) session.getAttribute("user");
-			List<Transaction> allUserTransactions = new ArrayList<>();
-			Set<Account> currentUserAccounts = (Set<Account>) accountDAO.getAllAccountsForUser(currentUser);
 
-			for (Account account : currentUserAccounts) {
-				allUserTransactions.addAll(transactionDAO.getAllTransactions(account));
-			}
-			model.addAttribute("allUserTransactions", allUserTransactions);
-			model.addAttribute("categories",categories);
-		} catch (AccountException | TransactionException | SQLException | CategoryException e) {
+			User currentUser = (User) session.getAttribute("user");
+			List<PlannedTransaction> allUserPlannedTransactions = plannedTransactionDAO.getAllPlannedTransactions(currentUser);	
+			
+			model.addAttribute("allUserPlannedTransactions", allUserPlannedTransactions);
+			model.addAttribute("categories", categories);
+		} catch (CategoryException | PlannedTransactionException | RecurrencyException e) {
 			e.printStackTrace();
 			return "error";
 		}
-		return "transactions";
+		return "plannedTransactions";
 	}
 	
-
+	@RequestMapping(value="/add", method=RequestMethod.GET)
+	protected String getUserAccounts(HttpSession session,Model model) {
+		User loggedUser = (User) session.getAttribute("user");
+		try {
+			//loading accounts of the user
+			Set<Account> usersAccounts = (Set<Account>) accountDAO.getAllAccountsForUser(loggedUser);
+			loggedUser.setAccounts(usersAccounts);
+			//loading recurrencies
+			SortedSet<String> recurrencies = recurrencyDAO.getAllRecurrencies();
+			model.addAttribute("recurrencies",recurrencies);
+			return "addNewPlannedTransaction";
+		} catch (AccountException | RecurrencyException e) {
+			e.printStackTrace();
+			return "error";
+		}
+		
+	}
 	
 	@RequestMapping(value = "/add/getCategories", method = RequestMethod.GET)
 	public @ResponseBody void getCategories(HttpServletRequest request, HttpServletResponse response) throws TransactionException {
@@ -87,21 +102,6 @@ public class TransactionController {
 			} 
 	}
 	
-	@RequestMapping(value="/add", method=RequestMethod.GET)
-	protected String getUserAccounts(HttpSession session) {
-		User loggedUser = (User) session.getAttribute("user");
-		HashSet<Account> usersAccounts;
-		try {
-			usersAccounts = (HashSet<Account>) accountDAO.getAllAccountsForUser(loggedUser);
-			loggedUser.setAccounts(usersAccounts);
-			return "newTransaction";
-		} catch (AccountException e) {
-			e.printStackTrace();
-			return "error";
-		}
-		
-	}
-	
 	@RequestMapping(value="/add", method=RequestMethod.POST)
 	protected String addTransaction(HttpServletRequest request, HttpSession session) {
 		if ((session == null) || (session.getAttribute("user") == null)) {
@@ -111,7 +111,7 @@ public class TransactionController {
 		try {
 			String payee = request.getParameter("payee");
 			double amount = Double.parseDouble(request.getParameter("amount"));
-			LocalDate date = LocalDate.parse(request.getParameter("date"));
+			LocalDate plannedDate = LocalDate.parse(request.getParameter("plannedDate"));
 
 			boolean isIncome;
 			
@@ -124,29 +124,17 @@ public class TransactionController {
 			String category = request.getParameter("category");
 			String accountName=request.getParameter("accountSelect");
 			Account account = accountDAO.getAccountByName(accountName);
+			String recurrency = request.getParameter("recurrencySelect");
 			
-			Transaction transaction = new Transaction(payee, amount, date, account, category, isIncome);
-			transactionDAO.addTransaction(transaction);
+			PlannedTransaction plannedTransaction = new PlannedTransaction(payee, amount, plannedDate, account, category, isIncome,recurrency);
+			plannedTransactionDAO.addTransaction(plannedTransaction);
 			
-			return "redirect:/transactions";
+			return "redirect:/plannedTransactions";
 
-		} catch (TransactionException | AccountException | SQLException  e) {
+		} catch (TransactionException | AccountException | PlannedTransactionException  e) {
 			e.printStackTrace();
 			return "error";
 		}
 	}
-	
-	@RequestMapping(value="/delete/{id}", method=RequestMethod.GET)
-	public String deleteTransaction(@PathVariable("id") Integer id,HttpSession session) {
-		if ((session == null) || (session.getAttribute("user") == null)) {
-			return "redirect:/signup-login";
-		}
-		try {
-			transactionDAO.deleteTransaction(id);
-			return "redirect:/transactions";
-		} catch (TransactionException e) {
-			e.printStackTrace();
-			return "error";
-		}
-	}
+
 }
