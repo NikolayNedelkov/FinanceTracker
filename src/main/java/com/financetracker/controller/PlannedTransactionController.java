@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
 
 import javax.servlet.http.HttpServletRequest;
@@ -73,7 +74,7 @@ public class PlannedTransactionController {
 		User loggedUser = (User) session.getAttribute("user");
 		try {
 			//loading accounts of the user
-			HashSet<Account> usersAccounts = accountDAO.getAllAccountsForUser(loggedUser);
+			Set<Account> usersAccounts = (Set<Account>) accountDAO.getAllAccountsForUser(loggedUser);
 			loggedUser.setAccounts(usersAccounts);
 			//loading recurrencies
 			SortedSet<String> recurrencies = recurrencyDAO.getAllRecurrencies();

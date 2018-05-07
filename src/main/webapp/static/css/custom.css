@@ -370,3 +370,6 @@ ul li {
 .card{
   margin-right: 20px;
 }
+.hidden-input{
+	display:none;
+}

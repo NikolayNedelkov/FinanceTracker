@@ -29,6 +29,9 @@ public class BudgetDAO {
 
 	private static final String CALCULATE_INCOME = "SELECT SUM(t.amount) FROM users u JOIN accounts a ON (u.id=a.user_id) JOIN transactions t on (a.id=t.accounts_id) WHERE u.id=? and t.is_income = '1'";
 	private static final String CALCULATE_EXPENSE = "SELECT SUM(t.amount) FROM users u JOIN accounts a ON (u.id=a.user_id) JOIN transactions t on (a.id=t.accounts_id) WHERE u.id=? and t.is_income = '0'";
+
+	private static final String ALL_TRANSACTIONS_TRANS_FOR_USER = "SELECT t.amount, t.date_paid, t.accounts_id, t.categories_id, t.is_income FROM transactions t JOIN accounts a ON (a.id=t.accounts_id) JOIN users u ON (u.id=a.user_id) WHERE u.id=?;";
+
 	private static final String ALL_INCOMES_TRANS_FOR_ACCOUNT = "select sum(t.amount) from users u join accounts a on(u.id=a.user_id) join transactions t on (a.id=t.accounts_id) where u.id=? and a.id=? and t.is_income='1'; ";
 	private static final String ALL_OUTCOMES_TRANS_FOR_ACCOUNT = "select sum(t.amount) from users u join accounts a on(u.id=a.user_id) join transactions t on (a.id=t.accounts_id) where u.id=? and a.id=? and t.is_income='0'; ";
 
@@ -79,7 +82,38 @@ public class BudgetDAO {
 		return budget;
 	}
 
-	public Map<String, List<Double>> getBudgetByAccount(User user) throws BudgetException {
+	public List<Double> getStatisticsTotal(User user) throws BudgetException {
+		if (user.getAccounts().isEmpty()) {
+			throw new BudgetException("No accounts for this user, buget can't be calculated!");
+		}
+		List<Double> statisticTotal = new ArrayList<Double>();
+		PreparedStatement pstmt;
+		try {
+			pstmt = DBConnection.getInstance().getConnection().prepareStatement(ALL_TRANSACTIONS_TRANS_FOR_USER,
+					Statement.RETURN_GENERATED_KEYS);
+			pstmt.setInt(1, user.getId());
+			ResultSet rs = pstmt.executeQuery();
+			double totalIncome = 0, totalOutcome = 0;
+			while (rs.next()) {
+				if (rs.getInt("t.is_income") == 1) {
+					totalIncome += rs.getDouble("t.amount");
+				} else {
+					totalOutcome += rs.getDouble("t.amount");
+				}
+			}
+			statisticTotal.add(totalIncome);
+			statisticTotal.add(totalOutcome);
+			double incomeVsOutcome = totalIncome - totalOutcome;
+			statisticTotal.add(incomeVsOutcome);
+			return statisticTotal;
+
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+			throw new BudgetException("No transactions for this user!", e);
+		}
+	}
+
+	public Map<String, List<Double>> getStatisticsAllAccounts(User user) throws BudgetException {
 		if (user.getAccounts().isEmpty()) {
 			throw new BudgetException("No accounts for this user, buget can't be calculated!");
 		}
@@ -87,56 +121,40 @@ public class BudgetDAO {
 		Map<String, List<Double>> allBudgets = new HashMap<String, List<Double>>();
 		// Vzimam akauntite na lognatiq user
 		HashSet<Account> userAccounts = new HashSet<>(user.getAccounts());
-
-		for (Account account : userAccounts) {
-			List<Double> accountBudget = inOutForAccount(account.getAccount_id(), user);
-			allBudgets.put(account.getAccountName(), accountBudget);
-		}
-		return allBudgets;
-
-	}
-
-	private List<Double> inOutForAccount(int accId, User user) throws BudgetException {
-		List<Double> incomeOutcome = new ArrayList<Double>(5);
-
+		PreparedStatement pstmt;
 		try {
-			// Get all income transactions for user and account
-			PreparedStatement pstmt1 = DBConnection.getInstance().getConnection()
-					.prepareStatement(ALL_INCOMES_TRANS_FOR_ACCOUNT, Statement.RETURN_GENERATED_KEYS);
+			pstmt = DBConnection.getInstance().getConnection().prepareStatement(ALL_TRANSACTIONS_TRANS_FOR_USER,
+					Statement.RETURN_GENERATED_KEYS);
+			pstmt.setInt(1, user.getId());
+			ResultSet rs = pstmt.executeQuery();
 
-			pstmt1.setInt(1, user.getId());
-			pstmt1.setInt(2, accId);
-			// pstmt1.executeQuery();
-			ResultSet rs = pstmt1.executeQuery();
-			// if any transactions found, add them to the list for this account
-			if (rs.next()) {
-				incomeOutcome.add(rs.getDouble(1));
-			} else {
-				// if not, add 0
-				incomeOutcome.add(0.0);
+			for (Account account : userAccounts) {
+				List<Double> accountBudget = new ArrayList<Double>();
+				double income = 0, outcome = 0;
+				rs.beforeFirst();
+				while (rs.next()) {
+					if ((rs.getInt("t.accounts_id") == account.getAccount_id()) && (rs.getInt("t.is_income") == 1)) {
+						income += rs.getDouble("t.amount");
+					}
+					if ((rs.getInt("t.accounts_id") == account.getAccount_id()) && (rs.getInt("t.is_income") == 0)) {
+						outcome += rs.getDouble("t.amount");
+					}
+					// incomeOutcome.add(rs.getDouble(1));
+				}
+				accountBudget.add(income);
+				accountBudget.add(outcome);
+				double incomeVsOutcome = income - outcome;
+				accountBudget.add(incomeVsOutcome);
+				double accountOldBBalance = account.getBalance();
+				accountBudget.add(accountOldBBalance);
+				accountBudget.add(accountOldBBalance + incomeVsOutcome);
+				allBudgets.put(account.getAccountName(), accountBudget);
 			}
+			return allBudgets;
 
-			// Get all outcome transactions for user and account
-			PreparedStatement pstmt2 = DBConnection.getInstance().getConnection()
-					.prepareStatement(ALL_OUTCOMES_TRANS_FOR_ACCOUNT, Statement.RETURN_GENERATED_KEYS);
-
-			pstmt2.setInt(1, user.getId());
-			pstmt2.setInt(2, accId);
-			ResultSet rs2 = pstmt2.executeQuery();
-			if (rs2.next()) {
-				incomeOutcome.add(rs2.getDouble(1));
-			} else {
-				incomeOutcome.add(0.0);
-			}
-			double incomeVsOutcome = incomeOutcome.get(0) - incomeOutcome.get(1);
-			incomeOutcome.add(incomeVsOutcome);
-			double accountOldBBalance = ((Account) accountDAO.getAccountById(accId)).getBalance();
-			incomeOutcome.add(accountOldBBalance);
-			incomeOutcome.add(accountOldBBalance + incomeVsOutcome);
-			return incomeOutcome;
-		} catch (ClassNotFoundException | SQLException | AccountException e) {
+		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
-			throw new BudgetException("No + or - transaction for this account!", e);
+			throw new BudgetException("No transactions for this user!", e);
 		}
 	}
 
