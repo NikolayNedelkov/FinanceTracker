@@ -13,4 +13,6 @@ public interface ICategoryDAO {
 	
 	SortedSet<String> getAllCategories() throws CategoryException;
 	
+	int addNewCategory(String categoryName, Boolean type) throws CategoryException;
+	
 }

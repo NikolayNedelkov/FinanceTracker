@@ -4,16 +4,14 @@
 <html>
 <head>
 <title>Sign-Up/Login Form</title>
-<link
-	href='https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600'
-	rel='stylesheet' type='text/css'>
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Login or register to the Finance Tracker</title>
 </head>
 <body>
 	<div class="form">

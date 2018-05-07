@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,6 +26,7 @@ import com.financetracker.exceptions.TransactionException;
 import com.financetracker.model.accounts.Account;
 import com.financetracker.model.accounts.IAccountDAO;
 import com.financetracker.model.categories.ICategoryDAO;
+import com.financetracker.model.transactions.IPlannedTransactionDAO;
 import com.financetracker.model.transactions.PlannedTransaction;
 import com.financetracker.model.transactions.PlannedTransactionDAO;
 import com.financetracker.model.users.User;
@@ -35,10 +37,8 @@ import com.google.gson.Gson;
 @RequestMapping(value = "/plannedTransactions")
 public class PlannedTransactionController {
 
-	
-	//IPlannedTransactionDAO
 	@Autowired
-	public PlannedTransactionDAO plannedTransactionDAO;
+	public IPlannedTransactionDAO plannedTransactionDAO;
 	@Autowired
 	public IAccountDAO accountDAO;
 	@Autowired
@@ -131,6 +131,20 @@ public class PlannedTransactionController {
 			return "redirect:/plannedTransactions";
 
 		} catch (TransactionException | AccountException | PlannedTransactionException  e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+	
+	@RequestMapping(value="/delete/{id}", method=RequestMethod.GET)
+	public String deletePlannedTransaction(@PathVariable("id") Integer id,HttpSession session) {
+		if ((session == null) || (session.getAttribute("user") == null)) {
+			return "redirect:/signup-login";
+		}
+		try {
+			plannedTransactionDAO.deletePlannedTransaction(id);
+			return "redirect:/plannedTransactions";
+		} catch (TransactionException e) {
 			e.printStackTrace();
 			return "error";
 		}

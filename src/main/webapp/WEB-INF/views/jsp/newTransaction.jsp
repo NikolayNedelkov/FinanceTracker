@@ -13,6 +13,15 @@
 			</h2>
 		</div>
 
+		<div class="well">
+			Would you like to add more transaction categories?
+			<div id="display_btn" class="inline">
+
+			<button type="button" class="btn btn-primary" id="addtransaction"
+				onclick="location.href='./add/category';">Add a category</button>
+			</div>
+		</div>
+
 		<form id="addExpenseForm" action="" method="post">
 			<div class="expense_name">
 				<div class="inline modalcss">Payee/Payer name:</div>
@@ -64,6 +73,7 @@
 					<option disabled selected>Please select a transaction
 						category</option>
 				</select>
+
 			</div>
 
 

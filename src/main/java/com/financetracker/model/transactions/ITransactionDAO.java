@@ -13,8 +13,7 @@ public interface ITransactionDAO {
 
 	int addTransaction(Transaction transaction) throws TransactionException, SQLException;
 
-
-	public void deleteTransaction(int transactionID) throws TransactionException;
+	void deleteTransaction(int transactionID) throws TransactionException;
 
 
 }

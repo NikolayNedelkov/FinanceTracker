@@ -71,8 +71,7 @@
 											<th scope="row" class="payee clickable"><c:out
 													value="${transaction.payee}"></c:out></th>
 											<td class="amount"><c:out value="${transaction.amount}"></c:out></td>
-											<td class="isIncome"><c:if
-													test="${transaction.isIncome eq true}">
+											<td class="isIncome"><c:if test="${transaction.isIncome eq true}">
 													<c:out value="Income"></c:out></td>
 											</c:if>
 											<c:if test="${transaction.isIncome eq false}">
@@ -88,11 +87,10 @@
 											<td class="recurrency"><c:out
 													value="${transaction.recurrency}"></c:out></td>
 											<td><input type="button" id="editbtn"
-												class="btn btn-primary"
-												onclick="location.href='./transactions/edit/${transaction.id}';"
-												value="Edit"> <input type="button" id="deletebtn"
-												class="btn btn-secondary"
-												onclick="location.href='./transactions/delete/${transaction.id}';"
+												class="btn btn-primary"	onclick="location.href='./transactions/edit/${transaction.id}';"
+												value="Edit"> 
+												<input type="button" id="deletebtn"	class="btn btn-secondary"
+												onclick="location.href='./plannedTransactions/delete/${transaction.id}';"
 												value="Delete"></td>
 
 										</tr>

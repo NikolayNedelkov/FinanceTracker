@@ -21,7 +21,7 @@ import com.financetracker.model.categories.ICategoryDAO;
 @Component
 public class TransactionDAO implements ITransactionDAO {
 
-	private static final String ADD_TRANSACTION_SQL = "INSERT INTO transactions VALUES (null,?,?,?,?,?,?,null,true)";
+	private static final String ADD_TRANSACTION_SQL = "INSERT INTO transactions VALUES (null,?,?,?,?,?,?,0,true)";
 	private static final String REMOVE_TRANSACTION_SQL = "DELETE FROM transactions WHERE transactions.id=?";
 	private static final String GET_ALL_TRANSACTIONS_SQL = "SELECT id,`payee/payer`,amount, date_paid,accounts_id,categories_id,is_income FROM transactions where accounts_id=? AND isPaid = true";
 
@@ -101,11 +101,9 @@ public class TransactionDAO implements ITransactionDAO {
 	}
 
 	@Override
-
 	public void deleteTransaction(int transactionID) throws TransactionException {
-		PreparedStatement pstmt;
 		try {
-			pstmt = DBConnection.getInstance().getConnection().prepareStatement(REMOVE_TRANSACTION_SQL);
+			PreparedStatement pstmt = DBConnection.getInstance().getConnection().prepareStatement(REMOVE_TRANSACTION_SQL);
 			pstmt.setInt(1, transactionID);
 			pstmt.executeUpdate();
 

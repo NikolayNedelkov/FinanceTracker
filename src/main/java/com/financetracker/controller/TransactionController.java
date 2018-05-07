@@ -99,6 +99,29 @@ public class TransactionController {
 		
 	}
 	
+	@RequestMapping(value="/add/category", method=RequestMethod.GET)
+	protected String addCategory(HttpServletRequest request) {
+			return "addNewCategory";
+	}
+	
+	@RequestMapping(value="/add/category", method=RequestMethod.POST)
+	protected String addNewCategory(HttpServletRequest request) {
+			try {
+				String categoryName = request.getParameter("categoryName");
+				boolean isIncome;
+				if (request.getParameter("typeSelect").equals("false")) {
+					isIncome = false;
+				}else {
+					isIncome = true;
+				}
+				categoryDAO.addNewCategory(categoryName, isIncome);
+			} catch (CategoryException e) {
+				e.printStackTrace();
+				return "redirect:../add";
+			}
+			return "redirect:../add";
+	}
+	
 	@RequestMapping(value="/add", method=RequestMethod.POST)
 	protected String addTransaction(HttpServletRequest request, HttpSession session) {
 		if ((session == null) || (session.getAttribute("user") == null)) {
