@@ -117,7 +117,7 @@ public class UserController {
 		return "forgotPassword";
 	}
 
-	@RequestMapping(value = "/forgottenPassword", method = RequestMethod.POST)
+	@RequestMapping(value = "/forgotPassword", method = RequestMethod.POST)
 	public String sendEmail(HttpServletRequest request, Model model) throws UserException {
 		String email = request.getParameter("email");
 		if (userDAO.getUserByEmail(email) != null) {
