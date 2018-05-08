@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 
 import javax.servlet.ServletOutputStream;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.financetracker.database.DBConnection;
@@ -22,6 +23,9 @@ public class ExportDao implements IExportDao {
 
 	private static final String ALL_TRANSACTIONS_TRANS_FOR_USER = "SELECT a.name as AccountName,c.name as CategoryName,t.amount as Amount,t.date_paid as DatePaid,t.`payee/payer` as Payee,t.is_income as Income FROM users u JOIN accounts a ON (u.id=a.user_id) JOIN transactions t ON (a.id = t.accounts_id) JOIN categories c ON (t.categories_id = c.id) where u.id = ?;";
 
+	@Autowired
+	private DBConnection DBConnection;
+	
 	@Override
 	public void exportIntoPdf(ServletOutputStream os, User user) {
 		try {
@@ -37,7 +41,7 @@ public class ExportDao implements IExportDao {
 			// add a new paragraph
 			doc.add(new Paragraph(user.getFirstName() + " " + user.getLastName() + " transaction history", bfBold18));
 
-			PreparedStatement pr = DBConnection.getInstance().getConnection()
+			PreparedStatement pr = DBConnection.getConnection()
 					.prepareStatement(ALL_TRANSACTIONS_TRANS_FOR_USER);
 			pr.setInt(1, user.getId());
 			ResultSet rs = pr.executeQuery();

@@ -3,6 +3,7 @@ package com.financetracker.controller;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
@@ -81,11 +82,11 @@ public class TransactionController {
 		User loggedUser = (User) session.getAttribute("user");
 		Set<Account> usersAccounts;
 		try {
-<<<<<<< HEAD
-			usersAccounts = (Set<Account>) accountDAO.getAllAccountsForUser(loggedUser);
-=======
+
+//			usersAccounts = (Set<Account>) accountDAO.getAllAccountsForUser(loggedUser);
+
 			usersAccounts = new HashSet<Account>(accountDAO.getAllAccountsForUser(loggedUser));
->>>>>>> 5b0f3297e9cd5f4a9de240beaa04a79fb537e3e6
+
 			loggedUser.setAccounts(usersAccounts);
 			return "newTransaction";
 		} catch (AccountException e) {

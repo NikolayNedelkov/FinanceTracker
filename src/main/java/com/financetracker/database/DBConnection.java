@@ -15,7 +15,7 @@ public class DBConnection {
 	
 	private static final String DB_HOST = "localhost";
 	private static final String DB_USER = "root";
-	private static final String DB_PASS = "0000";
+	private static final String DB_PASS = "7879";
 	private static final String DB_PORT = "3306";
 	private static final String DB_SCHEMA = "financetracker";
 	private static final String DB_USE_SSL = "&useSSL=false";
@@ -31,9 +31,9 @@ public class DBConnection {
 		this.connection = DriverManager.getConnection(
 				"jdbc:mysql://" + DB_HOST + ":" + DB_PORT + "/" + DB_SCHEMA + "?" + DB_USE_SSL,
 				DB_USER, DB_PASS);
-		Thread chekingThread = new PlannedTransactionThread();
+		//Thread chekingThread = new PlannedTransactionThread();
 		//chekingThread.setDaemon(true);
-		chekingThread.start();
+		//chekingThread.start();
 		//shte se startira
 		
 	}
