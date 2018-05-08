@@ -3,10 +3,7 @@ package com.financetracker.controller;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -44,7 +41,6 @@ public class TransactionController {
 	@Autowired
 	public ICategoryDAO categoryDAO;
 
-	// TODO:get transactions with db query
 	@RequestMapping(method = RequestMethod.GET)
 	protected String showTransactions(Model model, HttpSession session) {
 		if ((session == null) || (session.getAttribute("user") == null)) {
@@ -54,15 +50,10 @@ public class TransactionController {
 		try {
 			SortedSet<String> categories = categoryDAO.getAllCategories();
 			User currentUser = (User) session.getAttribute("user");
-			List<Transaction> allUserTransactions = new ArrayList<>();
-			Set<Account> currentUserAccounts = new HashSet<Account>(accountDAO.getAllAccountsForUser(currentUser));
-
-			for (Account account : currentUserAccounts) {
-				allUserTransactions.addAll(transactionDAO.getAllTransactions(account));
-			}
+			List<Transaction> allUserTransactions = transactionDAO.getAllTransactions(currentUser);
 			model.addAttribute("allUserTransactions", allUserTransactions);
-			model.addAttribute("categories", categories);
-		} catch (AccountException | TransactionException | SQLException | CategoryException e) {
+			model.addAttribute("categories",categories);
+		} catch (AccountException | TransactionException | CategoryException e) {
 			e.printStackTrace();
 			return "error";
 		}
@@ -90,7 +81,11 @@ public class TransactionController {
 		User loggedUser = (User) session.getAttribute("user");
 		Set<Account> usersAccounts;
 		try {
+<<<<<<< HEAD
+			usersAccounts = (Set<Account>) accountDAO.getAllAccountsForUser(loggedUser);
+=======
 			usersAccounts = new HashSet<Account>(accountDAO.getAllAccountsForUser(loggedUser));
+>>>>>>> 5b0f3297e9cd5f4a9de240beaa04a79fb537e3e6
 			loggedUser.setAccounts(usersAccounts);
 			return "newTransaction";
 		} catch (AccountException e) {

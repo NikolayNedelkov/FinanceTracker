@@ -28,7 +28,6 @@ import com.financetracker.model.accounts.IAccountDAO;
 import com.financetracker.model.categories.ICategoryDAO;
 import com.financetracker.model.transactions.IPlannedTransactionDAO;
 import com.financetracker.model.transactions.PlannedTransaction;
-import com.financetracker.model.transactions.PlannedTransactionDAO;
 import com.financetracker.model.users.User;
 import com.financetracker.recurrencies.IRecurrencyDAO;
 import com.google.gson.Gson;
@@ -61,7 +60,7 @@ public class PlannedTransactionController {
 			
 			model.addAttribute("allUserPlannedTransactions", allUserPlannedTransactions);
 			model.addAttribute("categories", categories);
-		} catch (CategoryException | PlannedTransactionException | RecurrencyException e) {
+		} catch (CategoryException | PlannedTransactionException e) {
 			e.printStackTrace();
 			return "error";
 		}
@@ -144,7 +143,7 @@ public class PlannedTransactionController {
 		try {
 			plannedTransactionDAO.deletePlannedTransaction(id);
 			return "redirect:/plannedTransactions";
-		} catch (TransactionException e) {
+		} catch (PlannedTransactionException e) {
 			e.printStackTrace();
 			return "error";
 		}
