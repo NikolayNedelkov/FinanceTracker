@@ -37,6 +37,8 @@
 						<button type="button" class="btn btn-primary" id="addtransaction"
 							onclick="location.href='./transactions/add';">Add a new
 							transaction</button>
+							<button type="button" class="btn btn-primary" id="exportPDF"
+							onclick="location.href='./export';">Export Transactions</button>
 					</div>
 
 					<div id="search">
