@@ -1,26 +1,33 @@
 package com.financetracker.controller;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.financetracker.exceptions.AccountException;
 import com.financetracker.exceptions.CurrencyException;
 import com.financetracker.model.accountType.IAccountTypeDAO;
 import com.financetracker.model.accounts.Account;
-import com.financetracker.model.accounts.AccountComparator;
-import com.financetracker.model.accounts.IAccountDAO;
+import com.financetracker.model.accounts.AccountDAO;
 import com.financetracker.model.currencies.ICurrencyDAO;
 import com.financetracker.model.users.User;
 
@@ -29,20 +36,26 @@ import com.financetracker.model.users.User;
 public class AccountController {
 
 	@Autowired
-	private IAccountDAO accountDao;
+	private AccountDAO accountDao;
 	@Autowired
 	private ICurrencyDAO currencyDAO;
 	@Autowired
 	private IAccountTypeDAO accountTypeDAO;
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String addAccounts(Model model, HttpSession session, HttpServletRequest request) {
+	public String addAccounts(
+			@RequestParam(required = false, defaultValue = "Account name", value = "criteria") String criteria,
+			Model model, HttpSession session, HttpServletRequest request) {
 		if ((session == null) || (session.getAttribute("user") == null)) {
 			return "redirect:/";
 		}
 		try {
+			// System.out.println(request.getAttribute("criteria"));
+			System.out.println("TUK SUM");
 			User loggedUser = (User) session.getAttribute("user");
-			HashSet<Account> usersAccounts = accountDao.getAllAccountsForUser(loggedUser);
+			// String criteria = "Account type";
+			Set<Account> usersAccounts = new TreeSet<Account>();
+			usersAccounts = accountDao.getSortedAccounts(loggedUser, criteria);
 			loggedUser.setAccounts(usersAccounts);
 			return "accounts";
 
@@ -52,7 +65,13 @@ public class AccountController {
 		}
 	}
 
-	// GET i POST metodi za dobavqne na nov Account, URL:.../accounts/add
+	@RequestMapping(value = "/delete", method = RequestMethod.GET)
+	public String deleteAccount(HttpSession session, HttpServletRequest request) {
+		int accountId = Integer.parseInt(request.getParameter("accId"));
+		accountDao.deleteAccount(accountId);
+		System.out.println(accountId);
+		return "redirect:/accounts";
+	}
 
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String addAccount(Model model) {
@@ -75,8 +94,12 @@ public class AccountController {
 	}
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public String addAccount(@ModelAttribute Account readyAccount, HttpServletRequest request, HttpSession session) {
+	public String addAccount(@Valid Account readyAccount, BindingResult bindingResult, HttpServletRequest request,
+			HttpSession session) {
 		try {
+			if (bindingResult.hasErrors()) {
+				return "redirect:./add";
+			}
 			if (accountDao.addNewAccount(readyAccount, session) > 0) {
 				return "redirect:/accounts";
 			} else {
@@ -110,13 +133,6 @@ public class AccountController {
 	@RequestMapping(value = "/acc/{account_id}", method = RequestMethod.POST)
 	public String editAccount(@ModelAttribute Account updatedAccount, @PathVariable("account_id") Integer accountId) {
 		try {
-			// System.out.println(updatedAccount.getAccount_id());
-			// AccountComparator comparator = new AccountComparator();
-			// System.out.println(comparator.compare(accountDao.getAccountById(updatedAccount.getAccount_id()),
-			// updatedAccount) == 0);
-			//!!!!!!!! tuka e greshkata, vrushta mi stariq akaunt v bazata
-//			Account updated = accountDao.getAccountById(updatedAccount.getAccount_id());
-//			System.out.println(updatedAccount.getAccount_id());
 			accountDao.updateAccount(updatedAccount);
 			return "redirect:/accounts";
 

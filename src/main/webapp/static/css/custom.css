@@ -35,6 +35,11 @@ ul li {
   padding-left: 0;
 }
 
+#deletebtn{
+	position: relative;
+	margin-left: 10px;
+}
+
 #page-wrapper {
   width: 100%;
   padding: 0;
@@ -47,7 +52,7 @@ ul li {
 }
 
 #editbtn{
-	
+	position: relative;
 }
 
 @media(min-width:768px) {
@@ -364,4 +369,7 @@ ul li {
 
 .card{
   margin-right: 20px;
+}
+.hidden-input{
+	display:none;
 }

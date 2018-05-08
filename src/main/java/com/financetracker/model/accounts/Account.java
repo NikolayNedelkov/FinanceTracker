@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import com.financetracker.exceptions.AccountException;
 import com.financetracker.model.transactions.Transaction;
 import com.financetracker.model.users.User;
@@ -11,41 +14,19 @@ import com.financetracker.model.users.User;
 public class Account{
 	private int account_id;
 	private User user;
+	
+	@NotNull
+    @Size(min=2, max=30)
 	private String accountName;
 	private double balance;
-	// private Currency currency;
 	private String lastFourDigits;
 	private float percentage;
 	private int paymentDueDay;
+	@NotNull
 	private String currency;
+	@NotNull
 	private String type;
-	// private List<Transaction> transactions;
 
-	// public Account() {
-	// // this.transactions = new ArrayList<Transaction>();
-	// }
-
-	// public Account(User user, String name, double balance, String currency,
-	// String type) throws AccountException {
-	// setAccountName(name);
-	// setType(type);
-	// setUser(user);
-	// this.balance = balance;
-	// setCurrency(currency);
-	// // this.transactions = new ArrayList<Transaction>();
-	// }
-	//
-	// public Account(int id, User user, String name, double balance, String
-	// currency, String type)
-	// throws AccountException {
-	// this.account_id = id;
-	// setAccountName(name);
-	// setType(type);
-	// setUser(user);
-	// this.balance = balance;
-	// setCurrency(currency);
-	// // this.transactions = new ArrayList<Transaction>();
-	// }
 
 	public Account() {
 	}
