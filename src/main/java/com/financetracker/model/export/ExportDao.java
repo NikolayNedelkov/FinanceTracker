@@ -19,19 +19,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 @Component
 public class ExportDao implements IExportDao {
-	/*
-	 * private static final String SELECT_ALL_INFO_FROM_TASKS_QUERY =
-	 * "SELECT t.summary, t.due_date, t.start_date, t.description, proj.name AS project_name, pr.type AS priority , s.type AS state , i.type AS issue_type, cr.full_name AS creator, assignee.full_name AS assignee "
-	 * + "      FROM tasks AS t " + "INNER JOIN projects AS p " +
-	 * "        ON t.project_id = p.id " + "INNER JOIN priorities AS pr " +
-	 * "        ON pr.id = t.priority_id " + "INNER JOIN states AS s " +
-	 * "		ON s.id = t.state_id " + "INNER JOIN issues AS i " +
-	 * "        ON i.id = t.issue_id " + "INNER JOIN projects AS proj " +
-	 * "        ON proj.id = t.project_id " + "INNER JOIN users AS cr " +
-	 * "        ON cr.id = t.creator_id " + "INNER JOIN users AS assignee " +
-	 * "        ON assignee.id = t.assignee_id " +
-	 * "     WHERE t.is_deleted = 0 AND p.is_deleted = 0 " + "ORDER BY t.due_date;";
-	 */
+	
 	private static final String ALL_TRANSACTIONS_TRANS_FOR_USER = "SELECT t.`payee/payer` as Payee, t.amount as Amount, t.date_paid as DatePaid, t.accounts_id as AccountID, t.categories_id as CategoriesId, t.is_income as IsIncome FROM transactions t JOIN accounts a ON (a.id=t.accounts_id) JOIN users u ON (u.id=a.user_id) WHERE u.id=?;";
 
 	@Override

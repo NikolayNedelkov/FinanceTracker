@@ -55,7 +55,7 @@ public class TransactionController {
 			SortedSet<String> categories = categoryDAO.getAllCategories();
 			User currentUser = (User) session.getAttribute("user");
 			List<Transaction> allUserTransactions = new ArrayList<>();
-			Set<Account> currentUserAccounts = (Set<Account>) accountDAO.getAllAccountsForUser(currentUser);
+			Set<Account> currentUserAccounts = new HashSet<Account>(accountDAO.getAllAccountsForUser(currentUser));
 
 			for (Account account : currentUserAccounts) {
 				allUserTransactions.addAll(transactionDAO.getAllTransactions(account));
