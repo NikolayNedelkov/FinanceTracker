@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.financetracker.model.transactions.PlannedTransactionThread;
@@ -21,7 +20,7 @@ public class DBConnection {
 	private static final String DB_SCHEMA = "financetracker";
 	private static final String DB_USE_SSL = "&useSSL=false";
 
-	private static DBConnection instance = null;
+	//private static DBConnection instance = null;
 	
 //	@Autowired
 //	PlannedTransactionThread chekingThread;

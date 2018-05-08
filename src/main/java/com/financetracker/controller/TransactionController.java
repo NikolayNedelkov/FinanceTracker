@@ -31,9 +31,9 @@ import com.financetracker.model.users.User;
 import com.google.gson.Gson;
 
 @Controller
-@RequestMapping(value="/transactions")
+@RequestMapping(value = "/transactions")
 public class TransactionController {
-	
+
 	@Autowired
 	public ITransactionDAO transactionDAO;
 	@Autowired
@@ -59,61 +59,66 @@ public class TransactionController {
 		}
 		return "transactions";
 	}
-	
+
 	@RequestMapping(value = "/add/getCategories", method = RequestMethod.GET)
-	public @ResponseBody void getCategories(HttpServletRequest request, HttpServletResponse response) throws TransactionException {
-			
-			try {
-				String transactionType = request.getParameter("typeSelect");
-				SortedSet<String> categories = categoryDAO.getCategoriesByType(transactionType);
-				response.setContentType("application/json");
-				response.getWriter().println(new Gson().toJson(categories));
-				
-			} catch (IOException | CategoryException e) {
-				e.printStackTrace();
-				throw new TransactionException("Cannot get categories!");
-			} 
+	public @ResponseBody void getCategories(HttpServletRequest request, HttpServletResponse response)
+			throws TransactionException {
+
+		try {
+			String transactionType = request.getParameter("typeSelect");
+			SortedSet<String> categories = categoryDAO.getCategoriesByType(transactionType);
+			response.setContentType("application/json");
+			response.getWriter().println(new Gson().toJson(categories));
+
+		} catch (IOException | CategoryException e) {
+			e.printStackTrace();
+			throw new TransactionException("Cannot get categories!");
+		}
 	}
-	
-	@RequestMapping(value="/add", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	protected String getUserAccounts(HttpSession session) {
 		User loggedUser = (User) session.getAttribute("user");
 		Set<Account> usersAccounts;
 		try {
+<<<<<<< HEAD
 			usersAccounts = (Set<Account>) accountDAO.getAllAccountsForUser(loggedUser);
+=======
+			usersAccounts = new HashSet<Account>(accountDAO.getAllAccountsForUser(loggedUser));
+>>>>>>> 5b0f3297e9cd5f4a9de240beaa04a79fb537e3e6
 			loggedUser.setAccounts(usersAccounts);
 			return "newTransaction";
 		} catch (AccountException e) {
 			e.printStackTrace();
 			return "error";
 		}
-		
+
 	}
-	
-	@RequestMapping(value="/add/category", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/add/category", method = RequestMethod.GET)
 	protected String addCategory(HttpServletRequest request) {
-			return "addNewCategory";
+		return "addNewCategory";
 	}
-	
-	@RequestMapping(value="/add/category", method=RequestMethod.POST)
+
+	@RequestMapping(value = "/add/category", method = RequestMethod.POST)
 	protected String addNewCategory(HttpServletRequest request) {
-			try {
-				String categoryName = request.getParameter("categoryName");
-				boolean isIncome;
-				if (request.getParameter("typeSelect").equals("false")) {
-					isIncome = false;
-				}else {
-					isIncome = true;
-				}
-				categoryDAO.addNewCategory(categoryName, isIncome);
-			} catch (CategoryException e) {
-				e.printStackTrace();
-				return "redirect:../add";
+		try {
+			String categoryName = request.getParameter("categoryName");
+			boolean isIncome;
+			if (request.getParameter("typeSelect").equals("false")) {
+				isIncome = false;
+			} else {
+				isIncome = true;
 			}
+			categoryDAO.addNewCategory(categoryName, isIncome);
+		} catch (CategoryException e) {
+			e.printStackTrace();
 			return "redirect:../add";
+		}
+		return "redirect:../add";
 	}
-	
-	@RequestMapping(value="/add", method=RequestMethod.POST)
+
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	protected String addTransaction(HttpServletRequest request, HttpSession session) {
 		if ((session == null) || (session.getAttribute("user") == null)) {
 			return "redirect:/signup-login";
@@ -125,30 +130,30 @@ public class TransactionController {
 			LocalDate date = LocalDate.parse(request.getParameter("date"));
 
 			boolean isIncome;
-			
+
 			if (request.getParameter("typeSelect").equals("false")) {
 				isIncome = false;
-			}else {
+			} else {
 				isIncome = true;
 			}
-			
+
 			String category = request.getParameter("category");
-			String accountName=request.getParameter("accountSelect");
+			String accountName = request.getParameter("accountSelect");
 			Account account = accountDAO.getAccountByName(accountName);
-			
+
 			Transaction transaction = new Transaction(payee, amount, date, account, category, isIncome);
 			transactionDAO.addTransaction(transaction);
-			
+
 			return "redirect:/transactions";
 
-		} catch (TransactionException | AccountException | SQLException  e) {
+		} catch (TransactionException | AccountException | SQLException e) {
 			e.printStackTrace();
 			return "error";
 		}
 	}
-	
-	@RequestMapping(value="/delete/{id}", method=RequestMethod.GET)
-	public String deleteTransaction(@PathVariable("id") Integer id,HttpSession session) {
+
+	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+	public String deleteTransaction(@PathVariable("id") Integer id, HttpSession session) {
 		if ((session == null) || (session.getAttribute("user") == null)) {
 			return "redirect:/signup-login";
 		}

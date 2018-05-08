@@ -8,6 +8,11 @@ import org.springframework.stereotype.Component;
 
 import com.financetracker.exceptions.PlannedTransactionException;
 
+import com.financetracker.exceptions.PlannedTransactionThreadException;
+import com.financetracker.exceptions.RecurrencyException;
+import com.financetracker.exceptions.TransactionException;
+import com.financetracker.model.users.User;
+
 //@Component
 public class PlannedTransactionThread extends Thread {
 
