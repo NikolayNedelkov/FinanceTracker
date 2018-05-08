@@ -1,5 +1,6 @@
 package com.financetracker.controller;
 
+import java.io.IOException;
 import java.rmi.server.ExportException;
 
 import javax.servlet.ServletOutputStream;
@@ -29,22 +30,30 @@ public class ExportController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String exportTasksIntoPdf(HttpServletResponse response, HttpSession session, Model model)  {
+		ServletOutputStream os = null;
 		try {
 			User loggedUser = this.userDao.getLoggedUser(session);
 			if (loggedUser == null) {
 				throw new ExportException(NOT_LOGGED_MESSAGE);
 			}
 			
-			ServletOutputStream os = response.getOutputStream();
-			response.setContentType("application/pdf");
+			os = response.getOutputStream();
+//			response.setContentType("application/pdf");
 			response.setHeader("Content-Disposition", "attachment; filename=\"" + "allTasks.pdf" + "\"");
 			this.exportDao.exportIntoPdf(os, loggedUser);
-
+			
 			return "home";
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("exception", e);
 			return "error";
+		} finally {
+			try {
+				os.flush();
+				os.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
