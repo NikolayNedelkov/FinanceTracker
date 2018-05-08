@@ -28,7 +28,7 @@ public class PlannedTransactionDAO implements IPlannedTransactionDAO{
 	
 	private static final String ADD_TRANSACTION_SQL = "INSERT INTO transactions VALUES (null,?,?,?,?,?,?,?,false)";
 	private static final String ADD_PLANNED_TRANSACTION_SQL = "INSERT INTO planed_transactions VALUES(null,?,?)";
-	private static final String GET_ALL_PLANNED_TRANSACTIONS_SQL = "select pt.id,t.`payee/payer`,t.amount,pt.planed_date,t.accounts_id,t.categories_id,t.is_income,pt.recurencies_id FROM planed_transactions pt JOIN transactions t ON pt.id = t.planed_transactions_id JOIN accounts ON t.accounts_id = accounts.id JOIN users ON accounts.user_id = users.id WHERE users.id = ? AND t.isPaid = false;";
+	private static final String GET_ALL_PLANNED_TRANSACTIONS_SQL = "select pt.id,t.`payee/payer`,t.amount,pt.planed_date,t.accounts_id,t.categories_id,t.is_income,pt.recurencies_id FROM planed_transactions pt JOIN transactions t ON pt.id = t.planed_transactions_id JOIN accounts ON t.accounts_id = accounts.id JOIN users ON accounts.user_id = users.id WHERE users.id = ? AND t.is_paid = false;";
 	private static final String REMOVE_PLANNED_TRANSACTION_SQL = "DELETE FROM planed_transactions WHERE planed_transactions.id=?";
 	private static final String FIND_TRANSACTION_TO_DELETE_SQL = "SELECT transactions.id FROM transactions WHERE transactions.planed_transactions_id = ?";
 
@@ -144,6 +144,21 @@ public class PlannedTransactionDAO implements IPlannedTransactionDAO{
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	@Override
+	public void payPlannedTransaction(PlannedTransaction plannedTransaction) throws PlannedTransactionException, TransactionException {
+		if(plannedTransaction == null) {
+			throw new PlannedTransactionException("Entered planned transaction is empty, please try again!");
+		}
+		try {
+			Transaction newTransaction = new Transaction(plannedTransaction.getPayee(), plannedTransaction.getAmount(), plannedTransaction.getAccount(), plannedTransaction.getCategory(), plannedTransaction.getIsIncome(), plannedTransaction.getId());
+			transactionDAO.makePlannedTransaction(newTransaction);
+
+		} catch (TransactionException e) {
+			e.printStackTrace();
+			throw new TransactionException("Something went wrong, cannot pay planned transaction!", e);
 		}
 	}
 

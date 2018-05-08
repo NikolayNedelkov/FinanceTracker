@@ -21,7 +21,7 @@
 			</div>
 			<div class="expense_name">
 				<div class="inline modalcss">Planned transaction date:</div>
-				<input type="date" class="form-control" id="addexpense_name"
+				<input type="date" class="form-control" id="addplanned_transaction_date"
 					name="plannedDate" required>
 			</div>
 			<div class="expense_name">

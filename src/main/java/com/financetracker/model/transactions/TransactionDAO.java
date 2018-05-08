@@ -21,9 +21,10 @@ import com.financetracker.model.categories.ICategoryDAO;
 @Component
 public class TransactionDAO implements ITransactionDAO {
 
-	private static final String ADD_TRANSACTION_SQL = "INSERT INTO transactions VALUES (null,?,?,?,?,?,?,0,true)";
+	private static final String ADD_TRANSACTION_SQL = "INSERT INTO transactions VALUES (null,?,?,?,?,?,?,?,true)";
 	private static final String REMOVE_TRANSACTION_SQL = "DELETE FROM transactions WHERE transactions.id=?";
 	private static final String GET_ALL_TRANSACTIONS_SQL = "SELECT id,`payee/payer`,amount, date_paid,accounts_id,categories_id,is_income FROM transactions where accounts_id=? AND isPaid = true";
+	//private static final String MAKE_PLANNED_TRANSACTION_SQL = "INSERT INTO transactions VALUES (null,?,?,?,?,?,?,?,true)";
 
 	@Autowired
 	private IAccountDAO accountDAO;
@@ -69,6 +70,7 @@ public class TransactionDAO implements ITransactionDAO {
 				pstmt.setInt(4, transaction.getAccount().getAccount_id());
 				pstmt.setInt(5, categoryDAO.getCategoryIdByName(transaction.getCategory()));
 				pstmt.setBoolean(6, transaction.getIsIncome());
+				pstmt.setInt(7, 0);
 				pstmt.executeUpdate();
 				ResultSet resultSet = pstmt.getGeneratedKeys();
 				resultSet.next();
@@ -111,5 +113,50 @@ public class TransactionDAO implements ITransactionDAO {
 			e.printStackTrace();
 			throw new TransactionException("Cannot delete transaction, please try again!", e);
 		}
+	}
+
+	@Override
+	public int makePlannedTransaction(Transaction transaction) throws TransactionException {
+		Connection connection = null;
+			try {
+				connection = DBConnection.getInstance().getConnection();
+				connection.setAutoCommit(false);
+				PreparedStatement pstmt = connection.prepareStatement(ADD_TRANSACTION_SQL,Statement.RETURN_GENERATED_KEYS);
+				pstmt.setString(1, transaction.getPayee());
+				pstmt.setDouble(2, transaction.getAmount());
+				pstmt.setTimestamp(3, Timestamp.valueOf(transaction.getDate().atStartOfDay()));
+				pstmt.setInt(4, transaction.getAccount().getAccount_id());
+				pstmt.setInt(5, categoryDAO.getCategoryIdByName(transaction.getCategory()));
+				pstmt.setBoolean(6, transaction.getIsIncome());
+				pstmt.setInt(7, transaction.getPlannedTransactionId());
+				pstmt.executeUpdate();
+				ResultSet resultSet = pstmt.getGeneratedKeys();
+				resultSet.next();
+				Statement statement = connection.createStatement();
+				double amount = transaction.getAmount();
+				if (!transaction.getIsIncome()) {
+					amount *= -1;
+				}
+				statement.executeUpdate("UPDATE accounts SET balance=balance + " + amount + "WHERE id="
+						+ transaction.getAccount().getAccount_id());
+				connection.commit();
+				return resultSet.getInt(1);
+			} catch (SQLException | CategoryException | ClassNotFoundException e) {
+				e.printStackTrace();
+				try {
+					connection.rollback();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				throw new TransactionException("Something went wrong, please try again!", e);
+			} finally {
+				try {
+					connection.setAutoCommit(true);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 	}
 }

@@ -63,7 +63,17 @@
     });
     
     
-   // Dropdown filter option
+   // Date picker 
+    
+    
+    var dateToday = new Date(); 
+    $(function() {
+        $( "#addplanned_transaction_date" ).datepicker({
+            numberOfMonths: 6,
+            showButtonPanel: true,
+            minDate: dateToday
+        });
+    });
     
     
 
