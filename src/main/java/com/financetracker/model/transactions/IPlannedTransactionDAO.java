@@ -15,5 +15,8 @@ public interface IPlannedTransactionDAO {
 
 	void deletePlannedTransaction(int transactionID) throws TransactionException;
 
+	void payPlannedTransaction(PlannedTransaction plannedTransaction)
+			throws PlannedTransactionException, TransactionException;
+
 
 }
