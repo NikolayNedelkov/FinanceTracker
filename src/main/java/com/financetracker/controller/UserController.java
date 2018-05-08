@@ -62,7 +62,7 @@ public class UserController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/register")
-	private String register(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+	private String register(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws UserException {
 		String firstName = request.getParameter("firstName");
 		String lastName = request.getParameter("lastName");
 		String email = request.getParameter("email");

@@ -7,7 +7,6 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 
 import javax.servlet.http.HttpSession;
-import javax.websocket.Session;
 
 import org.springframework.stereotype.Component;
 
