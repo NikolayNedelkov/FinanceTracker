@@ -45,10 +45,11 @@ public class Transaction {
 		setCategory(category);
 	}
 
-	public Transaction(String payee, double amount, Account account, String category, boolean isIncome,
+	public Transaction(String payee, double amount, LocalDate date,Account account, String category, boolean isIncome,
 			int plannedTransactionId) throws TransactionException {
 		setPayee(payee);
 		setAmount(amount);
+		setDate(date);
 		setAccount(account);
 		this.isIncome = isIncome;
 		setCategory(category);

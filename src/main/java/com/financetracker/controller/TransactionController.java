@@ -3,10 +3,7 @@ package com.financetracker.controller;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -44,7 +41,6 @@ public class TransactionController {
 	@Autowired
 	public ICategoryDAO categoryDAO;
 
-//TODO:get transactions with db query
 	@RequestMapping(method = RequestMethod.GET)
 	protected String showTransactions(Model model, HttpSession session) {
 		if ((session == null) || (session.getAttribute("user") == null)) {
@@ -54,22 +50,15 @@ public class TransactionController {
 		try {
 			SortedSet<String> categories = categoryDAO.getAllCategories();
 			User currentUser = (User) session.getAttribute("user");
-			List<Transaction> allUserTransactions = new ArrayList<>();
-			Set<Account> currentUserAccounts = (Set<Account>) accountDAO.getAllAccountsForUser(currentUser);
-
-			for (Account account : currentUserAccounts) {
-				allUserTransactions.addAll(transactionDAO.getAllTransactions(account));
-			}
+			List<Transaction> allUserTransactions = transactionDAO.getAllTransactions(currentUser);
 			model.addAttribute("allUserTransactions", allUserTransactions);
 			model.addAttribute("categories",categories);
-		} catch (AccountException | TransactionException | SQLException | CategoryException e) {
+		} catch (AccountException | TransactionException | CategoryException e) {
 			e.printStackTrace();
 			return "error";
 		}
 		return "transactions";
 	}
-	
-
 	
 	@RequestMapping(value = "/add/getCategories", method = RequestMethod.GET)
 	public @ResponseBody void getCategories(HttpServletRequest request, HttpServletResponse response) throws TransactionException {
@@ -89,9 +78,9 @@ public class TransactionController {
 	@RequestMapping(value="/add", method=RequestMethod.GET)
 	protected String getUserAccounts(HttpSession session) {
 		User loggedUser = (User) session.getAttribute("user");
-		HashSet<Account> usersAccounts;
+		Set<Account> usersAccounts;
 		try {
-			usersAccounts = (HashSet<Account>) accountDAO.getAllAccountsForUser(loggedUser);
+			usersAccounts = (Set<Account>) accountDAO.getAllAccountsForUser(loggedUser);
 			loggedUser.setAccounts(usersAccounts);
 			return "newTransaction";
 		} catch (AccountException e) {

@@ -62,7 +62,7 @@ public class ExportDao implements IExportDao {
 				doc.add(new Paragraph("Payee/Payer: " + rs.getString("Payee").trim(), bf12));
 				doc.add(new Paragraph("Amount of transaction: " + rs.getDouble("Amount"), bf12));
 				doc.add(new Paragraph("Date paid : " + rs.getTimestamp("DatePaid").toLocalDateTime().toString().trim(), bf12));
-				doc.add(new Paragraph("Category Id: " + rs.getInt("CategoryId"), bf12));
+				doc.add(new Paragraph("Category Id: " + rs.getInt("CategoriesId"), bf12));
 				doc.add(new Paragraph("Is Income: " + rs.getInt("IsIncome"), bf12));
 			}
 			doc.close();
