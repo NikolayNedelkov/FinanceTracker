@@ -115,7 +115,7 @@ public class User {
 	}
 
 	public void setEmail(String email) throws UserException {
-		if (EmailChecker.validate(email)) {
+		if (email!=null && EmailChecker.validate(email)) {
 			this.email = email;
 		} else
 			throw new UserException("Invalid Email");

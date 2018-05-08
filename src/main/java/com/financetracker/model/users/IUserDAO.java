@@ -26,4 +26,5 @@ public interface IUserDAO {
 
 	User getLoggedUser(HttpSession session);
 
+
 }
