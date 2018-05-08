@@ -27,7 +27,7 @@ public class ExportController {
 	private IUserDAO userDao;
 	
 
-	@RequestMapping(method = RequestMethod.GET, value = "/pdf")
+	@RequestMapping(method = RequestMethod.GET)
 	public String exportTasksIntoPdf(HttpServletResponse response, HttpSession session, Model model)  {
 		try {
 			User loggedUser = this.userDao.getLoggedUser(session);
@@ -38,9 +38,9 @@ public class ExportController {
 			ServletOutputStream os = response.getOutputStream();
 			response.setContentType("application/pdf");
 			response.setHeader("Content-Disposition", "attachment; filename=\"" + "allTasks.pdf" + "\"");
-			this.exportDao.exportIntoPdf(os);
+			this.exportDao.exportIntoPdf(os, loggedUser);
 
-			return "";
+			return "home";
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("exception", e);
