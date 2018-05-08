@@ -5,11 +5,17 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.context.annotation.Scope;
 
 import com.financetracker.exceptions.UserException;
 import com.financetracker.model.accounts.Account;
 import com.financetracker.model.budget.Budget;
+import com.financetracker.util.SecureTokenGenerator;
 
 
 @Scope("session")
@@ -22,6 +28,7 @@ public class User {
 	private LocalDateTime lastLoggedIn;
 	private Budget budget;
 	private Set<Account> accounts;
+	private String passwordToken;
 
 	public User() {
 		
@@ -37,6 +44,7 @@ public class User {
 		this(email, password);
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.passwordToken = SecureTokenGenerator.nextToken();
 	}
 
 	public User(int id, String email, String password, LocalDateTime lastLoggedIn) {
@@ -51,6 +59,23 @@ public class User {
 		this(id, email, password, lastLoggedIn);
 		this.firstName = firstName;
 		this.lastName = lastName;
+	}
+	
+	public User(int id, String firstName, String lastName, String email, String password, LocalDateTime lastLoggedIn, String passwordToken) {
+		this(email, password);
+		this.id = id;
+		this.lastLoggedIn = lastLoggedIn;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.passwordToken = passwordToken;
+	}
+	
+	public String getPasswordToken() {
+		return passwordToken;
+	}
+
+	public void setPasswordToken(String passwordToken) {
+		this.passwordToken = passwordToken;
 	}
 
 	public int getId() {
