@@ -15,5 +15,7 @@ public interface ITransactionDAO {
 
 	void deleteTransaction(int transactionID) throws TransactionException;
 
+	int makePlannedTransaction(Transaction transaction) throws TransactionException;
+
 
 }

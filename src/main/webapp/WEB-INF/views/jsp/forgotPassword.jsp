@@ -13,7 +13,6 @@
 </head>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
 </head>
 <body>
 	<div class="form">
@@ -25,7 +24,7 @@
 			<div id="login">
 				<h1>Enter your email to recover password</h1>
 
-				<form action="./sendPassword" method="post">
+				<form action="./forgottenPassword" method="post">
 
 					<div class="field-wrap">
 						<label> Email Address<span class="req">*</span>

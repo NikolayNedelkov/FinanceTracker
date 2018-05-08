@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import com.financetracker.exceptions.TransactionException;
 import com.financetracker.model.accounts.Account;
 
-public class Transaction{
+public class Transaction {
 	private int id;
 	private String payee;
 	private double amount;
@@ -13,6 +13,7 @@ public class Transaction{
 	private Account account;
 	private boolean isIncome;
 	private String category;
+	private int plannedTransactionId;
 
 	public Transaction(String payee, double amount, LocalDate date, Account account, String category, boolean isIncome)
 			throws TransactionException {
@@ -23,9 +24,9 @@ public class Transaction{
 		this.isIncome = isIncome;
 		setCategory(category);
 	}
-	
-	public Transaction(int id, String payee, double amount, LocalDate date, Account account, String category, boolean isIncome)
-			throws TransactionException {
+
+	public Transaction(int id, String payee, double amount, LocalDate date, Account account, String category,
+			boolean isIncome) throws TransactionException {
 		setId(id);
 		setPayee(payee);
 		setAmount(amount);
@@ -34,7 +35,7 @@ public class Transaction{
 		this.isIncome = isIncome;
 		setCategory(category);
 	}
-	
+
 	public Transaction(String payee, double amount, Account account, String category, boolean isIncome)
 			throws TransactionException {
 		setPayee(payee);
@@ -42,6 +43,16 @@ public class Transaction{
 		setAccount(account);
 		this.isIncome = isIncome;
 		setCategory(category);
+	}
+
+	public Transaction(String payee, double amount, Account account, String category, boolean isIncome,
+			int plannedTransactionId) throws TransactionException {
+		setPayee(payee);
+		setAmount(amount);
+		setAccount(account);
+		this.isIncome = isIncome;
+		setCategory(category);
+		setPlannedTransactionId(plannedTransactionId);
 	}
 
 	public boolean isValidString(String string) {
@@ -112,6 +123,7 @@ public class Transaction{
 		}
 
 	}
+
 	public void setIncome(boolean isIncome) {
 		this.isIncome = isIncome;
 	}
@@ -131,5 +143,15 @@ public class Transaction{
 			throw new TransactionException("Invalid category!");
 		}
 
+	}
+
+	public int getPlannedTransactionId() {
+		return plannedTransactionId;
+	}
+
+	public void setPlannedTransactionId(int plannedTransactionId) {
+		if (plannedTransactionId >= 0) {
+			this.plannedTransactionId = plannedTransactionId;
+		}
 	}
 }

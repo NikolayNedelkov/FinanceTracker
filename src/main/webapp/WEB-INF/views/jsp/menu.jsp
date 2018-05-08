@@ -90,6 +90,8 @@
 							<div class="inline">My budget</div></a> 
 							<a href="http://localhost:8080/FinalProject/home" id="credit_btn"><i class="fas fa-chart-line"></i>
 							<div class="inline">Charts and Reports</div></a></li>
+							<a href="http://localhost:8080/FinalProject/export" id="credit_btn"><i class="fas fa-chart-line"></i>
+							<div class="inline">Pdf Export</div></a></li>
 				</ul>
 
 			</div>
