@@ -45,7 +45,7 @@ public class TransactionController {
 	@RequestMapping(method = RequestMethod.GET)
 	protected String showTransactions(Model model, HttpSession session) {
 		if ((session == null) || (session.getAttribute("user") == null)) {
-			return "signup-login";
+			return "redirect:/";
 		}
 
 		try {
