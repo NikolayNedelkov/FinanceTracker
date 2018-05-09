@@ -1,6 +1,7 @@
 package com.financetracker.model.transactions;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,7 @@ public class PlannedTransactionThread implements Runnable {
 						default:
 							break;
 						}
-						LocalDate currentDate = LocalDate.now();
+						LocalDate currentDate = LocalDateTime.now().toLocalDate();
 						if(currentDate.isEqual(transactionDate)) {
 							///redirect kym stranica da te pita dali iskash da plati smetkata
 							plannedTransactionDAO.payPlannedTransaction(transaction);

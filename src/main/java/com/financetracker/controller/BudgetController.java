@@ -31,6 +31,9 @@ public class BudgetController {
 			// get all budgets for all accounts from the BudgetDAO
 			//System.out.println(user.getAccounts().iterator().next());
 			Map<String, List<Double>> budgetByAccount = budgetDao.getStatisticsAllAccounts(user);
+			if(budgetByAccount.isEmpty()) {
+				return "budget";
+			}
 			model.addAttribute("budgetByAccount", budgetByAccount);
 			List<Double> statisticTotal = budgetDao.getStatisticsTotal(user);
 			double allAccountsOld = 0, allAccountsNew = 0;
@@ -44,7 +47,7 @@ public class BudgetController {
 			return "budget";
 		} catch (BudgetException e) {
 			e.printStackTrace();
-			return "error";
+			return "budget";
 		}
 
 	}

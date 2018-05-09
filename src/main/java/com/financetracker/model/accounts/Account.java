@@ -11,12 +11,12 @@ import com.financetracker.exceptions.AccountException;
 import com.financetracker.model.transactions.Transaction;
 import com.financetracker.model.users.User;
 
-public class Account{
+public class Account {
 	private int account_id;
 	private User user;
-	
+
 	@NotNull
-    @Size(min=2, max=30)
+	@Size(min = 2, max = 30)
 	private String accountName;
 	private double balance;
 	private String lastFourDigits;
@@ -26,7 +26,6 @@ public class Account{
 	private String currency;
 	@NotNull
 	private String type;
-
 
 	public Account() {
 	}
@@ -40,8 +39,12 @@ public class Account{
 		setUser(user);
 		this.balance = balance;
 		setCurrency(currency);
-		this.lastFourDigits = lastFourDigits;
-		this.percentage = percentage;
+		setLastFourDigits(lastFourDigits);
+		if ((type.toLowerCase().equals("credit card")) || (type.toLowerCase().equals("loan"))) {
+			this.percentage = percentage;
+		} else {
+			this.percentage = 0;
+		}
 		this.paymentDueDay = paymentDueDay;
 	}
 
@@ -52,8 +55,12 @@ public class Account{
 		setUser(user);
 		this.balance = balance;
 		setCurrency(currency);
-		this.lastFourDigits = lastFourDigits;
-		this.percentage = percentage;
+		setLastFourDigits(lastFourDigits);
+		if ((type.toLowerCase().equals("credit card")) || (type.toLowerCase().equals("loan"))) {
+			this.percentage = percentage;
+		} else {
+			this.percentage = 0;
+		}
 		this.paymentDueDay = paymentDueDay;
 	}
 
@@ -64,8 +71,12 @@ public class Account{
 		setType(type);
 		this.balance = balance;
 		setCurrency(currency);
-		this.lastFourDigits = lastFourDigits;
-		this.percentage = percentage;
+		setLastFourDigits(lastFourDigits);
+		if ((type.toLowerCase().equals("credit card")) || (type.toLowerCase().equals("loan"))) {
+			this.percentage = percentage;
+		} else {
+			this.percentage = 0;
+		}
 		this.paymentDueDay = paymentDueDay;
 	}
 
@@ -74,7 +85,8 @@ public class Account{
 	}
 
 	public void setLastFourDigits(String lastFourDigits) {
-		this.lastFourDigits = lastFourDigits;
+		if ((lastFourDigits != null) && (lastFourDigits.trim().length() > 0))
+			this.lastFourDigits = lastFourDigits;
 	}
 
 	public float getPercentage() {
@@ -131,22 +143,9 @@ public class Account{
 		this.balance = balance;
 	}
 
-	// public Currency getCurrency() {
-	// return currency;
-	// }
-
 	public String getCurrency() {
 		return currency;
 	}
-	
-	
-	
-	// public void setCurrency(Currency currency) throws AccountException {
-	// if (currency != null)
-	// this.currency = currency;
-	// else
-	// throw new AccountException();
-	// }
 
 	public void setCurrency(String currency) throws AccountException {
 		if ((currency != null) && (currency.trim().length() > 0))
@@ -165,9 +164,5 @@ public class Account{
 		} else
 			throw new AccountException("Not a valid accounttype");
 	}
-
-	// public List<Transaction> getTransactions() {
-	// return Collections.unmodifiableList(this.transactions);
-	// }
 
 }

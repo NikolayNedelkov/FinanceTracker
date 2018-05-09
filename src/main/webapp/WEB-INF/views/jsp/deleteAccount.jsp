@@ -28,11 +28,12 @@
 
 							</tbody>
 						</table>
-						<form name="accountId" action="./delete" method="post">
-							<input type="hidden" name="accountId" value="${ account.account_id }" />
-							<input type="submit" id="editbtn" class="btn btn-primary"
-								value="I'm sure" />
+						<form name="accId" action="./delete" method="get">
+
 							<div class="modal-footer">
+								<input type="hidden" name="accId" value="${param.accId}" /> <input
+									type="submit" id="editbtn" class="btn btn-primary"
+									value="I'm sure" />
 								<button type="button" onclick="location.href='../accounts';"
 									class="btn btn-primary">Back</button>
 							</div>

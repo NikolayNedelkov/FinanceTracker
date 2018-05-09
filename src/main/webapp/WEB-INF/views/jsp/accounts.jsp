@@ -19,48 +19,16 @@
 			<div class="row">
 				<div class="col-lg-12">
 					<div class="well">
-						Display by:
-						<div id="display_btn" class="inline">
-							<select class="form-control select" id="display_option">
-								<option value="all">All</option>
-								<option value="general">General</option>
-								<option value="personal">Personal</option>
-								<option value="food">Food</option>
-								<option value="groceries">Groceries</option>
-								<option value="shopping">Shopping</option>
-								<option value="entertain">Entertain</option>
-								<option value="transport">Transport</option>
-								<option value="housing">Housing</option>
-								<option value="medical">Medical</option>
-								<option value="academic">Academic</option>
-							</select>
-						</div>
-						<div class="inline" id="changecolor">
-							Background Color:
-							<div class="changecolor inline">
-								<select class="form-control select" id="backcolor_option">
-									<option>White</option>
-									<option>Red</option>
-									<option>Orange</option>
-									<option>Yellow</option>
-									<option>Green</option>
-									<option>Blue</option>
-									<option>Pink</option>
-								</select>
-							</div>
-						</div>
 						<button onclick="location.href='./accounts/add';" type="button"
 							class="btn btn-primary" id="addtransaction">Add a new
 							account</button>
 					</div>
 
-
 					<div id="search">
 						<div id="search_btn" class="inline" style="display: block;">
 							Search: <input type="text" class="form-control search"
-								id="search_content">
+								id="search_content" placeholder="Search by Account name">
 						</div>
-
 
 						<div class=" col-lg-12 itemlog list">
 
@@ -103,7 +71,7 @@
 												onclick="location.href='./accounts/acc/${ account.account_id }';"
 												value="Edit account" /></td>
 											<td>
-												<form name="accId" action="./accounts/delete">
+												<form name="accId" action="./accounts/del">
 													<input type="hidden" name="accId"
 														value="${ account.account_id }" /> <input type="submit"
 														id="editbtn" class="btn btn-primary"
@@ -154,27 +122,6 @@
 
 
 </div>
-<!-- /.container-fluid -->
-
-
-
-
-
-<!-- 	<div class="modal-dialog" role="document">
-		<div class="modal-content"> -->
-<!-- <div class="modal-header"> -->
-
-<!-- </div> -->
-
-
-
-
-<!-- /.modal-content -->
-<!-- 		</div>
-		/.modal-dialog
-	</div> -->
-<!-- /.addExpenseModal -->
-<!-- </div> -->
 
 
 <script src="js/budget.js" type="text/javascript"></script>
