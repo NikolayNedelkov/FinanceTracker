@@ -28,11 +28,9 @@
 				{
 					type : 'bar',
 					data : {
-						/* i t.n. */
 						labels : [
 							<% 
 							ArrayList<String> names=(ArrayList<String>)(request.getAttribute("accounts"));
-							//Iterator <String> it=names.iterator();
 							for (int index=0; index<names.size(); index++){
 								if(index==names.size()-1){
 									out.print("'"+names.get(index)+"'");
@@ -56,7 +54,7 @@
 									}
 								}%>
 							],
-							backgroundColor:'#184f8b', 
+							backgroundColor:'#318a7c', 
 							borderColor: '#08182b', 
 							borderWidth: 2
 						}]
