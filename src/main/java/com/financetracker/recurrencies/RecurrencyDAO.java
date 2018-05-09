@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.financetracker.database.DBConnection;
@@ -21,18 +22,20 @@ public class RecurrencyDAO implements IRecurrencyDAO{
 	private static final String GET_RECURRENCY_NAME_SQL = "SELECT recurencies.recurency_name FROM recurencies WHERE recurencies.id = ?";
 	private static final String GET_ALL_RECURRENCIES_SQL = "SELECT recurencies.recurency_name FROM recurencies;";
 
+	@Autowired
+	private DBConnection DBConnection;
 	
 	@Override
 	public int getRecurrencyIdByName(String recurrencyName) throws RecurrencyException {
 		
 		try {
-			Connection connection = DBConnection.getInstance().getConnection();
+			Connection connection = DBConnection.getConnection();
 			PreparedStatement statement = connection.prepareStatement(GET_RECURRENCY_ID_SQL);
 			statement.setString(1,recurrencyName);
 			ResultSet resultSet = statement.executeQuery();
 			resultSet.next();
 			return resultSet.getInt(1);
-		} catch (SQLException | ClassNotFoundException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RecurrencyException("Cannot find reccurency name!", e);
 		}
@@ -41,13 +44,13 @@ public class RecurrencyDAO implements IRecurrencyDAO{
 	@Override
 	public String getRecurrencyNameById(int id) throws RecurrencyException {
 		try {
-			Connection connection = DBConnection.getInstance().getConnection();
+			Connection connection = DBConnection.getConnection();
 			PreparedStatement statement = connection.prepareStatement(GET_RECURRENCY_NAME_SQL);
 			statement.setInt(1,id);
 			ResultSet resultSet = statement.executeQuery();
 			resultSet.next();
 			return resultSet.getString(1);
-		} catch (SQLException | ClassNotFoundException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RecurrencyException("Cannot find reccurency id!", e);
 		}
@@ -56,7 +59,7 @@ public class RecurrencyDAO implements IRecurrencyDAO{
 	@Override
 	public SortedSet<String> getAllRecurrencies() throws RecurrencyException {
 		try {
-			Connection connection = DBConnection.getInstance().getConnection();
+			Connection connection = DBConnection.getConnection();
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(GET_ALL_RECURRENCIES_SQL);
 			TreeSet<String> allRecurrencies = new TreeSet<>();
@@ -64,7 +67,7 @@ public class RecurrencyDAO implements IRecurrencyDAO{
 				allRecurrencies.add(resultSet.getString("recurency_name"));
 			}
 			return allRecurrencies;
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RecurrencyException("Cannot get recurrencies!", e);
 		}

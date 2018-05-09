@@ -49,7 +49,7 @@ public class PlannedTransactionController {
 	@RequestMapping(method = RequestMethod.GET)
 	protected String showPlannedTransactions(Model model, HttpSession session) {
 		if ((session == null) || (session.getAttribute("user") == null)) {
-			return "signup-login";
+			return "redirect:/";
 		}
 
 		try {

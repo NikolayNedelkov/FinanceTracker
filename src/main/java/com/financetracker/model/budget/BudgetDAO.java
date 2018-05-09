@@ -26,6 +26,8 @@ public class BudgetDAO {
 
 	@Autowired
 	private AccountDAO accountDAO;
+	@Autowired
+	private DBConnection DBConnection;
 
 	private static final String CALCULATE_INCOME = "SELECT SUM(t.amount) FROM users u JOIN accounts a ON (u.id=a.user_id) JOIN transactions t on (a.id=t.accounts_id) WHERE u.id=? and t.is_income = '1'";
 	private static final String CALCULATE_EXPENSE = "SELECT SUM(t.amount) FROM users u JOIN accounts a ON (u.id=a.user_id) JOIN transactions t on (a.id=t.accounts_id) WHERE u.id=? and t.is_income = '0'";
@@ -39,7 +41,7 @@ public class BudgetDAO {
 		PreparedStatement pstmt;
 		try {
 			if (user != null) {
-				pstmt = DBConnection.getInstance().getConnection().prepareStatement(CALCULATE_INCOME);
+				pstmt = DBConnection.getConnection().prepareStatement(CALCULATE_INCOME);
 				pstmt.setInt(1, user.getId());
 
 				ResultSet resultSet = pstmt.executeQuery();
@@ -50,7 +52,7 @@ public class BudgetDAO {
 				throw new UserException("You account budget cannot be calculated ");
 			}
 
-		} catch (SQLException | ClassNotFoundException e) {
+		} catch (SQLException e) {
 			throw new UserException("You account budget cannot be calculated ", e);
 		}
 	}
@@ -59,7 +61,7 @@ public class BudgetDAO {
 		PreparedStatement pstmt;
 		try {
 			if (user != null) {
-				pstmt = DBConnection.getInstance().getConnection().prepareStatement(CALCULATE_EXPENSE);
+				pstmt = DBConnection.getConnection().prepareStatement(CALCULATE_EXPENSE);
 				pstmt.setInt(1, user.getId());
 
 				ResultSet resultSet = pstmt.executeQuery();
@@ -70,7 +72,7 @@ public class BudgetDAO {
 				throw new UserException("You account budget cannot be calculated ");
 			}
 
-		} catch (SQLException | ClassNotFoundException e) {
+		} catch (SQLException e) {
 			throw new UserException("You account budget cannot be calculated ", e);
 		}
 	}
@@ -89,7 +91,7 @@ public class BudgetDAO {
 		List<Double> statisticTotal = new ArrayList<Double>();
 		PreparedStatement pstmt;
 		try {
-			pstmt = DBConnection.getInstance().getConnection().prepareStatement(ALL_TRANSACTIONS_TRANS_FOR_USER,
+			pstmt = DBConnection.getConnection().prepareStatement(ALL_TRANSACTIONS_TRANS_FOR_USER,
 					Statement.RETURN_GENERATED_KEYS);
 			pstmt.setInt(1, user.getId());
 			ResultSet rs = pstmt.executeQuery();
@@ -107,7 +109,7 @@ public class BudgetDAO {
 			statisticTotal.add(incomeVsOutcome);
 			return statisticTotal;
 
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new BudgetException("No transactions for this user!", e);
 		}
@@ -123,7 +125,7 @@ public class BudgetDAO {
 		HashSet<Account> userAccounts = new HashSet<>(user.getAccounts());
 		PreparedStatement pstmt;
 		try {
-			pstmt = DBConnection.getInstance().getConnection().prepareStatement(ALL_TRANSACTIONS_TRANS_FOR_USER,
+			pstmt = DBConnection.getConnection().prepareStatement(ALL_TRANSACTIONS_TRANS_FOR_USER,
 					Statement.RETURN_GENERATED_KEYS);
 			pstmt.setInt(1, user.getId());
 			ResultSet rs = pstmt.executeQuery();
@@ -152,7 +154,7 @@ public class BudgetDAO {
 			}
 			return allBudgets;
 
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new BudgetException("No transactions for this user!", e);
 		}

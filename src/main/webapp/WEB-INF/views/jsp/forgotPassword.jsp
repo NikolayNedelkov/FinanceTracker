@@ -24,7 +24,7 @@
 			<div id="login">
 				<h1>Enter your email to recover password</h1>
 
-				<form action="./forgottenPassword" method="post">
+				<form action="./forgotPassword" method="post">
 
 					<div class="field-wrap">
 						<label> Email Address<span class="req">*</span>

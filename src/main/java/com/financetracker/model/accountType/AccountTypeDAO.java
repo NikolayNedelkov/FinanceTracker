@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.financetracker.database.DBConnection;
@@ -18,10 +19,13 @@ import com.financetracker.model.currencies.CurrencyDAO;
 public class AccountTypeDAO implements IAccountTypeDAO {
 	private static final String GET_ACC_TYPE_ID = "SELECT id from account_types where type like ?;";
 	private static final String GET_ALL_ACCOUNTTYPES = "SELECT type FROM account_types;";
+	
+	@Autowired
+	private DBConnection DBConnection;
 
 	@Override
 	public int getAccountTypeId(String typeName) throws SQLException, ClassNotFoundException, AccountException {
-		PreparedStatement pst = DBConnection.getInstance().getConnection().prepareStatement(GET_ACC_TYPE_ID,
+		PreparedStatement pst = DBConnection.getConnection().prepareStatement(GET_ACC_TYPE_ID,
 				Statement.RETURN_GENERATED_KEYS);
 		pst.setString(1, typeName);
 		ResultSet rs = pst.executeQuery();
@@ -35,7 +39,7 @@ public class AccountTypeDAO implements IAccountTypeDAO {
 	@Override
 	public List<String> getAccountTypesFromDB() throws ClassNotFoundException, SQLException, AccountException {
 		List<String> allAccountTypes = new ArrayList<String>();
-		Statement st = DBConnection.getInstance().getConnection().createStatement();
+		Statement st = DBConnection.getConnection().createStatement();
 		ResultSet rs = st.executeQuery(GET_ALL_ACCOUNTTYPES);
 		while (rs.next()) {
 			allAccountTypes.add((String) rs.getString("type"));
