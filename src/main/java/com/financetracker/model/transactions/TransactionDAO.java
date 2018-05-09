@@ -33,7 +33,6 @@ public class TransactionDAO implements ITransactionDAO {
 	private static final String UPDATE_ACCOUNT_BALANCE = "UPDATE accounts SET balance=balance + ? WHERE id = ?";
 	private static final String GET_TRANSACTION_BY_ID = "SELECT t.id, t.`payee/payer`, t.amount, t.date_paid, t.accounts_id, t.categories_id,t.is_income FROM transactions t WHERE t.id=?";
 	private static final String UPDATE_TRANSACTION = "UPDATE transactions t SET t.`payee/payer`= ?, t.amount = ?, t.date_paid = ?, t.accounts_id = ?, t.categories_id = ?,t.is_income = ?";
-
 	@Autowired
 	DBConnection DBConnection;
 
@@ -52,8 +51,7 @@ public class TransactionDAO implements ITransactionDAO {
 			List<Transaction> allTransactions = new LinkedList<Transaction>();
 			while (resultSet.next()) {
 				allTransactions.add(new Transaction(resultSet.getInt("id"), resultSet.getString("payee/payer"),
-						resultSet.getDouble("amount"),
-						(resultSet.getTimestamp("date_paid").toLocalDateTime().toLocalDate()),
+						resultSet.getDouble("amount"), resultSet.getTimestamp("date_paid").toLocalDateTime().toLocalDate(),
 						accountDAO.getAccountById(resultSet.getInt("accounts_id")),
 						categoryDAO.getCategoryNameById(resultSet.getInt("categories_id")),
 						resultSet.getBoolean("is_income")));
@@ -70,6 +68,7 @@ public class TransactionDAO implements ITransactionDAO {
 	public int addTransaction(Transaction transaction) throws TransactionException {
 		Connection connection = null;
 		try {
+
 			connection = DBConnection.getConnection();
 			connection.setAutoCommit(false);
 			PreparedStatement pstmt = connection.prepareStatement(ADD_TRANSACTION_SQL, Statement.RETURN_GENERATED_KEYS);
@@ -113,6 +112,7 @@ public class TransactionDAO implements ITransactionDAO {
 	@Override
 	public void deleteTransaction(int transactionID) throws TransactionException {
 		try {
+
 			PreparedStatement pstmt = DBConnection.getConnection().prepareStatement(REMOVE_TRANSACTION_SQL);
 			pstmt.setInt(1, transactionID);
 			pstmt.executeUpdate();

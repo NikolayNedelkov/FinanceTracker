@@ -65,11 +65,18 @@ public class AccountController {
 		}
 	}
 
-	@RequestMapping(value = "/delete", method = RequestMethod.GET)
+	@RequestMapping(value = "/del", method = RequestMethod.GET)
 	public String deleteAccount(HttpSession session, HttpServletRequest request) {
 		int accountId = Integer.parseInt(request.getParameter("accId"));
+//		accountDao.deleteAccount(accountId);
+//		System.out.println(accountId);
+		return "deleteAccount";
+	}
+	
+	@RequestMapping(value = "/delete", method = RequestMethod.GET)
+	public String confirmDelete(HttpSession session, HttpServletRequest request) {
+		int accountId = Integer.parseInt(request.getParameter("accId"));
 		accountDao.deleteAccount(accountId);
-		System.out.println(accountId);
 		return "redirect:/accounts";
 	}
 

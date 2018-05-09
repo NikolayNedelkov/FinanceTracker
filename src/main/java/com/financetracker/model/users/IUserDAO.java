@@ -1,6 +1,7 @@
 package com.financetracker.model.users;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -25,6 +26,10 @@ public interface IUserDAO {
 	void changePasswordByToken(User user, String password) throws UserException;
 
 	User getLoggedUser(HttpSession session);
+
+	List<String> getAllUsersOldEmails() throws UserException;
+
+	
 
 
 }

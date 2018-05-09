@@ -26,6 +26,7 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/uploaded/**").addResourceLocations("file:///C:\\uploaded\\");
 		registry.addResourceHandler("/images/**").addResourceLocations("/static/images/");
+		registry.addResourceHandler("resetPassword/images/**").addResourceLocations("/static/images/");
 		registry.addResourceHandler("/css/**").addResourceLocations("/static/css/");
 		registry.addResourceHandler("/accounts/css/**").addResourceLocations("/static/css/");
 		registry.addResourceHandler("/accounts/js/**").addResourceLocations("/static/js/");
@@ -38,7 +39,7 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
 		
 		registry.addResourceHandler("/transactions/add/css/**").addResourceLocations("/static/css/");
 		registry.addResourceHandler("/transactions/add/js/**").addResourceLocations("/static/js/");
-		
+
 		registry.addResourceHandler("/transactions/edit/css/**").addResourceLocations("/static/css/");
 		registry.addResourceHandler("/transactions/edit/js/**").addResourceLocations("/static/js/");
 

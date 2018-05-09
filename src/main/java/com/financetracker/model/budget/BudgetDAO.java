@@ -16,9 +16,11 @@ import org.springframework.stereotype.Component;
 import com.financetracker.database.DBConnection;
 import com.financetracker.exceptions.AccountException;
 import com.financetracker.exceptions.BudgetException;
+import com.financetracker.exceptions.TransactionException;
 import com.financetracker.exceptions.UserException;
 import com.financetracker.model.accounts.Account;
 import com.financetracker.model.accounts.AccountDAO;
+import com.financetracker.model.transactions.Transaction;
 import com.financetracker.model.users.User;
 
 @Component
@@ -32,7 +34,7 @@ public class BudgetDAO {
 	private static final String CALCULATE_INCOME = "SELECT SUM(t.amount) FROM users u JOIN accounts a ON (u.id=a.user_id) JOIN transactions t on (a.id=t.accounts_id) WHERE u.id=? and t.is_income = '1'";
 	private static final String CALCULATE_EXPENSE = "SELECT SUM(t.amount) FROM users u JOIN accounts a ON (u.id=a.user_id) JOIN transactions t on (a.id=t.accounts_id) WHERE u.id=? and t.is_income = '0'";
 
-	private static final String ALL_TRANSACTIONS_TRANS_FOR_USER = "SELECT t.amount, t.date_paid, t.accounts_id, t.categories_id, t.is_income FROM transactions t JOIN accounts a ON (a.id=t.accounts_id) JOIN users u ON (u.id=a.user_id) WHERE u.id=?;";
+	private static final String ALL_TRANSACTIONS_TRANS_FOR_USER = "SELECT t.amount, t.`payee/payer`, t.date_paid, t.accounts_id, t.categories_id, t.is_income FROM transactions t JOIN accounts a ON (a.id=t.accounts_id) JOIN users u ON (u.id=a.user_id) WHERE u.id=?;";
 
 	private static final String ALL_INCOMES_TRANS_FOR_ACCOUNT = "select sum(t.amount) from users u join accounts a on(u.id=a.user_id) join transactions t on (a.id=t.accounts_id) where u.id=? and a.id=? and t.is_income='1'; ";
 	private static final String ALL_OUTCOMES_TRANS_FOR_ACCOUNT = "select sum(t.amount) from users u join accounts a on(u.id=a.user_id) join transactions t on (a.id=t.accounts_id) where u.id=? and a.id=? and t.is_income='0'; ";
@@ -159,5 +161,39 @@ public class BudgetDAO {
 			throw new BudgetException("No transactions for this user!", e);
 		}
 	}
+
+//	public Map<Account, List<Transaction>> allTransactionsAllAccounts(User user) throws BudgetException {
+//		if (user.getAccounts().isEmpty()) {
+//			throw new BudgetException("No accounts for this user, buget can't be calculated!");
+//		}
+//		// List<Integer> incomeVsOutcome=new ArrayList<Integer>(2);
+//		Map<Account, List<Transaction>> result = new HashMap<Account, List<Transaction>>();
+//		// Vzimam akauntite na lognatiq user
+//		HashSet<Account> userAccounts = new HashSet<>(user.getAccounts());
+//		PreparedStatement pstmt;
+//		try {
+//			pstmt = DBConnection.getInstance().getConnection().prepareStatement(ALL_TRANSACTIONS_TRANS_FOR_USER,
+//					Statement.RETURN_GENERATED_KEYS);
+//			pstmt.setInt(1, user.getId());
+//			ResultSet rs = pstmt.executeQuery();
+//
+//			for (Account account : userAccounts) {
+//				List<Transaction> transactions = new ArrayList<Transaction>();
+//				rs.beforeFirst();
+//				while (rs.next()) {
+//					if (rs.getInt("t.accounts_id") == account.getAccount_id()) {
+//						boolean isIncome=rs.getInt("t.is_income")==1?true:false;
+//						transactions.add(new Transaction(rs.getString("t.`payee/payer`"), rs.getDouble("t.amount"), rs.getTimestamp("t.date_paid").toLocalDateTime(), isIncome));
+//					}
+//				}
+//				result.put(account, transactions);
+//			}
+//			return result;
+//
+//		} catch (ClassNotFoundException | SQLException | TransactionException e) {
+//			e.printStackTrace();
+//			throw new BudgetException("No transactions for this user!", e);
+//		}
+//	}
 
 }

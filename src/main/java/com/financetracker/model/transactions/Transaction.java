@@ -1,6 +1,7 @@
 package com.financetracker.model.transactions;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.financetracker.exceptions.TransactionException;
 import com.financetracker.model.accounts.Account;
@@ -34,6 +35,16 @@ public class Transaction {
 
 	public Transaction(int id, String payee, double amount, LocalDate date, Account account, String category,
 			boolean isIncome) throws TransactionException {
+		setId(id);
+		setPayee(payee);
+		setAmount(amount);
+		setDate(date);
+		setAccount(account);
+		this.isIncome = isIncome;
+		setCategory(category);
+	}
+
+	public Transaction(String payee, double amount, LocalDate date, boolean isIncome) throws TransactionException {
 		setId(id);
 		setPayee(payee);
 		setAmount(amount);

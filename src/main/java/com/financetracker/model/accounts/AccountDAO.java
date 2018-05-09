@@ -32,7 +32,7 @@ import com.financetracker.util.CurrencyComparator;
 @Component
 public class AccountDAO implements IAccountDAO {
 
-	private static final String UPDATE_ACCOUNT = "update accounts set name=?, balance=?, last_4_digits=?, currencies_id1=?, account_type_id=? where id=?;";
+	private static final String UPDATE_ACCOUNT = "update accounts set name=?, balance=?, last_4_digits=?, percentage=?, currencies_id1=?, account_type_id=? where id=?;";
 	private static final String GET_ACCOUNT_BY_ID = "SELECT a.id, a.name, a.balance, a.last_4_digits, a.percentage, a.payment_due_day, c.currency_type, acct.type FROM accounts a join currencies c on (a.currencies_id1=c.id) join account_types acct on (a.account_type_id=acct.id) where a.id=?;";
 	private static final String GET_ACCOUNT_BY_NAME = "SELECT a.id, a.name, a.balance, a.last_4_digits, a.percentage, a.payment_due_day, c.currency_type, acct.type FROM accounts a join currencies c on (a.currencies_id1=c.id) join account_types acct on (a.account_type_id=acct.id) where a.name like ?;";
 	private static final String ALL_ACCOUNTS_FOR_USER = "SELECT a.id, a.name, a.balance, a.last_4_digits, a.percentage, a.payment_due_day, c.currency_type, acct.type FROM accounts a join currencies c on (a.currencies_id1=c.id) join account_types acct on (a.account_type_id=acct.id) where a.user_id=? and (a.is_deleted is null or a.is_deleted=0);";
@@ -58,7 +58,11 @@ public class AccountDAO implements IAccountDAO {
 				pstmt.setString(1, a.getAccountName());
 				pstmt.setDouble(2, a.getBalance());
 				// bez account nomer ne raboti!!
-				pstmt.setInt(3, Integer.parseInt(a.getLastFourDigits()));
+				if ((a.getLastFourDigits() == null) || (a.getLastFourDigits().trim().length() < 3)) {
+					pstmt.setNull(3, java.sql.Types.INTEGER);
+				} else {
+					pstmt.setInt(3, Integer.parseInt(a.getLastFourDigits()));
+				}
 				pstmt.setInt(4, currencyDAO.getCurrencyId(a.getCurrency()));
 				pstmt.setInt(5, accountTypeDAO.getAccountTypeId(a.getType()));
 				pstmt.setInt(6, ((User) session.getAttribute("user")).getId());
@@ -191,19 +195,23 @@ public class AccountDAO implements IAccountDAO {
 	public void updateAccount(Account updated) throws AccountException {
 		try {
 			Account notUpdated = this.getAccountById(updated.getAccount_id());
-			Comparator comparator = new AccountNameComparator();
-			// if (comparator.compare(notUpdated, updated) == 0) {
-			// return;
-			// }
+
 			Connection connection = DBConnection.getConnection();
 			connection.setAutoCommit(false);
 			PreparedStatement pst = connection.prepareStatement(UPDATE_ACCOUNT, Statement.RETURN_GENERATED_KEYS);
 			pst.setString(1, updated.getAccountName());
 			pst.setDouble(2, updated.getBalance());
 			pst.setInt(3, Integer.parseInt(updated.getLastFourDigits()));
-			pst.setInt(4, currencyDAO.getCurrencyId(updated.getCurrency()));
-			pst.setInt(5, accountTypeDAO.getAccountTypeId(updated.getType()));
-			pst.setInt(6, notUpdated.getAccount_id());
+			Float percentage = updated.getPercentage();
+			if ((percentage == null) || ((!updated.getType().toLowerCase().equals("loan"))
+					&& (!updated.getType().toLowerCase().equals("credit card")))) {
+				pst.setNull(4, java.sql.Types.DOUBLE);
+			} else {
+				pst.setDouble(4, updated.getPercentage());
+			}
+			pst.setInt(5, currencyDAO.getCurrencyId(updated.getCurrency()));
+			pst.setInt(6, accountTypeDAO.getAccountTypeId(updated.getType()));
+			pst.setInt(7, notUpdated.getAccount_id());
 
 			pst.executeUpdate();
 			connection.commit();
