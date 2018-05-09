@@ -1,5 +1,6 @@
 package com.financetracker.model.transactions;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.financetracker.exceptions.PlannedTransactionException;
@@ -16,6 +17,8 @@ public interface IPlannedTransactionDAO {
 	void payPlannedTransaction(PlannedTransaction plannedTransaction) throws PlannedTransactionException;
 
 	List<PlannedTransaction> getAllUsersPlannedTransactions() throws PlannedTransactionException;
+
+	void updatePlannedTransactionDate(PlannedTransaction transaction, LocalDate newDate) throws PlannedTransactionException;
 
 
 }

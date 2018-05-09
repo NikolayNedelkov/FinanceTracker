@@ -6,6 +6,13 @@ import com.financetracker.exceptions.TransactionException;
 import com.financetracker.model.accounts.Account;
 
 public class Transaction {
+	@Override
+	public String toString() {
+		return "Transaction [id=" + id + ", payee=" + payee + ", amount=" + amount + ", date=" + date + ", account="
+				+ account + ", isIncome=" + isIncome + ", category=" + category + ", plannedTransactionId="
+				+ plannedTransactionId + "]";
+	}
+
 	private int id;
 	private String payee;
 	private double amount;

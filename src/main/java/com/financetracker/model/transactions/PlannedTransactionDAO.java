@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,7 +33,8 @@ public class PlannedTransactionDAO implements IPlannedTransactionDAO{
 	private static final String REMOVE_PLANNED_TRANSACTION_SQL = "DELETE FROM planed_transactions WHERE planed_transactions.id=?";
 	private static final String FIND_TRANSACTION_TO_DELETE_SQL = "SELECT transactions.id FROM transactions WHERE transactions.planed_transactions_id = ?";
 	private static final String ALL_USERS_PLANNED_TRANSACTIONS_SQL = "select users.first_name,pt.id,t.`payee/payer`,t.amount,pt.planed_date,t.accounts_id,t.categories_id,t.is_income,pt.recurencies_id FROM planed_transactions pt JOIN transactions t ON pt.id = t.planed_transactions_id JOIN accounts ON t.accounts_id = accounts.id JOIN users ON accounts.user_id = users.id WHERE t.is_paid = false";
-	private static final String UPDATE_PLANNED_TRANSACTIONS_DATE_SQL = "UPDATE planed_transactions pt SET pt.planed_date = ? WHERE pt.id = ?";
+	private static final String UPDATE_PLANNED_TRANSACTION_DATE_SQL = "UPDATE planed_transactions pt SET pt.planed_date = ? WHERE pt.id = ?";
+
 	@Autowired
 	private DBConnection DBConnection;
 	@Autowired
@@ -188,16 +190,29 @@ public class PlannedTransactionDAO implements IPlannedTransactionDAO{
 		try {
 			Transaction newTransaction = new Transaction(plannedTransaction.getPayee(), plannedTransaction.getAmount(), plannedTransaction.getPlannedDate(),plannedTransaction.getAccount(), plannedTransaction.getCategory(), plannedTransaction.getIsIncome(), plannedTransaction.getId());
 			transactionDAO.addTransaction(newTransaction);
-			Connection connection = DBConnection.getConnection();
-			PreparedStatement pstmt = connection.prepareStatement(UPDATE_PLANNED_TRANSACTIONS_DATE_SQL);
-			pstmt.setTimestamp(1, Timestamp.valueOf(plannedTransaction.getPlannedDate().atStartOfDay()));
-			pstmt.setInt(2, plannedTransaction.getId());
-			pstmt.executeUpdate();
-			
-		} catch (TransactionException | SQLException e) {
+		
+		} catch (TransactionException e) {
 			e.printStackTrace();
 			throw new PlannedTransactionException("Something went wrong, cannot pay planned transaction!", e);
 		}
+	}
+	
+	@Override
+	public void updatePlannedTransactionDate(PlannedTransaction transaction,LocalDate newDate) throws PlannedTransactionException {
+		if(transaction == null || newDate == null) {
+			throw new PlannedTransactionException("Entered planned transaction is empty, please try again!");
+		}
+		
+		try {
+			Connection connection = DBConnection.getConnection();
+			PreparedStatement pstmt = connection.prepareStatement(UPDATE_PLANNED_TRANSACTION_DATE_SQL);
+			pstmt.setTimestamp(1, Timestamp.valueOf(newDate.atStartOfDay()));
+			pstmt.setInt(2, transaction.getId());
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new PlannedTransactionException("Something went wrong, cannot pay planned transaction!", e);
+		}		
 	}
 
 
