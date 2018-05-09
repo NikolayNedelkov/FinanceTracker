@@ -244,7 +244,8 @@ public class UserDAO implements IUserDAO {
 	public User getLoggedUser(HttpSession session) {
 		return (User) session.getAttribute("user");
 	}
-
+	
+	@Override
 	public List<String> getAllUsersOldEmails() throws UserException {
 		try {
 			Connection connection = DBConnection.getConnection();

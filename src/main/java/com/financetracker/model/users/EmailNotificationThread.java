@@ -28,18 +28,14 @@ public class EmailNotificationThread extends Thread {
 	public void run() {
 		while (true) {
 			try {
-				Thread.sleep(TWENTYFOUR_HOURS_PERIOD);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-				return;
-			}
-			try {
 				List<String> allOldEmails = userDAO.getAllUsersOldEmails();
 				for (String email : allOldEmails) {
 					EmailSender.sendSimpleEmail(email, SUBJECT_TEXT_FT, NOT_LOGGED_IN_TEXT);
 				}
-			} catch (UserException e) {
+				Thread.sleep(TWENTYFOUR_HOURS_PERIOD);
+			} catch (InterruptedException | UserException e) {
 				e.printStackTrace();
+				return;
 			}
 		}
 	}
