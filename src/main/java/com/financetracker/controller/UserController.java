@@ -18,6 +18,7 @@ import com.financetracker.exceptions.AccountException;
 import com.financetracker.exceptions.UserException;
 import com.financetracker.model.accounts.Account;
 import com.financetracker.model.accounts.AccountDAO;
+import com.financetracker.model.transactions.PlannedTransactionThread;
 import com.financetracker.model.users.IUserDAO;
 import com.financetracker.model.users.User;
 import com.financetracker.util.EmailSender;
@@ -32,6 +33,9 @@ public class UserController {
 
 	@Autowired
 	private AccountDAO accountDao;
+	
+	@Autowired
+	private PlannedTransactionThread plannedTransactionThread;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/index")
 	private String startPage() {
@@ -40,6 +44,10 @@ public class UserController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/login")
 	private String login(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+		if (!plannedTransactionThread.isAlive()) {
+			plannedTransactionThread.start();
+		}
+
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 

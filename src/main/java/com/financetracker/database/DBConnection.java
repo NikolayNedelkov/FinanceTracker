@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 
 import com.financetracker.model.transactions.PlannedTransactionThread;
 
+//import com.financetracker.model.transactions.PlannedTransactionThread;
+
 @Component
 public class DBConnection {
 	
@@ -20,30 +22,21 @@ public class DBConnection {
 	private static final String DB_SCHEMA = "financetracker";
 	private static final String DB_USE_SSL = "&useSSL=false";
 
-	//private static DBConnection instance = null;
+	private static DBConnection instance = null;
 	
-//	@Autowired
-//	PlannedTransactionThread chekingThread;
-//  bazata shte se izvika	
-
 	private DBConnection() throws SQLException, ClassNotFoundException {
 		Class.forName("com.mysql.jdbc.Driver");
 		this.connection = DriverManager.getConnection(
 				"jdbc:mysql://" + DB_HOST + ":" + DB_PORT + "/" + DB_SCHEMA + "?" + DB_USE_SSL,
 				DB_USER, DB_PASS);
-		//Thread chekingThread = new PlannedTransactionThread();
-		//chekingThread.setDaemon(true);
-		//chekingThread.start();
-		//shte se startira
-		
 	}
 	
-	/*public static DBConnection getInstance() throws SQLException, ClassNotFoundException {
+	public static DBConnection getInstance() throws SQLException, ClassNotFoundException {
 		if (instance == null) {
 			instance = new DBConnection();
 		}
 		return instance;
-	}*/
+	}
 
 	public Connection getConnection() {
 		return connection;
