@@ -8,29 +8,25 @@ import org.springframework.stereotype.Component;
 
 import com.financetracker.exceptions.PlannedTransactionException;
 
-import com.financetracker.exceptions.PlannedTransactionThreadException;
-import com.financetracker.exceptions.RecurrencyException;
-import com.financetracker.exceptions.TransactionException;
-import com.financetracker.model.users.User;
-
-//@Component
+@Component
 public class PlannedTransactionThread extends Thread {
 
 	@Autowired
 	private PlannedTransactionDAO plannedTransactionDAO;
 
 	public PlannedTransactionThread() {
-		 Thread.currentThread().setDaemon(true);
+		System.out.println("Thread started...");
+		 this.setDaemon(true);
 	}
 
 	@Override
 	public void run() {
 		while (true) {
 			try {
-				Thread.sleep(3000);
+				Thread.sleep(60000);
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
-				/// eto tuka
+				return;
 			}
 			try {
 				List<PlannedTransaction>allTransactions = plannedTransactionDAO.getAllUsersPlannedTransactions();
@@ -41,18 +37,18 @@ public class PlannedTransactionThread extends Thread {
 					String recurrency = transaction.getRecurrency();
 					System.out.println(recurrency);
 					
-					LocalDate transactionDate = transaction.getDate();
+					LocalDate transactionDate = transaction.getPlannedDate();
 					System.out.println(transactionDate);
 					
 					switch (recurrency.toLowerCase()) {
 					case "monthly":
-						transactionDate.plusMonths(1);
+						transactionDate = transactionDate.plusMonths(1);
 						break;
 					case "weekly":
-						transactionDate.plusWeeks(1);
+						transactionDate = transactionDate.plusWeeks(1);
 						break;
 					case "daily":
-						transactionDate.plusDays(1);
+						transactionDate = transactionDate.plusDays(1);
 						break;
 					default:
 						break;
@@ -64,6 +60,7 @@ public class PlannedTransactionThread extends Thread {
 						System.out.println("V ifa sum");
 						/// redirect kym stranica da te pita dali iskash da plati smetkata
 						plannedTransactionDAO.payPlannedTransaction(transaction);
+						transaction.setPlannedDate(transactionDate);
 						System.out.println("balance" + transaction.getAccount().getBalance());
 					}
 				}

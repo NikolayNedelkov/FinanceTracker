@@ -14,9 +14,11 @@ public interface ITransactionDAO {
 
 	void deleteTransaction(int transactionID) throws TransactionException;
 
-	//int makePlannedTransaction(Transaction transaction) throws TransactionException;
-
 	List<Transaction> getAllTransactions(User user) throws TransactionException, AccountException;
+
+	void updateTransaction(Transaction transaction) throws TransactionException;
+
+	Transaction getTransactionById(int id) throws TransactionException;
 
 
 }

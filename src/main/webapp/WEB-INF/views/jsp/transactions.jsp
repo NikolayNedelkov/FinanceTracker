@@ -77,12 +77,11 @@
 											<td class="acc_name"><c:out
 													value="${transaction.account.accountName}"></c:out></td>
 
-											<td class="trans_date"><c:out
-													value="${transaction.date}"></c:out></td>
-											<td><input type="button" id="editbtn"
-												class="btn btn-primary"
-												onclick="location.href='./transactions/edit/${transaction.id}';"
-												value="Edit"> <input type="button" id="deletebtn"
+											<td class="trans_date"><c:out value="${transaction.date}"></c:out></td>
+											<td><input type="button" id="editbtn" class="btn btn-primary"
+												onclick="location.href='./transactions/edit/${transaction.id}';"	value="Edit"> 
+												
+												<input type="button" id="deletebtn"
 												class="btn btn-secondary"
 												onclick="location.href='./transactions/delete/${transaction.id}';"
 												value="Delete"></td>
