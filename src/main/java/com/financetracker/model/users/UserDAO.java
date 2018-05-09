@@ -1,10 +1,13 @@
 package com.financetracker.model.users;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -12,7 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.financetracker.database.DBConnection;
+import com.financetracker.exceptions.AccountException;
+import com.financetracker.exceptions.CategoryException;
+import com.financetracker.exceptions.PlannedTransactionException;
+import com.financetracker.exceptions.RecurrencyException;
+import com.financetracker.exceptions.TransactionException;
 import com.financetracker.exceptions.UserException;
+import com.financetracker.model.transactions.PlannedTransaction;
 
 @Component
 public class UserDAO implements IUserDAO {
@@ -26,10 +35,11 @@ public class UserDAO implements IUserDAO {
 	private static final String UPDATE_USER_PASSWORD_BY_EMAIL = "UPDATE users set password=sha1(?) Where email=?";
 	private static final String CHECK_USER_IF_EXISTS_BY_TOKEN = "SELECT * FROM users WHERE password_token = ?;";
 	private static final String GET_USER_BY_TOKEN = "SELECT first_name, last_name, id, email, password, last_loged_in FROM users where password_token like ?;";
+	private static final String ALL_USERS_OLD_LOGIN_EMIALS = "SELECT email FROM users WHERE last_loged_in <= DATE_SUB(NOW(), INTERVAL 2 WEEK);";
 
 	@Autowired
 	private DBConnection DBConnection;
-	
+
 	@Override
 	public boolean login(String email, String password) throws UserException, ClassNotFoundException, SQLException {
 		PreparedStatement pstmt;
@@ -66,8 +76,7 @@ public class UserDAO implements IUserDAO {
 		PreparedStatement pstmt;
 		try {
 			if (checkIfUserExists(user)) {
-				pstmt = DBConnection.getConnection().prepareStatement(ADD_USER_SQL,
-						Statement.RETURN_GENERATED_KEYS);
+				pstmt = DBConnection.getConnection().prepareStatement(ADD_USER_SQL, Statement.RETURN_GENERATED_KEYS);
 				pstmt.setString(1, user.getFirstName());
 				pstmt.setString(2, user.getLastName());
 				pstmt.setString(3, user.getEmail());
@@ -213,8 +222,7 @@ public class UserDAO implements IUserDAO {
 	public void changePasswordByToken(User user, String password) throws UserException {
 		PreparedStatement pstmt;
 		try {
-			pstmt = DBConnection.getConnection().prepareStatement(GET_USER_BY_EMAIL,
-					Statement.RETURN_GENERATED_KEYS);
+			pstmt = DBConnection.getConnection().prepareStatement(GET_USER_BY_EMAIL, Statement.RETURN_GENERATED_KEYS);
 			pstmt.setString(1, user.getEmail());
 
 			ResultSet rs = pstmt.executeQuery();
@@ -231,9 +239,25 @@ public class UserDAO implements IUserDAO {
 			throw new UserException("DB is not working", e);
 		}
 	}
-	
+
 	@Override
 	public User getLoggedUser(HttpSession session) {
-		return (User)session.getAttribute("user");
+		return (User) session.getAttribute("user");
+	}
+
+	public List<String> getAllUsersOldEmails() throws UserException {
+		try {
+			Connection connection = DBConnection.getConnection();
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(ALL_USERS_OLD_LOGIN_EMIALS);
+			List<String> allOldEmails = new LinkedList<String>();
+
+			while (resultSet.next()) {
+				allOldEmails.add(resultSet.getString("email"));
+			}
+			return allOldEmails;
+		} catch (SQLException e) {
+			throw new UserException("DB is not working well", e);
+		}
 	}
 }

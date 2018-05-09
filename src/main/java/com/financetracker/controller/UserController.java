@@ -28,6 +28,7 @@ public class UserController {
 
 	public static final String SUBJECT_TEXT_FORGOTTEN_PASSWORD = "Finance Tracker FORGOTTEN PASSWORD";
 	public static final String FORGOTTEN_PASSWORD_EMAIL_TEXT = "Hello %s Click on the link to change password: http://localhost:8080/FinalProject/resetPassword/%s";
+	
 	@Autowired
 	private IUserDAO userDAO;
 
