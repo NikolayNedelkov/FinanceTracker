@@ -90,8 +90,6 @@
 							<div class="inline">My budget</div></a> 
 							<a href="http://localhost:8080/FinalProject/charts" id="credit_btn"><i class="fas fa-chart-line"></i>
 							<div class="inline">Charts and Reports</div></a></li>
-							<a href="http://localhost:8080/FinalProject/export" id="credit_btn"><i class="fas fa-chart-line"></i>
-							<div class="inline">Pdf Export</div></a></li>
 				</ul>
 
 			</div>
@@ -104,7 +102,8 @@
 		<!-- Bootstrap Core JavaScript -->
 		<script src="js/bootstrap.min.js"></script>
 
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.2.0/list.min.js"></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.2.0/list.min.js"></script>
 </body>
 
 </html>

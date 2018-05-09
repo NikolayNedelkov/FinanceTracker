@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +28,13 @@ public class PlannedTransactionDAO implements IPlannedTransactionDAO{
 	
 	private static final String ADD_TRANSACTION_SQL = "INSERT INTO transactions VALUES (null,?,?,?,?,?,?,?,false)";
 	private static final String ADD_PLANNED_TRANSACTION_SQL = "INSERT INTO planed_transactions VALUES(null,?,?)";
-	private static final String GET_ALL_PLANNED_TRANSACTIONS_SQL = "select pt.id,t.`payee/payer`,t.amount,pt.planed_date,t.accounts_id,t.categories_id,t.is_income,pt.recurencies_id FROM planed_transactions pt JOIN transactions t ON pt.id = t.planed_transactions_id JOIN accounts ON t.accounts_id = accounts.id JOIN users ON accounts.user_id = users.id WHERE users.id = ? AND t.is_paid = false;";
+	private static final String GET_ALL_PLANNED_TRANSACTIONS_SQL = "SELECT pt.id,t.`payee/payer`,t.amount,pt.planed_date,t.accounts_id,t.categories_id,t.is_income,pt.recurencies_id FROM planed_transactions pt JOIN transactions t ON pt.id = t.planed_transactions_id JOIN accounts ON t.accounts_id = accounts.id JOIN users ON accounts.user_id = users.id WHERE users.id = ? AND t.is_paid = false;";
 	private static final String REMOVE_PLANNED_TRANSACTION_SQL = "DELETE FROM planed_transactions WHERE planed_transactions.id=?";
 	private static final String FIND_TRANSACTION_TO_DELETE_SQL = "SELECT transactions.id FROM transactions WHERE transactions.planed_transactions_id = ?";
-
+	private static final String ALL_USERS_PLANNED_TRANSACTIONS_SQL = "select users.first_name,pt.id,t.`payee/payer`,t.amount,pt.planed_date,t.accounts_id,t.categories_id,t.is_income,pt.recurencies_id FROM planed_transactions pt JOIN transactions t ON pt.id = t.planed_transactions_id JOIN accounts ON t.accounts_id = accounts.id JOIN users ON accounts.user_id = users.id WHERE t.is_paid = false";
+	private static final String UPDATE_PLANNED_TRANSACTIONS_DATE_SQL = "UPDATE planed_transactions pt SET pt.planed_date = ? WHERE pt.id = ?";
+	@Autowired
+	private DBConnection DBConnection;
 	@Autowired
 	private CategoryDAO categoryDAO;
 	@Autowired
@@ -42,14 +45,17 @@ public class PlannedTransactionDAO implements IPlannedTransactionDAO{
 	private TransactionDAO transactionDAO;
 	
 	@Override
-	public List<PlannedTransaction> getAllPlannedTransactions(User user) throws PlannedTransactionException, RecurrencyException{
-		
+	public List<PlannedTransaction> getAllPlannedTransactions(User user) throws PlannedTransactionException{
+		if(user == null) {
+			throw new PlannedTransactionException("This user doesn't exist, please try again!");
+		}
 		try {
-			Connection connection = DBConnection.getInstance().getConnection();
+			Connection connection = DBConnection.getConnection();
 			PreparedStatement statement = connection.prepareStatement(GET_ALL_PLANNED_TRANSACTIONS_SQL);
 			statement.setInt(1, user.getId());
+			List<PlannedTransaction> allPlannedTransactions = new LinkedList<PlannedTransaction>();
 			ResultSet resultSet = statement.executeQuery();
-			List<PlannedTransaction> allPlannedTransactions = new ArrayList<PlannedTransaction>();
+
 			while(resultSet.next()) {
 				allPlannedTransactions.add(new PlannedTransaction(resultSet.getInt("pt.id"), resultSet.getString("payee/payer"),
 						resultSet.getDouble("t.amount"),
@@ -59,7 +65,28 @@ public class PlannedTransactionDAO implements IPlannedTransactionDAO{
 						resultSet.getBoolean("t.is_income"),recurrencyDAO.getRecurrencyNameById((resultSet.getInt("pt.recurencies_id")))));
 			}
 			return allPlannedTransactions;
-		} catch (SQLException | ClassNotFoundException | TransactionException | AccountException | CategoryException e) {
+		} catch (SQLException | TransactionException | AccountException | CategoryException | RecurrencyException e) {
+			e.printStackTrace();
+			throw new PlannedTransactionException("Cannot get transactions, please try again later!", e);
+		}
+	}
+	
+	@Override
+	public List<PlannedTransaction> getAllUsersPlannedTransactions() throws PlannedTransactionException{
+		try {
+			Connection connection = DBConnection.getConnection();
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(ALL_USERS_PLANNED_TRANSACTIONS_SQL);
+			List<PlannedTransaction> allUsersPlannedTransactions = new LinkedList<PlannedTransaction>();
+
+			while(resultSet.next()) {
+				allUsersPlannedTransactions.add(new PlannedTransaction(resultSet.getInt("pt.id"), resultSet.getString("payee/payer"),
+						resultSet.getDouble("t.amount"),resultSet.getTimestamp("pt.planed_date").toLocalDateTime().toLocalDate(),
+						accountDAO.getAccountById(resultSet.getInt("t.accounts_id")),categoryDAO.getCategoryNameById(resultSet.getInt("t.categories_id")),
+						resultSet.getBoolean("t.is_income"),recurrencyDAO.getRecurrencyNameById((resultSet.getInt("pt.recurencies_id")))));
+			}
+			return allUsersPlannedTransactions;
+		} catch (SQLException | TransactionException | AccountException | CategoryException | RecurrencyException e) {
 			e.printStackTrace();
 			throw new PlannedTransactionException("Cannot get transactions, please try again later!", e);
 		}
@@ -67,9 +94,12 @@ public class PlannedTransactionDAO implements IPlannedTransactionDAO{
 	
 	@Override
 	public int addTransaction(PlannedTransaction plannedTransaction) throws PlannedTransactionException {
+		if(plannedTransaction == null) {
+			throw new PlannedTransactionException("Entered planned transaction is empty, please try again!");
+		}
 		Connection connection = null;
 		try {
-			connection = DBConnection.getInstance().getConnection();
+			connection = DBConnection.getConnection();
 			connection.setAutoCommit(false);
 			
 			PreparedStatement statement = connection.prepareStatement(ADD_PLANNED_TRANSACTION_SQL, Statement.RETURN_GENERATED_KEYS);
@@ -95,7 +125,7 @@ public class PlannedTransactionDAO implements IPlannedTransactionDAO{
 			resultSetTransaction.next();
 			return resultSetTransaction.getInt(1);
 
-		} catch (SQLException | CategoryException | ClassNotFoundException | RecurrencyException e) {
+		} catch (SQLException | CategoryException | RecurrencyException e) {
 			e.printStackTrace();
 			try {
 				connection.rollback();
@@ -115,10 +145,13 @@ public class PlannedTransactionDAO implements IPlannedTransactionDAO{
 	}
 	
 	@Override
-	public void deletePlannedTransaction(int plannedTransactionID) throws TransactionException {
+	public void deletePlannedTransaction(int plannedTransactionID) throws PlannedTransactionException {
+		if(plannedTransactionID <= 0) {
+			throw new PlannedTransactionException("Entered planned transaction is empty, please try again!");
+		}
 		Connection connection = null;
 		try {
-			connection = DBConnection.getInstance().getConnection();
+			connection = DBConnection.getConnection();
 			connection.setAutoCommit(false);
 			PreparedStatement pstmt = connection.prepareStatement(REMOVE_PLANNED_TRANSACTION_SQL);
 			pstmt.setInt(1, plannedTransactionID);
@@ -130,14 +163,14 @@ public class PlannedTransactionDAO implements IPlannedTransactionDAO{
 			int transactionID = resultSet.getInt(1);
 			transactionDAO.deleteTransaction(transactionID);
 			connection.commit();
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch (SQLException | TransactionException e) {
 			e.printStackTrace();
 			try {
 				connection.rollback();
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-			throw new TransactionException("Cannot delete planned transaction, please try again!", e);
+			throw new PlannedTransactionException("Cannot delete planned transaction, please try again!", e);
 		}finally {
 			try {
 				connection.setAutoCommit(true);
@@ -148,17 +181,22 @@ public class PlannedTransactionDAO implements IPlannedTransactionDAO{
 	}
 	
 	@Override
-	public void payPlannedTransaction(PlannedTransaction plannedTransaction) throws PlannedTransactionException, TransactionException {
+	public void payPlannedTransaction(PlannedTransaction plannedTransaction) throws PlannedTransactionException {
 		if(plannedTransaction == null) {
 			throw new PlannedTransactionException("Entered planned transaction is empty, please try again!");
 		}
 		try {
-			Transaction newTransaction = new Transaction(plannedTransaction.getPayee(), plannedTransaction.getAmount(), plannedTransaction.getAccount(), plannedTransaction.getCategory(), plannedTransaction.getIsIncome(), plannedTransaction.getId());
-			transactionDAO.makePlannedTransaction(newTransaction);
-
-		} catch (TransactionException e) {
+			Transaction newTransaction = new Transaction(plannedTransaction.getPayee(), plannedTransaction.getAmount(), plannedTransaction.getPlannedDate(),plannedTransaction.getAccount(), plannedTransaction.getCategory(), plannedTransaction.getIsIncome(), plannedTransaction.getId());
+			transactionDAO.addTransaction(newTransaction);
+			Connection connection = DBConnection.getConnection();
+			PreparedStatement pstmt = connection.prepareStatement(UPDATE_PLANNED_TRANSACTIONS_DATE_SQL);
+			pstmt.setTimestamp(1, Timestamp.valueOf(plannedTransaction.getPlannedDate().atStartOfDay()));
+			pstmt.setInt(2, plannedTransaction.getId());
+			pstmt.executeUpdate();
+			
+		} catch (TransactionException | SQLException e) {
 			e.printStackTrace();
-			throw new TransactionException("Something went wrong, cannot pay planned transaction!", e);
+			throw new PlannedTransactionException("Something went wrong, cannot pay planned transaction!", e);
 		}
 	}
 

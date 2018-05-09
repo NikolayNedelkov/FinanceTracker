@@ -1,17 +1,27 @@
 package com.financetracker.model.users;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.financetracker.database.DBConnection;
+import com.financetracker.exceptions.AccountException;
+import com.financetracker.exceptions.CategoryException;
+import com.financetracker.exceptions.PlannedTransactionException;
+import com.financetracker.exceptions.RecurrencyException;
+import com.financetracker.exceptions.TransactionException;
 import com.financetracker.exceptions.UserException;
+import com.financetracker.model.transactions.PlannedTransaction;
 
 @Component
 public class UserDAO implements IUserDAO {
@@ -25,22 +35,26 @@ public class UserDAO implements IUserDAO {
 	private static final String UPDATE_USER_PASSWORD_BY_EMAIL = "UPDATE users set password=sha1(?) Where email=?";
 	private static final String CHECK_USER_IF_EXISTS_BY_TOKEN = "SELECT * FROM users WHERE password_token = ?;";
 	private static final String GET_USER_BY_TOKEN = "SELECT first_name, last_name, id, email, password, last_loged_in FROM users where password_token like ?;";
+	private static final String ALL_USERS_OLD_LOGIN_EMIALS = "SELECT email FROM users WHERE last_loged_in <= DATE_SUB(NOW(), INTERVAL 2 WEEK);";
+
+	@Autowired
+	private DBConnection DBConnection;
 
 	@Override
 	public boolean login(String email, String password) throws UserException, ClassNotFoundException, SQLException {
 		PreparedStatement pstmt;
 		try {
 			// user check login
-			DBConnection.getInstance().getConnection().setAutoCommit(false);
-			pstmt = DBConnection.getInstance().getConnection().prepareStatement(LOGIN_USER_SQL);
+			DBConnection.getConnection().setAutoCommit(false);
+			pstmt = DBConnection.getConnection().prepareStatement(LOGIN_USER_SQL);
 			pstmt.setString(1, email);
 			pstmt.setString(2, password);
 			ResultSet resultSet = pstmt.executeQuery();
 			// update user last log in
-			pstmt = DBConnection.getInstance().getConnection().prepareStatement(UPDATE_USER_LOG_IN_TIME);
+			pstmt = DBConnection.getConnection().prepareStatement(UPDATE_USER_LOG_IN_TIME);
 			pstmt.setString(1, email);
 			pstmt.setString(2, password);
-			DBConnection.getInstance().getConnection().commit();
+			DBConnection.getConnection().commit();
 			int rs = pstmt.executeUpdate();
 
 			if (resultSet.next()) {
@@ -48,12 +62,12 @@ public class UserDAO implements IUserDAO {
 			} else {
 				return false;
 			}
-		} catch (SQLException | ClassNotFoundException e) {
-			DBConnection.getInstance().getConnection().rollback();
+		} catch (SQLException e) {
+			DBConnection.getConnection().rollback();
 			e.printStackTrace();
 			throw new UserException("Can't connect to Database !", e);
 		} finally {
-			DBConnection.getInstance().getConnection().setAutoCommit(true);
+			DBConnection.getConnection().setAutoCommit(true);
 		}
 	}
 
@@ -62,8 +76,7 @@ public class UserDAO implements IUserDAO {
 		PreparedStatement pstmt;
 		try {
 			if (checkIfUserExists(user)) {
-				pstmt = DBConnection.getInstance().getConnection().prepareStatement(ADD_USER_SQL,
-						Statement.RETURN_GENERATED_KEYS);
+				pstmt = DBConnection.getConnection().prepareStatement(ADD_USER_SQL, Statement.RETURN_GENERATED_KEYS);
 				pstmt.setString(1, user.getFirstName());
 				pstmt.setString(2, user.getLastName());
 				pstmt.setString(3, user.getEmail());
@@ -78,7 +91,7 @@ public class UserDAO implements IUserDAO {
 			} else {
 				throw new UserException("User already exist");
 			}
-		} catch (SQLException | ClassNotFoundException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new UserException("User with that email already exists!", e);
 		}
@@ -88,7 +101,7 @@ public class UserDAO implements IUserDAO {
 	public boolean checkIfUserExists(User user) throws UserException {
 		PreparedStatement pstmt;
 		try {
-			pstmt = DBConnection.getInstance().getConnection().prepareStatement(CHECK_USER_IF_EXISTS);
+			pstmt = DBConnection.getConnection().prepareStatement(CHECK_USER_IF_EXISTS);
 			pstmt.setString(1, user.getEmail());
 
 			ResultSet rs = pstmt.executeQuery();
@@ -97,7 +110,7 @@ public class UserDAO implements IUserDAO {
 			} else {
 				return true;
 			}
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new UserException("User with that email already exists!", e);
 		}
@@ -107,7 +120,7 @@ public class UserDAO implements IUserDAO {
 	public boolean checkIfUserExistsByToken(String passwordToken) throws UserException {
 		PreparedStatement pstmt;
 		try {
-			pstmt = DBConnection.getInstance().getConnection().prepareStatement(CHECK_USER_IF_EXISTS_BY_TOKEN);
+			pstmt = DBConnection.getConnection().prepareStatement(CHECK_USER_IF_EXISTS_BY_TOKEN);
 			pstmt.setString(1, passwordToken);
 
 			ResultSet rs = pstmt.executeQuery();
@@ -116,7 +129,7 @@ public class UserDAO implements IUserDAO {
 			} else {
 				return false;
 			}
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new UserException("User with that token don't exist!", e);
 		}
@@ -126,7 +139,7 @@ public class UserDAO implements IUserDAO {
 	public User getUserByToken(String passwordToken) throws UserException {
 		PreparedStatement pstmt;
 		try {
-			pstmt = DBConnection.getInstance().getConnection().prepareStatement(GET_USER_BY_TOKEN);
+			pstmt = DBConnection.getConnection().prepareStatement(GET_USER_BY_TOKEN);
 			pstmt.setString(1, passwordToken);
 
 			ResultSet rs = pstmt.executeQuery();
@@ -143,7 +156,7 @@ public class UserDAO implements IUserDAO {
 			} else {
 				throw new UserException("User with that token doesn't exist!");
 			}
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new UserException("User with that token don't exist!", e);
 		}
@@ -153,7 +166,7 @@ public class UserDAO implements IUserDAO {
 	public User getUserByEmail(String email) throws UserException {
 		PreparedStatement pstmt;
 		try {
-			pstmt = DBConnection.getInstance().getConnection().prepareStatement(GET_USER_BY_EMAIL);
+			pstmt = DBConnection.getConnection().prepareStatement(GET_USER_BY_EMAIL);
 			pstmt.setString(1, email);
 
 			ResultSet rs = pstmt.executeQuery();
@@ -171,7 +184,7 @@ public class UserDAO implements IUserDAO {
 			} else {
 				throw new UserException("User with email:" + email + " doesn't exist!");
 			}
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new UserException("User with that email already exists!", e);
 		}
@@ -181,7 +194,7 @@ public class UserDAO implements IUserDAO {
 	public void changePassword(int id, String password, String newPassword, String newPassword2) throws UserException {
 		PreparedStatement pstmt;
 		try {
-			pstmt = DBConnection.getInstance().getConnection().prepareStatement(FIND_USER_BY_ID_AND_PASSWORD,
+			pstmt = DBConnection.getConnection().prepareStatement(FIND_USER_BY_ID_AND_PASSWORD,
 					Statement.RETURN_GENERATED_KEYS);
 			pstmt.setInt(1, id);
 			pstmt.setString(2, password);
@@ -189,7 +202,7 @@ public class UserDAO implements IUserDAO {
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
 				if (newPassword.equals(newPassword2)) {
-					pstmt = DBConnection.getInstance().getConnection().prepareStatement(UPDATE_USER_PASSWORD);
+					pstmt = DBConnection.getConnection().prepareStatement(UPDATE_USER_PASSWORD);
 					pstmt.setString(1, newPassword);
 					pstmt.setInt(2, id);
 
@@ -209,13 +222,12 @@ public class UserDAO implements IUserDAO {
 	public void changePasswordByToken(User user, String password) throws UserException {
 		PreparedStatement pstmt;
 		try {
-			pstmt = DBConnection.getInstance().getConnection().prepareStatement(GET_USER_BY_EMAIL,
-					Statement.RETURN_GENERATED_KEYS);
+			pstmt = DBConnection.getConnection().prepareStatement(GET_USER_BY_EMAIL, Statement.RETURN_GENERATED_KEYS);
 			pstmt.setString(1, user.getEmail());
 
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
-				pstmt = DBConnection.getInstance().getConnection().prepareStatement(UPDATE_USER_PASSWORD_BY_EMAIL);
+				pstmt = DBConnection.getConnection().prepareStatement(UPDATE_USER_PASSWORD_BY_EMAIL);
 				pstmt.setString(1, password);
 				pstmt.setString(2, user.getEmail());
 
@@ -227,9 +239,26 @@ public class UserDAO implements IUserDAO {
 			throw new UserException("DB is not working", e);
 		}
 	}
-	
+
 	@Override
 	public User getLoggedUser(HttpSession session) {
-		return (User)session.getAttribute("user");
+		return (User) session.getAttribute("user");
+	}
+	
+	@Override
+	public List<String> getAllUsersOldEmails() throws UserException {
+		try {
+			Connection connection = DBConnection.getConnection();
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(ALL_USERS_OLD_LOGIN_EMIALS);
+			List<String> allOldEmails = new LinkedList<String>();
+
+			while (resultSet.next()) {
+				allOldEmails.add(resultSet.getString("email"));
+			}
+			return allOldEmails;
+		} catch (SQLException e) {
+			throw new UserException("DB is not working well", e);
+		}
 	}
 }

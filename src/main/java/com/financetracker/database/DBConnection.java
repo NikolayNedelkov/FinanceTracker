@@ -6,6 +6,10 @@ import java.sql.SQLException;
 
 import org.springframework.stereotype.Component;
 
+import com.financetracker.model.transactions.PlannedTransactionThread;
+
+//import com.financetracker.model.transactions.PlannedTransactionThread;
+
 @Component
 public class DBConnection {
 	
@@ -13,21 +17,18 @@ public class DBConnection {
 	
 	private static final String DB_HOST = "localhost";
 	private static final String DB_USER = "root";
-
-	private static final String DB_PASS = "ggYTJR7Q!";
-
+	private static final String DB_PASS = "7879";
 	private static final String DB_PORT = "3306";
 	private static final String DB_SCHEMA = "financetracker";
 	private static final String DB_USE_SSL = "&useSSL=false";
 
 	private static DBConnection instance = null;
-
+	
 	private DBConnection() throws SQLException, ClassNotFoundException {
 		Class.forName("com.mysql.jdbc.Driver");
 		this.connection = DriverManager.getConnection(
 				"jdbc:mysql://" + DB_HOST + ":" + DB_PORT + "/" + DB_SCHEMA + "?" + DB_USE_SSL,
 				DB_USER, DB_PASS);
-		
 	}
 	
 	public static DBConnection getInstance() throws SQLException, ClassNotFoundException {

@@ -44,6 +44,8 @@ public class AccountDAO implements IAccountDAO {
 	private ICurrencyDAO currencyDAO;
 	@Autowired
 	private IAccountTypeDAO accountTypeDAO;
+	@Autowired
+	private DBConnection DBConnection;
 
 	@Override
 	public int addNewAccount(Account a, HttpSession session) throws AccountException {
@@ -51,7 +53,7 @@ public class AccountDAO implements IAccountDAO {
 		try {
 			if (!accountExists(a, session)) {
 				// first add the account to DB
-				pstmt = DBConnection.getInstance().getConnection().prepareStatement(ADD_ACCOUNT_SQL,
+				pstmt = DBConnection.getConnection().prepareStatement(ADD_ACCOUNT_SQL,
 						Statement.RETURN_GENERATED_KEYS);
 				pstmt.setString(1, a.getAccountName());
 				pstmt.setDouble(2, a.getBalance());
@@ -87,7 +89,7 @@ public class AccountDAO implements IAccountDAO {
 		}
 		PreparedStatement pstmt;
 		try {
-			pstmt = DBConnection.getInstance().getConnection().prepareStatement(CHECK_IF_ACCOUNT_EXISTS);
+			pstmt = DBConnection.getConnection().prepareStatement(CHECK_IF_ACCOUNT_EXISTS);
 			pstmt.setString(1, a.getAccountName());
 			pstmt.setInt(2, ((User) session.getAttribute("user")).getId());
 			ResultSet rs = pstmt.executeQuery();
@@ -96,7 +98,7 @@ public class AccountDAO implements IAccountDAO {
 			} else {
 				return false;
 			}
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new AccountException();
 		}
@@ -108,7 +110,7 @@ public class AccountDAO implements IAccountDAO {
 		Set<Account> allAccounts = new TreeSet<Account>(comparator);
 		PreparedStatement pstmt;
 		try {
-			pstmt = DBConnection.getInstance().getConnection().prepareStatement(ALL_ACCOUNTS_FOR_USER);
+			pstmt = DBConnection.getConnection().prepareStatement(ALL_ACCOUNTS_FOR_USER);
 			pstmt.setInt(1, user.getId());
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
@@ -117,7 +119,7 @@ public class AccountDAO implements IAccountDAO {
 						rs.getInt("a.payment_due_day"), rs.getString("c.currency_type"), rs.getString("acct.type")));
 			}
 			return allAccounts;
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new AccountException("Account can't be added, database issue", e);
 		}
@@ -154,7 +156,7 @@ public class AccountDAO implements IAccountDAO {
 	@Override
 	public Account getAccountById(int id) throws AccountException {
 		try {
-			PreparedStatement pst = DBConnection.getInstance().getConnection().prepareStatement(GET_ACCOUNT_BY_ID,
+			PreparedStatement pst = DBConnection.getConnection().prepareStatement(GET_ACCOUNT_BY_ID,
 					Statement.RETURN_GENERATED_KEYS);
 			pst.setInt(1, id);
 			ResultSet rs = pst.executeQuery();
@@ -165,7 +167,7 @@ public class AccountDAO implements IAccountDAO {
 				return account;
 			} else
 				throw new AccountException("Couldn't retrieve an account with id " + id);
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch (SQLException e) {
 			throw new AccountException("DB-issue!");
 		}
 	}
@@ -173,7 +175,7 @@ public class AccountDAO implements IAccountDAO {
 	@Override
 	public Account getAccountByName(String name) throws AccountException {
 		try {
-			PreparedStatement pst = DBConnection.getInstance().getConnection().prepareStatement(GET_ACCOUNT_BY_NAME,
+			PreparedStatement pst = DBConnection.getConnection().prepareStatement(GET_ACCOUNT_BY_NAME,
 					Statement.RETURN_GENERATED_KEYS);
 			pst.setString(1, name);
 			ResultSet rs = pst.executeQuery();
@@ -184,7 +186,7 @@ public class AccountDAO implements IAccountDAO {
 				return account;
 			} else
 				throw new AccountException("Couldn't retrieve an account with name: " + name);
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch (SQLException e) {
 			throw new AccountException("DB-issue!");
 		}
 	}
@@ -193,7 +195,8 @@ public class AccountDAO implements IAccountDAO {
 	public void updateAccount(Account updated) throws AccountException {
 		try {
 			Account notUpdated = this.getAccountById(updated.getAccount_id());
-			Connection connection = DBConnection.getInstance().getConnection();
+
+			Connection connection = DBConnection.getConnection();
 			connection.setAutoCommit(false);
 			PreparedStatement pst = connection.prepareStatement(UPDATE_ACCOUNT, Statement.RETURN_GENERATED_KEYS);
 			pst.setString(1, updated.getAccountName());
@@ -225,12 +228,12 @@ public class AccountDAO implements IAccountDAO {
 	public void deleteAccount(int id) {
 		PreparedStatement pst;
 		try {
-			pst = DBConnection.getInstance().getConnection().prepareStatement(DELETE_ACCOUNT,
+			pst = DBConnection.getConnection().prepareStatement(DELETE_ACCOUNT,
 					Statement.RETURN_GENERATED_KEYS);
 			pst.setInt(1, id);
 			pst.executeUpdate();
 
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

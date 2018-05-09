@@ -8,61 +8,67 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.financetracker.exceptions.PlannedTransactionException;
-import com.financetracker.exceptions.PlannedTransactionThreadException;
-import com.financetracker.exceptions.RecurrencyException;
-import com.financetracker.exceptions.TransactionException;
-import com.financetracker.model.users.User;
 
+@Component
+public class PlannedTransactionThread extends Thread {
 
-public class PlannedTransactionThread implements Runnable {
-
-	private User user;
-	
 	@Autowired
-	private PlannedTransactionDAO plannedTransactionDAO;	
-	
-	
-	public PlannedTransactionThread(User user) {
-		if(user != null) {
-			this.user = user;
-		}
+	private PlannedTransactionDAO plannedTransactionDAO;
+
+	public PlannedTransactionThread() {
+		System.out.println("Thread started...");
+		 this.setDaemon(true);
 	}
-	
+
 	@Override
 	public void run() {
-		while(true) {
-		
+		while (true) {
 			try {
-				List<PlannedTransaction> allTransactions = plannedTransactionDAO.getAllPlannedTransactions(user);
-				for(PlannedTransaction transaction: allTransactions) {
-						String recurrency = transaction.getRecurrency();
-						LocalDate transactionDate = transaction.getDate();
-						switch (recurrency.toLowerCase()) {
-						case "monthly":
-							transactionDate.plusMonths(1);
-							break;
-                        case "weekly":
-                        	transactionDate.plusWeeks(1);
-							break;
-                        case "daily":
-                        	transactionDate.plusDays(1);
-							break;
-						default:
-							break;
-						}
-						LocalDate currentDate = LocalDateTime.now().toLocalDate();
-						if(currentDate.isEqual(transactionDate)) {
-							///redirect kym stranica da te pita dali iskash da plati smetkata
-							plannedTransactionDAO.payPlannedTransaction(transaction);
-						}
+				Thread.sleep(60000);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+				return;
+			}
+			try {
+				List<PlannedTransaction>allTransactions = plannedTransactionDAO.getAllUsersPlannedTransactions();
+				System.out.println(plannedTransactionDAO);
+				for (PlannedTransaction transaction : allTransactions) {
+					System.out.println(transaction);
+					
+					String recurrency = transaction.getRecurrency();
+					System.out.println(recurrency);
+					
+					LocalDate transactionDate = transaction.getPlannedDate();
+					System.out.println(transactionDate);
+					
+					switch (recurrency.toLowerCase()) {
+					case "monthly":
+						transactionDate = transactionDate.plusMonths(1);
+						break;
+					case "weekly":
+						transactionDate = transactionDate.plusWeeks(1);
+						break;
+					case "daily":
+						transactionDate = transactionDate.plusDays(1);
+						break;
+					default:
+						break;
 					}
-				} catch (PlannedTransactionException | RecurrencyException | TransactionException e) {
+					System.out.println("new date" + transactionDate);
+					LocalDate currentDate = LocalDate.now();
+					System.out.println(currentDate);
+					if (currentDate.isEqual(transactionDate)) {
+						System.out.println("V ifa sum");
+						/// redirect kym stranica da te pita dali iskash da plati smetkata
+						plannedTransactionDAO.payPlannedTransaction(transaction);
+						transaction.setPlannedDate(transactionDate);
+						System.out.println("balance" + transaction.getAccount().getBalance());
+					}
+				}
+			} catch (PlannedTransactionException e) {
 				e.printStackTrace();
-				
-					//throw new PlannedTransactionThreadException("Oops, something went wrong!",e);
-				
 			}
 		}
-		
+
 	}
 }

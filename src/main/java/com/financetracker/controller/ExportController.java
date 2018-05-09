@@ -29,7 +29,7 @@ public class ExportController {
 	
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String exportTasksIntoPdf(HttpServletResponse response, HttpSession session, Model model)  {
+	public void exportTasksIntoPdf(HttpServletResponse response, HttpSession session, Model model)  {
 		ServletOutputStream os = null;
 		try {
 			User loggedUser = this.userDao.getLoggedUser(session);
@@ -38,15 +38,12 @@ public class ExportController {
 			}
 			
 			os = response.getOutputStream();
-//			response.setContentType("application/pdf");
-			response.setHeader("Content-Disposition", "attachment; filename=\"" + "allTasks.pdf" + "\"");
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + "MyTransactions.pdf" + "\"");
 			this.exportDao.exportIntoPdf(os, loggedUser);
 			
-			return "home";
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("exception", e);
-			return "error";
 		} finally {
 			try {
 				os.flush();

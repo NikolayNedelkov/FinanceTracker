@@ -1,14 +1,10 @@
 package com.financetracker.model.accounts;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.financetracker.exceptions.AccountException;
-import com.financetracker.model.transactions.Transaction;
 import com.financetracker.model.users.User;
 
 public class Account {

@@ -66,8 +66,7 @@
 											<td class="item_amt"><c:out value="${account.balance}" /></td>
 											<td class="item_amt"><c:out value="${account.currency}" /></td>
 											<td class="item_category"><c:out value="${account.type}" /></td>
-											<td><input type="button" id="editbtn"
-												class="btn btn-primary"
+											<td><input type="button" id="editbtn" class="btn btn-primary"
 												onclick="location.href='./accounts/acc/${ account.account_id }';"
 												value="Edit account" /></td>
 											<td>

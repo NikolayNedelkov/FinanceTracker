@@ -6,16 +6,19 @@ import java.util.List;
 import com.financetracker.exceptions.AccountException;
 import com.financetracker.exceptions.TransactionException;
 import com.financetracker.model.accounts.Account;
+import com.financetracker.model.users.User;
 
 public interface ITransactionDAO {
-
-	List<Transaction> getAllTransactions(Account account) throws TransactionException, SQLException, AccountException;
 
 	int addTransaction(Transaction transaction) throws TransactionException, SQLException;
 
 	void deleteTransaction(int transactionID) throws TransactionException;
 
-	int makePlannedTransaction(Transaction transaction) throws TransactionException;
+	List<Transaction> getAllTransactions(User user) throws TransactionException, AccountException;
+
+	void updateTransaction(Transaction transaction) throws TransactionException;
+
+	Transaction getTransactionById(int id) throws TransactionException;
 
 
 }

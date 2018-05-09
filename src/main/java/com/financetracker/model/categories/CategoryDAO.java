@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.financetracker.database.DBConnection;
 import com.financetracker.exceptions.CategoryException;
@@ -23,17 +25,19 @@ public class CategoryDAO implements ICategoryDAO {
 	private static final String ADD_NEW_CATEGORY_SQL = "INSERT INTO categories VALUES (null,?,?)";
 	private static final String CHECK_IF_CATEGORY_EXISTS = "SELECT categories.name FROM categories WHERE categories.name = ? AND categories.is_income =?";
 
-
+	@Autowired
+	private DBConnection DBConnection;
+	
 	@Override
 	public int getCategoryIdByName(String category) throws CategoryException {
 		try {
-			Connection connection = DBConnection.getInstance().getConnection();
+			Connection connection = DBConnection.getConnection();
 			PreparedStatement statement = connection.prepareStatement(GET_CATEGORY_ID_SQL);
 			statement.setString(1,category);
 			ResultSet resultSet = statement.executeQuery();
 			resultSet.next();
 			return resultSet.getInt(1);
-		} catch (SQLException | ClassNotFoundException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new CategoryException("Cannot find category name!", e);
 		}
@@ -44,7 +48,7 @@ public class CategoryDAO implements ICategoryDAO {
 	public SortedSet<String> getAllCategories() throws CategoryException{
 		Connection connection;
 		try {
-			connection = DBConnection.getInstance().getConnection();
+			connection = DBConnection.getConnection();
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(GET_ALL_CATEGORIES_SQL);
 			TreeSet<String> allCategories = new TreeSet<>();
@@ -52,7 +56,7 @@ public class CategoryDAO implements ICategoryDAO {
 				allCategories.add((String) resultSet.getString("name"));
 			}
 			return allCategories;
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new CategoryException("Cannot get categories!", e);
 		}
@@ -61,7 +65,7 @@ public class CategoryDAO implements ICategoryDAO {
 	@Override
 	public SortedSet<String> getCategoriesByType(String isIncome) throws CategoryException{
 		try {
-			Connection connection = DBConnection.getInstance().getConnection();
+			Connection connection = DBConnection.getConnection();
 			PreparedStatement statement = connection.prepareStatement(GET_CATEGORIES_BY_TYPE_SQL);
 			
 			if(isIncome.equals("true")) {
@@ -76,7 +80,7 @@ public class CategoryDAO implements ICategoryDAO {
 				categories.add((String) resultSet.getString("name"));
 			}
 			return categories;
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new CategoryException("Cannot get category type!", e);
 		}
@@ -86,13 +90,13 @@ public class CategoryDAO implements ICategoryDAO {
 	@Override
 	public String getCategoryNameById(int id) throws CategoryException {
 		try {
-			Connection connection = DBConnection.getInstance().getConnection();
+			Connection connection = DBConnection.getConnection();
 			PreparedStatement statement = connection.prepareStatement(GET_CATEGORY_NAME_SQL);
 			statement.setInt(1,id);
 			ResultSet resultSet = statement.executeQuery();
 			resultSet.next();
 			return resultSet.getString(1);
-		} catch (SQLException | ClassNotFoundException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new CategoryException("Cannot find category id!", e);
 		}
@@ -102,8 +106,8 @@ public class CategoryDAO implements ICategoryDAO {
 	@Override
 	public int addNewCategory(String categoryName, Boolean type) throws CategoryException {
 		try {
-			Connection connection = DBConnection.getInstance().getConnection();
-			PreparedStatement statement = DBConnection.getInstance().getConnection().prepareStatement(CHECK_IF_CATEGORY_EXISTS);
+			Connection connection = DBConnection.getConnection();
+			PreparedStatement statement = DBConnection.getConnection().prepareStatement(CHECK_IF_CATEGORY_EXISTS);
 			statement.setString(1, categoryName);
 			statement.setBoolean(2, type);
 			ResultSet rs = statement.executeQuery();
@@ -118,11 +122,12 @@ public class CategoryDAO implements ICategoryDAO {
 				resultSet.next();
 				return resultSet.getInt(1);
 			}
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new CategoryException("Cannot add category!", e);
 		}
 		
 		
 	}
+
 }

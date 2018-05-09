@@ -3,12 +3,7 @@ package com.financetracker.controller;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-
-import java.util.Set;
 import java.util.SortedSet;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -45,25 +41,19 @@ public class TransactionController {
 	@Autowired
 	public ICategoryDAO categoryDAO;
 
-	// TODO:get transactions with db query
 	@RequestMapping(method = RequestMethod.GET)
 	protected String showTransactions(Model model, HttpSession session) {
 		if ((session == null) || (session.getAttribute("user") == null)) {
-			return "signup-login";
+			return "redirect:/";
 		}
 
 		try {
 			SortedSet<String> categories = categoryDAO.getAllCategories();
 			User currentUser = (User) session.getAttribute("user");
-			List<Transaction> allUserTransactions = new ArrayList<>();
-			Set<Account> currentUserAccounts = (Set<Account>) accountDAO.getAllAccountsForUser(currentUser);
-
-			for (Account account : currentUserAccounts) {
-				allUserTransactions.addAll(transactionDAO.getAllTransactions(account));
-			}
+			List<Transaction> allUserTransactions = transactionDAO.getAllTransactions(currentUser);
 			model.addAttribute("allUserTransactions", allUserTransactions);
-			model.addAttribute("categories", categories);
-		} catch (AccountException | TransactionException | SQLException | CategoryException e) {
+			model.addAttribute("categories",categories);
+		} catch (AccountException | TransactionException | CategoryException e) {
 			e.printStackTrace();
 			return "error";
 		}
@@ -88,17 +78,7 @@ public class TransactionController {
 
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	protected String getUserAccounts(HttpSession session) {
-		User loggedUser = (User) session.getAttribute("user");
-		Set<Account> usersAccounts;
-		try {
-			usersAccounts = new HashSet<Account>(accountDAO.getAllAccountsForUser(loggedUser));
-			loggedUser.setAccounts(usersAccounts);
 			return "newTransaction";
-		} catch (AccountException e) {
-			e.printStackTrace();
-			return "error";
-		}
-
 	}
 
 	@RequestMapping(value = "/add/category", method = RequestMethod.GET)
@@ -170,6 +150,49 @@ public class TransactionController {
 		} catch (TransactionException e) {
 			e.printStackTrace();
 			return "error";
+		}
+	}
+	
+	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+	public String editTransaction(Model model, @PathVariable("id") Integer id,HttpSession session) {
+		try {
+			Transaction currentTransaction = transactionDAO.getTransactionById(id);
+			model.addAttribute("currentTransaction", currentTransaction);
+			
+			/*Set<Account> usersAccounts = (Set<Account>) accountDAO.getAllAccountsForUser((User)session.getAttribute("user"));
+			model.addAttribute("usersAccounts", usersAccounts);*/
+			return "editTransaction";
+		} catch (TransactionException e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+	
+	@RequestMapping(value = "/edit/{account_id}", method = RequestMethod.POST)
+	public String editTransaction(@ModelAttribute Transaction newTransaction, @PathVariable("id") Integer id) {
+		try {
+			transactionDAO.updateTransaction(newTransaction);
+			return "redirect:/transactions";
+
+		} catch (TransactionException e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+	
+	@RequestMapping(value = "/edit/{account_id}/getCategories", method = RequestMethod.GET)
+	public @ResponseBody void loadCategoriesForEdit(HttpServletRequest request, HttpServletResponse response)
+			throws TransactionException {
+
+		try {
+			String transactionType = request.getParameter("typeSelect");
+			SortedSet<String> categories = categoryDAO.getCategoriesByType(transactionType);
+			response.setContentType("application/json");
+			response.getWriter().println(new Gson().toJson(categories));
+
+		} catch (IOException | CategoryException e) {
+			e.printStackTrace();
+			throw new TransactionException("Cannot get categories!");
 		}
 	}
 }
