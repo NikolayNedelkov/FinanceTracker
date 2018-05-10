@@ -22,6 +22,10 @@ public class Transaction {
 	private boolean isIncome;
 	private String category;
 	private int plannedTransactionId;
+	
+	public Transaction() {
+		
+	}
 
 	public Transaction(String payee, double amount, LocalDate date, Account account, String category, boolean isIncome)
 			throws TransactionException {

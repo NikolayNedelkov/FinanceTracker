@@ -139,7 +139,7 @@ public class AccountController {
 	// ne updateva v bazata
 	@RequestMapping(value = "/acc/{account_id}", method = RequestMethod.POST)
 	public String editAccount(@ModelAttribute Account updatedAccount, @PathVariable("account_id") Integer accountId) {
-		try {
+		try {		
 			accountDao.updateAccount(updatedAccount);
 			return "redirect:/accounts";
 

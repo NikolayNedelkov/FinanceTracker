@@ -76,6 +76,12 @@
     });
     
     
+    
+    $( "#addplanned_transaction_date" ).datepicker({
+    	format: 'yyyy-mm-dd'
+     });
+    
+    
 
 	
 	

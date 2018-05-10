@@ -13,7 +13,7 @@
 			</h2>
 		</div>
 
-		<form id="addExpenseForm" action="" method="post">
+		<form:form id="addExpenseForm" action="" method="post">
 			<form:form commandName="currentTransaction">
 				<div class="expense_name">
 					<div class="inline modalcss">Payee/Payer name:</div>
@@ -24,7 +24,7 @@
 				<div class="expense_name">
 					<div class="inline modalcss">Planned transaction date:</div>
 					<form:input type="date" class="form-control"
-						id="addplanned_transaction_date" path="date" name="plannedDate" />
+						id="addplanned_transaction_date" path="date" value="${transaction.date}"/>
 				</div>
 
 				<div class="expense_name">
@@ -40,7 +40,7 @@
 						path="account">
 							<form:option value="-" label="Please select an existing account" />
 						    <c:forEach items="${ sessionScope.user.accounts }" var="account">
-							<form:option value="${ account.accountName }">${ account.accountName }</form:option>
+							<form:option value="${ account }">${ account.accountName }</form:option>		
 						</c:forEach>
 					</form:select>
 				</div>
@@ -78,7 +78,7 @@
 			<!--  id="addExpenseOn_btn" -->
 
 
-		</form>
+		</form:form>
 	</div>
 </div>
 
@@ -87,7 +87,7 @@
 	function loadCategories() {
 		var type = document.getElementById('type').value;
 		var xhr = new XMLHttpRequest();
-		xhr.open("GET", "edit/${account_id}/getCategories?typeSelect="+ type, true);
+		xhr.open("GET", "${id}/getCategories?typeSelect="+ type, true);
 		xhr.send(null);
 		
 		xhr.addEventListener('load', () => {

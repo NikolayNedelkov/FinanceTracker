@@ -52,7 +52,7 @@ public class TransactionController {
 			User currentUser = (User) session.getAttribute("user");
 			List<Transaction> allUserTransactions = transactionDAO.getAllTransactions(currentUser);
 			model.addAttribute("allUserTransactions", allUserTransactions);
-			model.addAttribute("categories",categories);
+			model.addAttribute("categories", categories);
 		} catch (AccountException | TransactionException | CategoryException e) {
 			e.printStackTrace();
 			return "error";
@@ -78,7 +78,7 @@ public class TransactionController {
 
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	protected String getUserAccounts(HttpSession session) {
-			return "newTransaction";
+		return "newTransaction";
 	}
 
 	@RequestMapping(value = "/add/category", method = RequestMethod.GET)
@@ -113,7 +113,7 @@ public class TransactionController {
 		try {
 			String payee = request.getParameter("payee");
 			double amount = Double.parseDouble(request.getParameter("amount"));
-			//???
+			// ???
 			LocalDate date = LocalDate.parse(request.getParameter("date"));
 
 			boolean isIncome;
@@ -152,23 +152,20 @@ public class TransactionController {
 			return "error";
 		}
 	}
-	
+
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-	public String editTransaction(Model model, @PathVariable("id") Integer id,HttpSession session) {
+	public String editTransaction(Model model, @PathVariable("id") Integer id, HttpSession session) {
 		try {
 			Transaction currentTransaction = transactionDAO.getTransactionById(id);
 			model.addAttribute("currentTransaction", currentTransaction);
-			
-			/*Set<Account> usersAccounts = (Set<Account>) accountDAO.getAllAccountsForUser((User)session.getAttribute("user"));
-			model.addAttribute("usersAccounts", usersAccounts);*/
 			return "editTransaction";
 		} catch (TransactionException e) {
 			e.printStackTrace();
 			return "error";
 		}
 	}
-	
-	@RequestMapping(value = "/edit/{account_id}", method = RequestMethod.POST)
+
+	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
 	public String editTransaction(@ModelAttribute Transaction newTransaction, @PathVariable("id") Integer id) {
 		try {
 			transactionDAO.updateTransaction(newTransaction);
@@ -179,8 +176,8 @@ public class TransactionController {
 			return "error";
 		}
 	}
-	
-	@RequestMapping(value = "/edit/{account_id}/getCategories", method = RequestMethod.GET)
+
+	@RequestMapping(value = "/edit/{id}/getCategories", method = RequestMethod.GET)
 	public @ResponseBody void loadCategoriesForEdit(HttpServletRequest request, HttpServletResponse response)
 			throws TransactionException {
 

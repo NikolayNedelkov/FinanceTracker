@@ -1,4 +1,4 @@
-package com.financetracker.test;
+//package com.financetracker.test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
