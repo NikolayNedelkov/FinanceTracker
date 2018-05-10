@@ -53,8 +53,7 @@ public class AccountDAO implements IAccountDAO {
 		try {
 			if (!accountExists(a, session)) {
 				// first add the account to DB
-				pstmt = DBConnection.getConnection().prepareStatement(ADD_ACCOUNT_SQL,
-						Statement.RETURN_GENERATED_KEYS);
+				pstmt = DBConnection.getConnection().prepareStatement(ADD_ACCOUNT_SQL, Statement.RETURN_GENERATED_KEYS);
 				pstmt.setString(1, a.getAccountName());
 				pstmt.setDouble(2, a.getBalance());
 				// bez account nomer ne raboti!!
@@ -216,9 +215,6 @@ public class AccountDAO implements IAccountDAO {
 			pst.executeUpdate();
 			connection.commit();
 			connection.setAutoCommit(true);
-
-			// ResultSet resultSet = pst.getGeneratedKeys();
-			// return resultSet.next();
 		} catch (AccountException | ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 			throw new AccountException("Could not update the account");
@@ -228,8 +224,7 @@ public class AccountDAO implements IAccountDAO {
 	public void deleteAccount(int id) {
 		PreparedStatement pst;
 		try {
-			pst = DBConnection.getConnection().prepareStatement(DELETE_ACCOUNT,
-					Statement.RETURN_GENERATED_KEYS);
+			pst = DBConnection.getConnection().prepareStatement(DELETE_ACCOUNT, Statement.RETURN_GENERATED_KEYS);
 			pst.setInt(1, id);
 			pst.executeUpdate();
 
@@ -238,8 +233,26 @@ public class AccountDAO implements IAccountDAO {
 			e.printStackTrace();
 		}
 	}
-	// public boolean deleteAccount(Account a) {
-	// (rs.getInt("id"), rs.getString("name"), rs.getBigDecimal("balance"), balance,
-	// currency, type));
-	// }
+
+	public Set<Account> getAccountsBySort(User user, String sort) throws AccountException {
+		Set<Account> accounts = getAllAccountsForUser(user);
+		Set<Account> result = new HashSet<Account>();
+		switch (sort) {
+		case "debit":
+			accounts.stream()
+					.filter(acc -> acc.getType().toLowerCase().equals("cash") || acc.getType().toLowerCase().equals("paypal")|| acc.getType().toLowerCase().equals("gift card"))
+					.forEach(acc -> result.add(acc));
+			break;
+		case "investment":
+			accounts.stream().filter(
+					acc -> acc.getType().toLowerCase().equals("pension") || acc.getType().toLowerCase().equals("ira") || acc.getType().toLowerCase().equals("other investment"))
+					.forEach(acc -> result.add(acc));
+			break;
+		default:
+			accounts.stream().filter(acc -> acc.getType().toLowerCase().equals("creditcard") || acc.getType().toLowerCase().equals("loan"))
+					.forEach(acc -> result.add(acc));
+			break;
+		}
+		return result;
+	}
 }

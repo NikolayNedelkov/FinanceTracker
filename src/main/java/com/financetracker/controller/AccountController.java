@@ -50,10 +50,7 @@ public class AccountController {
 			return "redirect:/";
 		}
 		try {
-			// System.out.println(request.getAttribute("criteria"));
-			System.out.println("TUK SUM");
 			User loggedUser = (User) session.getAttribute("user");
-			// String criteria = "Account type";
 			Set<Account> usersAccounts = new TreeSet<Account>();
 			usersAccounts = accountDao.getSortedAccounts(loggedUser, criteria);
 			loggedUser.setAccounts(usersAccounts);
