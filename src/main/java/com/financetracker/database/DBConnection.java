@@ -6,9 +6,6 @@ import java.sql.SQLException;
 
 import org.springframework.stereotype.Component;
 
-import com.financetracker.model.transactions.PlannedTransactionThread;
-
-//import com.financetracker.model.transactions.PlannedTransactionThread;
 
 @Component
 public class DBConnection {

@@ -65,8 +65,6 @@ public class AccountController {
 	@RequestMapping(value = "/del", method = RequestMethod.GET)
 	public String deleteAccount(HttpSession session, HttpServletRequest request) {
 		int accountId = Integer.parseInt(request.getParameter("accId"));
-//		accountDao.deleteAccount(accountId);
-//		System.out.println(accountId);
 		return "deleteAccount";
 	}
 	
@@ -92,7 +90,6 @@ public class AccountController {
 		} catch (ClassNotFoundException | SQLException | CurrencyException | AccountException e) {
 			e.printStackTrace();
 
-			// tuka nqma da e home, vremenno
 			return "redirect:home";
 		}
 	}
@@ -133,10 +130,12 @@ public class AccountController {
 		}
 	}
 
-	// ne updateva v bazata
 	@RequestMapping(value = "/acc/{account_id}", method = RequestMethod.POST)
-	public String editAccount(@ModelAttribute Account updatedAccount, @PathVariable("account_id") Integer accountId) {
-		try {		
+	public String editAccount(@Valid Account updatedAccount,BindingResult bindingResult, @PathVariable("account_id") Integer accountId) {
+		try {	
+			if (bindingResult.hasErrors()) {
+				return "redirect:/accounts/acc/{account_id}";
+			}
 			accountDao.updateAccount(updatedAccount);
 			return "redirect:/accounts";
 

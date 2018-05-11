@@ -151,7 +151,6 @@ public class AccountDAO implements IAccountDAO {
 		return resultSet;
 	}
 
-	// Validaciq posle
 	@Override
 	public Account getAccountById(int id) throws AccountException {
 		try {
@@ -240,7 +239,7 @@ public class AccountDAO implements IAccountDAO {
 		switch (sort) {
 		case "debit":
 			accounts.stream()
-					.filter(acc -> acc.getType().toLowerCase().equals("cash") || acc.getType().toLowerCase().equals("paypal")|| acc.getType().toLowerCase().equals("gift card"))
+					.filter(acc -> acc.getType().toLowerCase().equals("cash") || acc.getType().toLowerCase().equals("paypal")|| acc.getType().toLowerCase().equals("gift card")||acc.getType().toLowerCase().equals("savings"))
 					.forEach(acc -> result.add(acc));
 			break;
 		case "investment":
@@ -249,7 +248,7 @@ public class AccountDAO implements IAccountDAO {
 					.forEach(acc -> result.add(acc));
 			break;
 		default:
-			accounts.stream().filter(acc -> acc.getType().toLowerCase().equals("creditcard") || acc.getType().toLowerCase().equals("loan"))
+			accounts.stream().filter(acc -> acc.getType().toLowerCase().equals("credit card") || acc.getType().toLowerCase().equals("loan"))
 					.forEach(acc -> result.add(acc));
 			break;
 		}

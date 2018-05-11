@@ -33,27 +33,6 @@
 						name="accountName" path="lastFourDigits" />
 				</div>
 
-<%-- 				<c:if test="${type} eq 'Loan' ">
-					<div class="expense_name">
-						<div id="percentdiv">Percentage:</div>
-						<form:input type="text" id="percent" name="percentage"
-							path="percentage" />
-					</div>
-				</c:if>
-
-
-
-				<c:if test="${type} ne 'Loan' ">
-					<div class="expense_name">
-						<div id="percentdiv" class="inline modalcss hidden-input">Percentage:</div>
-						<form:input class="hidden-input" type="text" id="percent"
-							name="percentage" path="percentage" />
-					</div>
-				</c:if> --%>
-
-
-
-
 				<div class="expense_name">
 					<div class="inline modalcss">Currency:</div>
 

@@ -11,16 +11,6 @@
 
 		<!-- Page Heading -->
 		
-		
-		
-		<%-- <c:if test=${criteria == 'debit'} value=>
-		<div class="row center">
-			<h2>My Debit Accounts</h2>
-		</div>
-		</c:if> --%>
-		
-		
-		
 		<!-- /.row -->
 
 		<div class="dashlog">

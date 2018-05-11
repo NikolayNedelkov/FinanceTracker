@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.financetracker.exceptions.AccountException;
 import com.financetracker.exceptions.TransactionException;
-import com.financetracker.model.accounts.Account;
 import com.financetracker.model.users.User;
 
 public interface ITransactionDAO {

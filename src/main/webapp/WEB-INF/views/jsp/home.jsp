@@ -32,7 +32,7 @@
 					</form>
 					<div class="card-body">
 						<h5 class="card-title">Primary card title</h5>
-						<p class="card-text">Overview of your Debit Accounts: PayPal,
+						<p class="card-text">Overview of your Debit accounts: PayPal,
 							Cash</p>
 					</div>
 				</div>
@@ -46,8 +46,8 @@
 					</form>
 					<div class="card-body">
 						<h5 class="card-title">Primary card title</h5>
-						<p class="card-text">Some quick example text to build on the
-							card title and make up the bulk of the card's content.</p>
+						<p class="card-text">Overview of your Debts: Credit Card,
+							Loans</p>
 					</div>
 				</div>
 
@@ -59,20 +59,11 @@
 					</form>
 					<div class="card-body">
 						<h5 class="card-title">Primary card title</h5>
-						<p class="card-text">Some quick example text to build on the
-							card title and make up the bulk of the card's content.</p>
+						<p class="card-text">Overview of your Investment accounts: IRA,
+							Other Investments</p>
 					</div>
 				</div>
 
-				<div class="card text-white bg-secondary mb-3"
-					style="max-width: 40rem;">
-					<div class="card-header">Add new account</div>
-					<div class="card-body">
-						<h5 class="card-title">Primary card title</h5>
-						<p class="card-text">Some quick example text to build on the
-							card title and make up the bulk of the card's content.</p>
-					</div>
-				</div>
 
 
 
