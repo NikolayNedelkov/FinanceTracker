@@ -1,7 +1,6 @@
 package com.financetracker.model.transactions;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import com.financetracker.exceptions.TransactionException;
 import com.financetracker.model.accounts.Account;
@@ -22,6 +21,10 @@ public class Transaction {
 	private boolean isIncome;
 	private String category;
 	private int plannedTransactionId;
+	
+	public Transaction() {
+		
+	}
 
 	public Transaction(String payee, double amount, LocalDate date, Account account, String category, boolean isIncome)
 			throws TransactionException {

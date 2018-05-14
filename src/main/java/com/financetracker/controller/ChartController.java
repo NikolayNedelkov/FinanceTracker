@@ -34,24 +34,14 @@ public class ChartController {
 	public String getCashflowTrend(HttpSession session, Model model) {
 		User user = (User) session.getAttribute("user");
 
-		// Map<String, Map<LocalDate, Double>> chartData;
-		// try {
-		// chartData = chartService.getTransactionAmountAndDate(user);
-		// model.addAttribute("accounts", chartData.keySet());
-		// Map<LocalDate, Double> dateAmountForAccount = new TreeMap<LocalDate,
-		// Double>();
-		// for (String account : chartData.keySet()) {
-		// for (LocalDate date : chartData.get(account).keySet()) {
-		// dateAmountForAccount.put(date, chartData.get(account).get(date));
-		// }
-		// }
-		// model.addAttribute("dateAmountForAccount", dateAmountForAccount);
-
 		Map<String, List<Double>> chartData;
 		try {
 			chartData = budgetDao.getStatisticsAllAccounts(user);
-			ArrayList<String> accountNames= new ArrayList<String>();
-			for(String name: chartData.keySet()) {
+			if (chartData.isEmpty()) {
+				return "empty";
+			}
+			ArrayList<String> accountNames = new ArrayList<String>();
+			for (String name : chartData.keySet()) {
 				accountNames.add(name);
 			}
 			model.addAttribute("accounts", accountNames);
@@ -63,7 +53,7 @@ public class ChartController {
 			return "charts";
 		} catch (BudgetException e) {
 			e.printStackTrace();
-			return "redirect:error";
+			return "empty";
 		}
 	}
 }

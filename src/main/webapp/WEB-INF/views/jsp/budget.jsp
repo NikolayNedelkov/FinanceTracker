@@ -21,35 +21,6 @@
 				<div class="col-lg-12">
 					<div class=" col-lg-12 itemlog list">
 
-
-
-
-						<%-- 
-						<table class="table table-hover" class="col-lg-12 itemlog list">
-							<thead>
-								<tr>
-									<th scope="col"></th>
-									<th scope="col">Total Income</th>
-									<th scope="col">Total Expense</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr class="item_name clickable">
-									<th scope="row" class="item_name clickable"><c:out
-											value="Totals" /></th>
-									<td class="item_amt"><c:out
-											value="${sessionScope.budget.totalIncome}" /></td>
-									<td class="item_amt"><c:out
-											value="${sessionScope.budget.totalExpense}" /></td>
-
-								</tr>
-							</tbody>
-						</table> --%>
-
-
-
-
-
 						<table class="table table-hover" class="col-lg-12 itemlog list">
 							<thead>
 								<tr>
@@ -79,37 +50,6 @@
 										<td class="item_amt"><c:out value="${total}" /></td>
 									</c:forEach>
 								</tr>
-
-
-
-								<%-- 	<c:forEach items="${budgetByAccount}" var="currentAccount"
-									varStatus="currentAccountStatus">  
-						       //Key
-						       Key: ${currentAccount.key}
-						       //Iterate over values ,assuming vector of strings
-						       <c:forEach items="${currentAccount.value}"
-										var="accountName" varStatus="valueStatus">
-						           Value: ${accountName}
-						       </c:forEach>
-								</c:forEach>
-
-
-								<c:forEach items="${budgetByAccount}" var="entry">
-								Key = ${entry.key}, value = ${entry.value}
-									<tr class="item_name clickable">
-										<th scope="row" class="item_name clickable"><c:out
-												value="${account.accountName}" /></th>
-										<td class="item_amt"><c:out value="${account.incomes}" /></td>
-										<td class="item_amt"><c:out value="${account.outcomes}" /></td>
-									</tr>
-								</c:forEach> --%>
-
-
-
-
-
-
-
 
 							</tbody>
 						</table>

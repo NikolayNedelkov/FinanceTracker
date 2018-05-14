@@ -1,6 +1,5 @@
 package com.financetracker.model.accounts;
 
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -90,7 +89,8 @@ public class Account {
 	}
 
 	public void setPercentage(float percentage) {
-		this.percentage = percentage;
+		if (percentage >= 0)
+			this.percentage = percentage;
 	}
 
 	public int getPaymentDueDay() {

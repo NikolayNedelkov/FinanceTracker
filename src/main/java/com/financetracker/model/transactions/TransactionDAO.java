@@ -6,8 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,11 +16,9 @@ import com.financetracker.database.DBConnection;
 import com.financetracker.exceptions.AccountException;
 import com.financetracker.exceptions.CategoryException;
 import com.financetracker.exceptions.TransactionException;
-import com.financetracker.model.accounts.Account;
 import com.financetracker.model.accounts.IAccountDAO;
 import com.financetracker.model.categories.ICategoryDAO;
 import com.financetracker.model.users.User;
-import com.financetracker.util.AccountNameComparator;
 
 @Component
 public class TransactionDAO implements ITransactionDAO {
@@ -166,8 +162,6 @@ public class TransactionDAO implements ITransactionDAO {
 
 			pstmt.executeUpdate();
 			connection.commit();
-			// ResultSet resultSet = pst.getGeneratedKeys();
-			// return resultSet.next();
 		} catch (SQLException | CategoryException e) {
 			e.printStackTrace();
 			try {

@@ -16,8 +16,6 @@
 
 		<form id="addExpenseForm" action="" method="post">
 
-
-			<!-- Raboti!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 -->
 			<form:form commandName="account">
 				<div class="expense_name">
 					<div class="inline modalcss">Account Name:</div>
@@ -66,7 +64,6 @@
 					<button type="button" onclick="location.href='../accounts';"
 						class="btn btn-primary">Back</button>
 				</div>
-				<!-- Do tuk!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 -->
 			</form:form>
 
 

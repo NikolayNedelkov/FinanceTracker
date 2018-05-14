@@ -28,8 +28,6 @@ public class BudgetController {
 
 		User user = (User) session.getAttribute("user");
 		try {
-			// get all budgets for all accounts from the BudgetDAO
-			//System.out.println(user.getAccounts().iterator().next());
 			Map<String, List<Double>> budgetByAccount = budgetDao.getStatisticsAllAccounts(user);
 			if(budgetByAccount.isEmpty()) {
 				return "budget";

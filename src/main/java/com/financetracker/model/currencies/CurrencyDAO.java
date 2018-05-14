@@ -39,9 +39,6 @@ public class CurrencyDAO implements ICurrencyDAO {
 		List<String> allCurrencies = new ArrayList<String>();
 		Statement st = DBConnection.getConnection().createStatement();
 		ResultSet rs = st.executeQuery(GET_ALL_CURRENCIES);
-//		if (!rs.next()) {
-//			throw new CurrencyException("No currencies in DB");
-//		}
 		while (rs.next()) {
 			allCurrencies.add((String) rs.getString("currency_type"));
 		}
